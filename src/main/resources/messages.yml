@@ -1,0 +1,10 @@
+ban:
+    kick: "You've been banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    broadcast: "{{name}} was banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+
+mute:
+    kick: "You've been muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    broadcast: "{{name}} was muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+
+permission:
+    required: "That requires {{permission}} permission"

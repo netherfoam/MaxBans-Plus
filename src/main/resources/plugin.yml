@@ -1,0 +1,12 @@
+name: MaxBans
+version: 1.0
+main: org.maxgamer.maxbans.MaxBans
+
+commands:
+   ban:
+      description: Bans a user, optionally for a duration
+      usage: /ban <player> [duration] [message]
+      
+   mute:
+         description: Mutes a user, optionally for a duration
+         usage: /mute <player> [duration] [message]
