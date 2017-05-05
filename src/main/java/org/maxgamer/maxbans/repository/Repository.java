@@ -1,7 +1,6 @@
 package org.maxgamer.maxbans.repository;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.io.Serializable;
 
@@ -9,38 +8,25 @@ import java.io.Serializable;
  * @author Dirk Jamieson
  */
 public abstract class Repository<ID extends Serializable, T> {
+    protected final Transactor worker;
     private Class<ID> idClass;
     private Class<T> entityClass;
-    private SessionFactory factory;
-    private Session session;
 
-    public Repository(SessionFactory factory, Class<ID> idClass, Class<T> entityClass) {
-        this.factory = factory;
+    public Repository(Transactor worker, Class<ID> idClass, Class<T> entityClass) {
+        this.worker = worker;
         this.idClass = idClass;
         this.entityClass = entityClass;
     }
 
-    protected synchronized Session session() {
-        if(session != null && session.isConnected()) {
-            return session;
-        }
-        
-        session = factory.openSession();
-        
-        return session; 
-    }
-
     public T find(ID id) {
-        return session().get(entityClass, id);
+        return worker.retrieve((session) -> session.get(entityClass, id));
     }
     
     public void persist(T t) {
-        session().persist(t);
-        session().flush();
+        worker.work((session) -> session.persist(t));
     }
     
     public void save(T t) {
-        session().saveOrUpdate(t);
-        session().flush();
+        worker.work((session) -> session.saveOrUpdate(t));
     }
 }

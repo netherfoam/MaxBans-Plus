@@ -1,12 +1,12 @@
 package org.maxgamer.maxbans.command;
 
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
 import java.time.Duration;
@@ -17,11 +17,11 @@ import java.util.LinkedList;
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public abstract class RestrictionCommandExecutor extends StandardCommandExecutor {
-    protected final Server server;
+    protected final LocatorService locatorService;
 
-    public RestrictionCommandExecutor(Server server, Locale locale, String permission) {
+    public RestrictionCommandExecutor(Locale locale, LocatorService locatorService, String permission) {
         super(locale, permission);
-        this.server = server;
+        this.locatorService = locatorService;
     }
 
     @Override
@@ -33,8 +33,8 @@ public abstract class RestrictionCommandExecutor extends StandardCommandExecutor
             return;
         }
 
-        Player player = server.getPlayer(args.pop());
-        if(player == null) {
+        User user = locatorService.user(args.pop());
+        if(user == null) {
             sender.sendMessage("Player not found");
             return;
         }
@@ -47,8 +47,8 @@ public abstract class RestrictionCommandExecutor extends StandardCommandExecutor
             reason = String.join(" ", args);
         }
 
-        restrict(sender, player, duration, reason);
+        restrict(sender, user, duration, reason);
     }
     
-    public abstract void restrict(CommandSender source, Player player, Duration duration, String reason) throws RejectedException, PermissionException;
+    public abstract void restrict(CommandSender source, User user, Duration duration, String reason) throws RejectedException, PermissionException;
 }

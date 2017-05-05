@@ -68,11 +68,11 @@ public class UserService {
     }
     
     public boolean isBanned(User user) {
-        return RestrictionUtil.isActive(user.getBans());
+        return RestrictionUtil.isActive(user.getBan());
     }
     
     public boolean isMuted(User user) {
-        return RestrictionUtil.isActive(user.getMutes());
+        return RestrictionUtil.isActive(user.getMute());
     }
     
     public void onJoin(User user) throws RejectedException {
@@ -97,11 +97,10 @@ public class UserService {
             ban.setExpiresAt((Instant) duration.addTo(ban.getCreated()));
         }
 
-        RestrictionUtil.assertRestrictionLonger(user.getBans(), ban);
-        
-        user.getBans().add(ban);
-        
+        RestrictionUtil.assertRestrictionLonger(user.getBan(), ban);
         bans.save(ban);
+        user.setBan(ban);
+        users.save(user);
     }
     
     public void mute(User source, User user, String reason, Duration duration) throws RejectedException {
@@ -114,11 +113,11 @@ public class UserService {
             mute.setExpiresAt(((Instant) duration.addTo(mute.getCreated())));
         }
         
-        RestrictionUtil.assertRestrictionLonger(user.getMutes(), mute);
+        RestrictionUtil.assertRestrictionLonger(user.getMute(), mute);
         
         mutes.save(mute);
 
-        user.getMutes().add(mute);
+        user.setMute(mute);
         users.save(user);
     }
 }

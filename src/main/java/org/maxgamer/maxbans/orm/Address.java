@@ -1,7 +1,6 @@
 package org.maxgamer.maxbans.orm;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,17 +23,19 @@ public class Address {
     })
     private List<User> users = new LinkedList<>();
 
-    @OneToMany
-    @JoinTable(name = "Address_Ban", joinColumns = {
-            @JoinColumn(name = "ban_id")
-    })
-    private List<Ban> bans = new LinkedList<>();
+    @OneToOne
+    private Ban ban;
     
-    @OneToMany
-    @JoinTable(name = "Address_Mute", joinColumns = {
-            @JoinColumn(name = "mute_id")
-    })
-    private List<Mute> mutes = new LinkedList<>();
+    @OneToOne
+    private Mute mute;
+
+    private Address() {
+        // Hibernate constructor
+    }
+
+    public Address(String host) {
+        this.host = host;
+    }
 
     public String getHost() {
         return host;
@@ -52,11 +53,19 @@ public class Address {
         this.lastActive = lastActive;
     }
 
-    public List<Ban> getBans() {
-        return bans;
+    public Ban getBan() {
+        return ban;
     }
 
-    public List<Mute> getMutes() {
-        return mutes;
+    public void setBan(Ban ban) {
+        this.ban = ban;
+    }
+
+    public Mute getMute() {
+        return mute;
+    }
+
+    public void setMute(Mute mute) {
+        this.mute = mute;
     }
 }

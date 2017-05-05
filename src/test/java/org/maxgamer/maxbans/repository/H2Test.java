@@ -11,7 +11,7 @@ import java.io.File;
  */
 public abstract class H2Test {
     private static boolean initialized = false;
-    private JdbcConfig jdbc;
+    private static JdbcConfig jdbc;
     
     @Before
     public void init() {

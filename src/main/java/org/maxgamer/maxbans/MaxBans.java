@@ -75,8 +75,8 @@ public class MaxBans extends JavaPlugin {
         JoinListener joinListener = new JoinListener(context.getUserService());
         
         getServer().getPluginManager().registerEvents(joinListener, this);
-        getCommand("ban").setExecutor(new BanCommandExecutor(getServer(), context.getUserService(), context.getBroadcastService(), locale));
-        getCommand("mute").setExecutor(new MuteCommandExecutor(getServer(), context.getUserService(), context.getBroadcastService(), locale));
+        getCommand("ban").setExecutor(new BanCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
+        getCommand("mute").setExecutor(new MuteCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
     }
 
     @Override

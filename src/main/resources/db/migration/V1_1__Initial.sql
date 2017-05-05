@@ -1,18 +1,9 @@
 CREATE TABLE `Users` (
     id UUID NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    last_active TIMESTAMP NOT NULL DEFAULT 0
-);
-
-CREATE TABLE Address (
-    host VARCHAR(50) NOT NULL PRIMARY KEY,
-    last_active TIMESTAMP NOT NULL DEFAULT 0
-);
-
-CREATE TABLE Address_Users (
-    address VARCHAR(15) NOT NULL REFERENCES Address(host),
-    user_id UUID NOT NULL REFERENCES Users(id),
-    PRIMARY KEY(address, user_id)
+    last_active TIMESTAMP NOT NULL DEFAULT 0,
+    ban_id UUID,
+    mute_id UUID,
 );
 
 CREATE TABLE Mute (
@@ -31,26 +22,29 @@ CREATE TABLE Ban (
     reason TEXT DEFAULT NULL
 );
 
-CREATE TABLE Address_Ban (
-    address VARCHAR(15) NOT NULL REFERENCES Address(host),
+-- Now that these tables exist, we can create them
+ALTER TABLE `Users`
+    ADD FOREIGN KEY(ban_id) REFERENCES Ban(id);
+
+ALTER TABLE `Users`
+    ADD FOREIGN KEY(mute_id) REFERENCES Mute(id);
+
+-- TODO: Alter users, make a FK to mute and ban
+
+CREATE TABLE Address (
+    host VARCHAR(50) NOT NULL PRIMARY KEY,
+    last_active TIMESTAMP NOT NULL DEFAULT 0, -- TODO: make this a property of the relation
     ban_id UUID NOT NULL REFERENCES Ban(id),
-    PRIMARY KEY (address, ban_id)
-);
-
-CREATE TABLE Address_Mute (
-    address VARCHAR(15) NOT NULL REFERENCES Address(host),
     mute_id UUID NOT NULL REFERENCES Mute(id),
-    PRIMARY KEY (address, mute_id)
 );
 
-CREATE TABLE Users_Ban (
+-- TODO: Will want a timestamp field on this
+CREATE TABLE Address_Users (
+    address VARCHAR(15) NOT NULL REFERENCES Address(host),
     user_id UUID NOT NULL REFERENCES Users(id),
-    ban_id UUID NOT NULL REFERENCES Ban(id),
-    PRIMARY KEY (user_id, ban_id)
+    PRIMARY KEY(address, user_id)
 );
 
-CREATE TABLE Users_Mute (
-    user_id UUID NOT NULL REFERENCES `Users`(id),
-    mute_id UUID NOT NULL REFERENCES Mute(id),
-    PRIMARY KEY (user_id, mute_id)
-);
+
+
+

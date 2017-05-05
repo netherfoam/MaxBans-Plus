@@ -22,18 +22,11 @@ public class User {
     @Column(name = "last_active")
     private Instant lastActive;
 
-    @JoinTable(name = "Users_Mute", 
-            joinColumns = @JoinColumn(name = "mute_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @OneToMany
-    private List<Mute> mutes = new LinkedList<>();
+    @OneToOne
+    private Mute mute;
 
-    @JoinTable(name = "Users_Ban", joinColumns = {
-            @JoinColumn(name = "ban_id")
-    })
-    @OneToMany
-    private List<Ban> bans = new LinkedList<>();
+    @OneToOne
+    private Ban ban;
 
     @JoinTable(name = "Address_Users", joinColumns = {
             @JoinColumn(name = "address")
@@ -41,11 +34,11 @@ public class User {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Address> addresses = new LinkedList<>();
 
-    private User() {}
+    private User() {
+        // Hibernate constructor
+    }
 
     public User(UUID id, String name) {
-        this();
-
         this.id = id;
         this.name = name;
     }
@@ -66,12 +59,20 @@ public class User {
         this.lastActive = lastActive;
     }
 
-    public List<Mute> getMutes() {
-        return mutes;
+    public Mute getMute() {
+        return mute;
     }
 
-    public List<Ban> getBans() {
-        return bans;
+    public void setMute(Mute mute) {
+        this.mute = mute;
+    }
+
+    public Ban getBan() {
+        return ban;
+    }
+
+    public void setBan(Ban ban) {
+        this.ban = ban;
     }
 
     public List<Address> getAddresses() {

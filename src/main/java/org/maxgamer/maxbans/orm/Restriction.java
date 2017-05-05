@@ -10,8 +10,8 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class Restriction {
     @Id
-    @GeneratedValue
-    private UUID id;
+    //@GeneratedValue
+    private UUID id = UUID.randomUUID();
     
     @Column
     protected Instant created;

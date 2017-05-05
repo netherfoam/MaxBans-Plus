@@ -33,7 +33,7 @@ public class IPLookupCommandExecutor extends StandardCommandExecutor {
             return;
         }
 
-        user.get
+        // TODO
 
     }
 }

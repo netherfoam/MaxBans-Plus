@@ -6,7 +6,6 @@ import org.maxgamer.maxbans.orm.Restriction;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class RestrictionUtil {
     public static <R extends Restriction> void assertRestrictionLonger(R existing, R replacement) throws RejectedException {
+        if(existing == null) return;
         if(existing.getExpiresAt() == null) {
             // The old restriction lasts forever
             throw new RejectedException("Existing restriction lasts longer");
@@ -36,6 +36,7 @@ public class RestrictionUtil {
     }
     
     public static boolean isActive(Restriction r) {
+        if(r == null) return false;
         if(r.getExpiresAt() == null) return true;
         
         return r.getExpiresAt().isAfter(Instant.now());

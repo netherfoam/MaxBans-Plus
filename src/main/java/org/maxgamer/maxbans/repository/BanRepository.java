@@ -1,8 +1,7 @@
 package org.maxgamer.maxbans.repository;
 
-import org.hibernate.SessionFactory;
 import org.maxgamer.maxbans.orm.Ban;
-import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.util.UUID;
 
@@ -10,7 +9,7 @@ import java.util.UUID;
  * @author Dirk Jamieson
  */
 public class BanRepository extends Repository<UUID, Ban> {
-    public BanRepository(SessionFactory factory) {
-        super(factory, UUID.class, Ban.class);
+    public BanRepository(Transactor worker) {
+        super(worker, UUID.class, Ban.class);
     }
 }
