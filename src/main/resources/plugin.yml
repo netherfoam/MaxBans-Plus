@@ -10,3 +10,7 @@ commands:
    mute:
          description: Mutes a user, optionally for a duration
          usage: /mute <player> [duration] [message]
+
+   iplookup:
+         description: Inspect information about a players most recent IP address
+         usage: /iplookup <player>

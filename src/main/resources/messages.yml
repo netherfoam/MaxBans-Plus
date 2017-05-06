@@ -1,10 +1,24 @@
 ban:
     kick: "You've been banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     broadcast: "{{name}} was banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    denied: "You're banned for {{reason|no reason}}. Expires: {{duration|never}}"
 
 mute:
-    kick: "You've been muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    muted: "You've been muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     broadcast: "{{name}} was muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    denied: "You're muted for {{reason|no reason}}. Expires: {{duration|never}}"
 
 permission:
     required: "That requires {{permission}} permission"
+
+iplookup:
+    never: "{{name}} has no IP history"
+    format: |
+      {{name}} IP Address Report:
+      First Login: {{firstActive|Never}}
+      Last Login: {{lastActive|Never}}
+      Address: {{ip}}
+      Ban: {{ban|None}}
+      Mute: {{mute|None}}
+      The following users have also used the IP Address:
+      {{users|None}}

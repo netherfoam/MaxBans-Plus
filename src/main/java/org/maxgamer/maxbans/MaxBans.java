@@ -5,11 +5,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
 import org.maxgamer.maxbans.command.BanCommandExecutor;
+import org.maxgamer.maxbans.command.IPLookupCommandExecutor;
 import org.maxgamer.maxbans.command.MuteCommandExecutor;
 import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
-import org.maxgamer.maxbans.listener.JoinListener;
+import org.maxgamer.maxbans.listener.RestrictionListener;
 import org.maxgamer.maxbans.locale.Locale;
 
 import java.io.File;
@@ -72,11 +73,12 @@ public class MaxBans extends JavaPlugin {
         
         migrate();
         
-        JoinListener joinListener = new JoinListener(context.getUserService());
+        RestrictionListener restrictionListener = new RestrictionListener(context.getUserService());
         
-        getServer().getPluginManager().registerEvents(joinListener, this);
+        getServer().getPluginManager().registerEvents(restrictionListener, this);
         getCommand("ban").setExecutor(new BanCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
         getCommand("mute").setExecutor(new MuteCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
+        getCommand("mute").setExecutor(new IPLookupCommandExecutor(locale, context.getLocatorService(), context.getAddressService()));
     }
 
     @Override

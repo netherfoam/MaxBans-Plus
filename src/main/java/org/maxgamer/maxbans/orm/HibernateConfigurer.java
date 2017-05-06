@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.orm;
 
 import org.hibernate.cfg.Configuration;
 import org.maxgamer.maxbans.config.JdbcConfig;
+import org.maxgamer.maxbans.orm.id.UserAddressId;
 
 /**
  * @author Dirk Jamieson
@@ -14,6 +15,8 @@ public class HibernateConfigurer {
         config.addAnnotatedClass(Address.class);
         config.addAnnotatedClass(Ban.class);
         config.addAnnotatedClass(Mute.class);
+        config.addAnnotatedClass(UserAddress.class);
+        config.addAnnotatedClass(UserAddressId.class);
 
         config.setProperty("hibernate.connection.driver_class", jdbc.getDriver());
         config.setProperty("hibernate.connection.url", jdbc.getUrl());

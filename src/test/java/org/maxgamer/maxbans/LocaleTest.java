@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.test.UnitTest;
 import org.maxgamer.maxbans.util.TemporalDuration;
 
 import java.time.temporal.ChronoUnit;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
-public class LocaleTest {
+public class LocaleTest implements UnitTest {
     private Locale locale;
     
     @Before

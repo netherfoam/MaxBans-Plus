@@ -1,14 +1,11 @@
 package org.maxgamer.maxbans.service;
 
 import junit.framework.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
-import org.maxgamer.maxbans.config.PluginConfig;
-import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.test.IntegrationTest;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -16,7 +13,7 @@ import java.util.UUID;
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
-public class UserServiceTest extends PluginContextTest {
+public class UserServiceTest extends PluginContextTest implements IntegrationTest {
     @Test
     public void testBan() throws RejectedException {
         UserService users = getContext().getUserService();

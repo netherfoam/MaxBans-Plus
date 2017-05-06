@@ -3,13 +3,14 @@ package org.maxgamer.maxbans.repository;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.maxgamer.maxbans.config.JdbcConfig;
+import org.maxgamer.maxbans.test.IntegrationTest;
 
 import java.io.File;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
-public abstract class H2Test {
+public abstract class H2Test implements IntegrationTest {
     private static boolean initialized = false;
     private static JdbcConfig jdbc;
     

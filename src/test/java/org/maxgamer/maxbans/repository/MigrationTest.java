@@ -7,11 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.orm.HibernateConfigurer;
+import org.maxgamer.maxbans.test.IntegrationTest;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
-public class MigrationTest {
+public class MigrationTest implements IntegrationTest {
     private JdbcConfig jdbc;
     private SessionFactory sessionFactory;
     private Flyway flyway;

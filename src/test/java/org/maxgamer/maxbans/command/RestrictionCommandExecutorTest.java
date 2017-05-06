@@ -7,6 +7,7 @@ import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.LocatorService;
+import org.maxgamer.maxbans.test.UnitTest;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author netherfoam
  */
-public class RestrictionCommandExecutorTest {
+public class RestrictionCommandExecutorTest implements UnitTest {
     /**
      * A subclass for testing
      */

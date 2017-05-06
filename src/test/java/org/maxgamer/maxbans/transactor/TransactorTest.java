@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.maxgamer.maxbans.orm.Ban;
 import org.maxgamer.maxbans.orm.HibernateConfigurer;
 import org.maxgamer.maxbans.repository.H2Test;
+import org.maxgamer.maxbans.test.IntegrationTest;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Instant;
@@ -14,7 +15,7 @@ import java.util.UUID;
 /**
  * @author netherfoam
  */
-public class TransactorTest extends H2Test {
+public class TransactorTest extends H2Test implements IntegrationTest {
     @Test
     public void testSplitTransaction() {
         Configuration hibernate = HibernateConfigurer.configuration(getJdbc());

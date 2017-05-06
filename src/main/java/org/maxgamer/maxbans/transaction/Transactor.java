@@ -3,17 +3,18 @@ package org.maxgamer.maxbans.transaction;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.maxgamer.maxbans.exception.TransactionException;
 
 /**
  * @author netherfoam
  */
 public class Transactor {
     public interface Job<T> {
-        T run(Session session);
+        T run(Session session) throws Exception;
     }
 
     public interface VoidJob {
-        void run(Session session);
+        void run(Session session) throws Exception;
     }
 
     private static ThreadLocal<Session> sessions = new ThreadLocal<>();
@@ -52,7 +53,7 @@ public class Transactor {
         } catch (Throwable t) {
             transaction.rollback();
 
-            throw t;
+            throw new TransactionException(t);
         }
 
         if(created) {

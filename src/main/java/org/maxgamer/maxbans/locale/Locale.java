@@ -19,6 +19,10 @@ public class Locale {
             
             return this;
         }
+
+        public Object preview(String key) {
+            return substitutions.get(key);
+        }
         
         public String get(String name) {
             String template = messages.get(name);

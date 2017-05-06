@@ -1,12 +1,12 @@
 package org.maxgamer.maxbans.command;
 
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.AddressService;
-import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.service.LocatorService;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -15,25 +15,30 @@ import java.util.LinkedList;
  * @author netherfoam
  */
 public class IPLookupCommandExecutor extends StandardCommandExecutor {
-    private Server server;
     private AddressService addressService;
-    private UserService userService;
+    private LocatorService locatorService;
 
-    public IPLookupCommandExecutor(Locale locale) {
+    public IPLookupCommandExecutor(Locale locale, LocatorService locatorService, AddressService addressService) {
         super(locale, "maxbans.iplookup");
+
+        this.locatorService = locatorService;
+        this.addressService = addressService;
     }
 
     @Override
-    public void perform(CommandSender sender, Command command, String name, String[] userArgs) {
+    public void perform(CommandSender sender, Command command, String name, String[] userArgs) throws RejectedException {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(userArgs));
 
-        User user = userService.get(args.pop());
+        User user = locatorService.user(args.pop());
         if(user == null) {
             sender.sendMessage("Player not found");
             return;
         }
 
-        // TODO
+        String message = addressService
+                .report(user, locale)
+                .get("iplookup.format");
 
+        sender.sendMessage(message);
     }
 }

@@ -77,13 +77,31 @@ public class UserService {
     
     public void onJoin(User user) throws RejectedException {
         if(isBanned(user)) {
-            throw new RejectedException("You're banned");
+            Ban ban = user.getBan();
+
+            throw new RejectedException("ban.denied")
+                    .with("reason", ban.getReason())
+                    .with("duration", ban.getExpiresAt());
         }
     }
     
     public void onChat(User user) throws RejectedException {
         if(isMuted(user)) {
-            throw new RejectedException("You're muted");
+            Mute mute = user.getMute();
+
+            throw new RejectedException("mute.denied")
+                    .with("reason", mute.getReason())
+                    .with("duration", mute.getExpiresAt());
+        }
+    }
+
+    public void onCommand(User user, String command) throws RejectedException {
+        if(config.getChatCommands().contains(command.toLowerCase()) && isMuted(user)) {
+            Mute mute = user.getMute();
+
+            throw new RejectedException("mute.denied")
+                    .with("reason", mute.getReason())
+                    .with("duration", mute.getExpiresAt());
         }
     }
 

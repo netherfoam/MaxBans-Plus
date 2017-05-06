@@ -28,11 +28,9 @@ public class User {
     @OneToOne
     private Ban ban;
 
-    @JoinTable(name = "Address_Users", joinColumns = {
-            @JoinColumn(name = "address")
-    })
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Address> addresses = new LinkedList<>();
+    @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
+    @OrderBy("lastActive ASC")
+    private List<UserAddress> addresses = new LinkedList<>();
 
     private User() {
         // Hibernate constructor
@@ -75,7 +73,7 @@ public class User {
         this.ban = ban;
     }
 
-    public List<Address> getAddresses() {
+    public List<UserAddress> getAddresses() {
         return addresses;
     }
 }

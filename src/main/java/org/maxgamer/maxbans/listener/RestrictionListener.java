@@ -10,10 +10,10 @@ import org.maxgamer.maxbans.service.UserService;
 /**
  * @author Dirk Jamieson
  */
-public class JoinListener implements Listener {
+public class RestrictionListener implements Listener {
     private UserService userService;
 
-    public JoinListener(UserService userService) {
+    public RestrictionListener(UserService userService) {
         this.userService = userService;
     }
 
@@ -36,6 +36,19 @@ public class JoinListener implements Listener {
         
         try {
             userService.onChat(user);
+        } catch (RejectedException r) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(r.getMessage());
+        }
+    }
+
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e) {
+        User user = userService.get(e.getPlayer());
+        if(user == null) return;
+
+        try {
+            userService.onCommand(user, e.getMessage());
         } catch (RejectedException r) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(r.getMessage());

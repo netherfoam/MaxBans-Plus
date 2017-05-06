@@ -14,14 +14,8 @@ public class Address {
     @Column
     private String host;
 
-    @Column(name = "last_active")
-    private long lastActive;
-
-    @ManyToMany
-    @JoinTable(name = "Address_Users", joinColumns = {
-            @JoinColumn(name = "user_id")
-    })
-    private List<User> users = new LinkedList<>();
+    @OneToMany(mappedBy = "id.address", cascade = CascadeType.ALL)
+    private List<UserAddress> users = new LinkedList<>();
 
     @OneToOne
     private Ban ban;
@@ -41,16 +35,8 @@ public class Address {
         return host;
     }
 
-    public List<User> getUsers () {
+    public List<UserAddress> getUsers () {
         return users;
-    }
-
-    public long getLastActive() {
-        return lastActive;
-    }
-
-    public void setLastActive(long lastActive) {
-        this.lastActive = lastActive;
     }
 
     public Ban getBan() {

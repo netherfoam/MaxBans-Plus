@@ -29,22 +29,16 @@ ALTER TABLE `Users`
 ALTER TABLE `Users`
     ADD FOREIGN KEY(mute_id) REFERENCES Mute(id);
 
--- TODO: Alter users, make a FK to mute and ban
-
 CREATE TABLE Address (
     host VARCHAR(50) NOT NULL PRIMARY KEY,
-    last_active TIMESTAMP NOT NULL DEFAULT 0, -- TODO: make this a property of the relation
-    ban_id UUID NOT NULL REFERENCES Ban(id),
-    mute_id UUID NOT NULL REFERENCES Mute(id),
+    ban_id UUID REFERENCES Ban(id),
+    mute_id UUID REFERENCES Mute(id),
 );
 
--- TODO: Will want a timestamp field on this
-CREATE TABLE Address_Users (
+CREATE TABLE Address_User (
     address VARCHAR(15) NOT NULL REFERENCES Address(host),
     user_id UUID NOT NULL REFERENCES Users(id),
+    first_active TIMESTAMP NOT NULL DEFAULT 0,
+    last_active TIMESTAMP NOT NULL DEFAULT 0,
     PRIMARY KEY(address, user_id)
 );
-
-
-
-
