@@ -17,6 +17,7 @@ public class HibernateConfigurer {
         config.addAnnotatedClass(Mute.class);
         config.addAnnotatedClass(UserAddress.class);
         config.addAnnotatedClass(UserAddressId.class);
+        config.addAnnotatedClass(Warning.class);
 
         config.setProperty("hibernate.connection.driver_class", jdbc.getDriver());
         config.setProperty("hibernate.connection.url", jdbc.getUrl());

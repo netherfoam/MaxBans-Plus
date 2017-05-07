@@ -1,5 +1,7 @@
 package org.maxgamer.maxbans.orm;
 
+import com.avaje.ebean.annotation.Where;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -23,14 +25,21 @@ public class User {
     private Instant lastActive;
 
     @OneToOne
+    @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
     private Mute mute;
 
     @OneToOne
+    @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
     private Ban ban;
 
     @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
     @OrderBy("lastActive ASC")
     private List<UserAddress> addresses = new LinkedList<>();
+
+    @OneToMany(mappedBy = "user")
+    @OrderBy("expiresAt")
+    @Where(clause = "expiresAt > now()")
+    private List<Warning> warnings = new LinkedList<>();
 
     private User() {
         // Hibernate constructor
@@ -75,5 +84,9 @@ public class User {
 
     public List<UserAddress> getAddresses() {
         return addresses;
+    }
+
+    public List<Warning> getWarnings() {
+        return warnings;
     }
 }

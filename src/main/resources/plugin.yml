@@ -18,3 +18,7 @@ commands:
    iplookup:
       description: Inspect information about a players most recent IP address
       usage: /iplookup <player>
+
+   warn:
+      description: Warn a player for misbehaviour
+      usage: /warn <player> [message]

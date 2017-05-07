@@ -1,5 +1,7 @@
 package org.maxgamer.maxbans.orm;
 
+import com.avaje.ebean.annotation.Where;
+
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,9 +20,11 @@ public class Address {
     private List<UserAddress> users = new LinkedList<>();
 
     @OneToOne
+    @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
     private Ban ban;
     
     @OneToOne
+    @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
     private Mute mute;
 
     private Address() {

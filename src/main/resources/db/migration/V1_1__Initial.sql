@@ -42,3 +42,14 @@ CREATE TABLE Address_User (
     last_active TIMESTAMP NOT NULL DEFAULT 0,
     PRIMARY KEY(address, user_id)
 );
+
+CREATE TABLE Warning (
+    id UUID NOT NULL PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES Users(id),
+    source_id UUID DEFAULT NULL REFERENCES Users(id),
+    created TIMESTAMP NOT NULL,
+    expires_at TIMESTAMP,
+    reason TEXT DEFAULT NULL
+);
+
+-- TODO: Indices on all user_id, expires_at, source_id, name columns

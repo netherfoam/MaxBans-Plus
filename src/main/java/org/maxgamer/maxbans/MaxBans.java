@@ -4,12 +4,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
-import org.maxgamer.maxbans.command.BanCommandExecutor;
-import org.maxgamer.maxbans.command.IPLookupCommandExecutor;
-import org.maxgamer.maxbans.command.MuteCommandExecutor;
+import org.maxgamer.maxbans.command.*;
 import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
+import org.maxgamer.maxbans.exception.ConfigException;
 import org.maxgamer.maxbans.listener.RestrictionListener;
 import org.maxgamer.maxbans.locale.Locale;
 
@@ -42,7 +41,13 @@ public class MaxBans extends JavaPlugin {
         super.reloadConfig();
         
         if(context != null) {
-            context.getConfig().load(getConfig());
+            try {
+                context.getConfig().load(getConfig());
+            } catch (ConfigException e) {
+                getLogger().severe("Configuration failed validation at " + e.getSection().getCurrentPath() + ": " + e.getMessage());
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
         }
         
         ConfigurationSection localeConfig = YamlConfiguration.loadConfiguration(messagesFile);
@@ -68,7 +73,15 @@ public class MaxBans extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
 
-        PluginConfig config = new PluginConfig(getConfig());
+        PluginConfig config;
+        try {
+            config = new PluginConfig(getConfig());
+        } catch (ConfigException e) {
+            getLogger().severe("Configuration failed validation at " + e.getSection().getCurrentPath() + ": " + e.getMessage());
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+
         context = new PluginContext(config, getServer());
         
         migrate();
@@ -78,7 +91,9 @@ public class MaxBans extends JavaPlugin {
         getServer().getPluginManager().registerEvents(restrictionListener, this);
         getCommand("ban").setExecutor(new BanCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
         getCommand("mute").setExecutor(new MuteCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
-        getCommand("mute").setExecutor(new IPLookupCommandExecutor(locale, context.getLocatorService(), context.getAddressService()));
+        getCommand("iplookup").setExecutor(new IPLookupCommandExecutor(locale, context.getLocatorService(), context.getAddressService()));
+        getCommand("kick").setExecutor(new KickCommand(locale, context.getLocatorService(), context.getBroadcastService()));
+        getCommand("warn").setExecutor(new WarnCommandExecutor(locale, context.getLocatorService(), context.getUserService(), context.getWarningService()));
     }
 
     @Override

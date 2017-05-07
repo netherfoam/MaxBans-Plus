@@ -62,6 +62,7 @@ public class RestrictionUtil {
                 if(unit.name().toLowerCase().startsWith(unitName.toLowerCase())) {
                     args.pop();
                     args.pop();
+
                     return Duration.ofMillis(unit.toMillis(value));
                 }
             }

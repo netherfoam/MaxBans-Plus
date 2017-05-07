@@ -1,11 +1,10 @@
 package org.maxgamer.maxbans.locale;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.maxgamer.maxbans.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
@@ -28,37 +27,7 @@ public class Locale {
             String template = messages.get(name);
             if(template == null) throw new IllegalArgumentException("No such template: " + name);
 
-            String result = "";
-            Matcher matcher = Pattern.compile("\\{\\{[^\\}\\}]*\\}\\}").matcher(template);
-            
-            int last = 0;
-            while(matcher.find()) {
-                int start = matcher.start();
-                int end = matcher.end();
-                
-                String group = matcher.group();
-                result += template.substring(last, start);
-                last = end;
-                
-                int defaultSeparator = group.lastIndexOf('|');
-                String identifier;
-                String defaultValue;
-                if(defaultSeparator >= 0) {
-                    identifier = group.substring(2, defaultSeparator);
-                    defaultValue = group.substring(defaultSeparator + 1, group.length() - 2);
-                } else {
-                    identifier = group.substring(2, group.length() - 2);
-                    defaultValue = "MISSING";
-                }
-                
-                Object value = substitutions.get(identifier);
-                if(value == null) value = defaultValue;
-                
-                result += value;
-            }
-            result += template.substring(last);
-            
-            return result;
+            return StringUtil.expand(template, substitutions);
         }
     }
     
@@ -89,6 +58,16 @@ public class Locale {
     
     public MessageBuilder get() {
         return new MessageBuilder();
+    }
+
+    /**
+     * Puts the given template under the given key
+     *
+     * @param key the key
+     * @param template the template message
+     */
+    public void put(String key, String template) {
+        messages.put(key, template);
     }
 
     /**

@@ -7,6 +7,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author netherfoam
@@ -35,5 +36,24 @@ public class UserAddressId implements Serializable {
 
     public Address getAddress() {
         return address;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, address);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final UserAddressId other = (UserAddressId) obj;
+
+        return Objects.equals(this.user.getId(), other.user.getId())
+                && Objects.equals(this.address.getHost(), other.address.getHost());
     }
 }

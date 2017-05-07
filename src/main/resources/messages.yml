@@ -8,6 +8,10 @@ mute:
     broadcast: "{{name}} was muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     denied: "You're muted for {{reason|no reason}}. Expires: {{duration|never}}"
 
+warn:
+    warned: "You've been warned by {{source}} for {{reason|no reason}}. The warning expires in {{duration}}"
+    broadcast: "{{name}} was warned by {{source}} for {{reason|no reason}}."
+
 kick:
     message: |
       You've been kicked by {{source}}. The reason given was:
