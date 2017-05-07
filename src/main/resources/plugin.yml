@@ -22,3 +22,7 @@ commands:
    warn:
       description: Warn a player for misbehaviour
       usage: /warn <player> [message]
+
+   lockdown:
+      description: Prevent players from joining the server.
+      usage: /lockdown <ALL|JOIN|NEW|OFF> [reason]

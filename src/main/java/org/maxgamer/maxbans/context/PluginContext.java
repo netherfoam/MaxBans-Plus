@@ -1,6 +1,8 @@
 package org.maxgamer.maxbans.context;
 
 import org.bukkit.Server;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.maxgamer.maxbans.config.JdbcConfig;
@@ -11,12 +13,15 @@ import org.maxgamer.maxbans.repository.*;
 import org.maxgamer.maxbans.service.*;
 import org.maxgamer.maxbans.transaction.Transactor;
 
+import java.io.File;
+
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public class PluginContext {
     private PluginConfig config;
     private Server server;
+    private File dataFolder;
 
     private SessionFactory sessionFactory;
     private Transactor transactor;
@@ -31,14 +36,17 @@ public class PluginContext {
     private LocatorService locatorService;
     private AddressService addressService;
     private WarningService warningService;
+    private LockdownService lockdownService;
     
-    public PluginContext(PluginConfig config, Server server) {
+    public PluginContext(PluginConfig config, Server server, File dataFolder) {
         this.config = config;
         this.server = server;
+        this.dataFolder = dataFolder;
 
         JdbcConfig jdbc = config.getJdbcConfig();
         WarningConfig warnings = config.getWarningConfig();
         Configuration hibernate = HibernateConfigurer.configuration(jdbc);
+        FileConfiguration lockdownConfig = YamlConfiguration.loadConfiguration(new File(dataFolder, "lockdown.yml"));
 
         sessionFactory = hibernate.buildSessionFactory();
         transactor = new Transactor(sessionFactory);
@@ -54,6 +62,7 @@ public class PluginContext {
         locatorService = new LocatorService(server, userService);
         addressService = new AddressService(addressRepository);
         warningService = new WarningService(server, warningRepository, broadcastService, locatorService, warnings);
+        lockdownService = new LockdownService(server, userService, broadcastService, lockdownConfig);
     }
 
     public PluginConfig getConfig() {
@@ -62,6 +71,10 @@ public class PluginContext {
 
     public Server getServer() {
         return server;
+    }
+
+    public File getDataFolder() {
+        return dataFolder;
     }
 
     public SessionFactory getSessionFactory() {
@@ -110,5 +123,9 @@ public class PluginContext {
 
     public WarningRepository getWarningRepository() {
         return warningRepository;
+    }
+
+    public LockdownService getLockdownService() {
+        return lockdownService;
     }
 }

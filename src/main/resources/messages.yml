@@ -16,7 +16,19 @@ kick:
     message: |
       You've been kicked by {{source}}. The reason given was:
       {{reason|None}}
+
     broadcast: "{{name}} was kicked by {{source}} for {{reason|no reason}}."
+
+lockdown:
+    broadcast: |
+      The server has been switched to lockdown mode: {{type}} by {{source}}
+      This means: {{description}}.
+      The reason was: {{reason|None}}
+
+    message: |
+      The server is currently in lockdown.
+      Reason: {{reason|None}}
+
 
 permission:
     required: "That requires {{permission}} permission"
