@@ -8,9 +8,13 @@ commands:
       usage: /ban <player> [duration] [message]
       
    mute:
-         description: Mutes a user, optionally for a duration
-         usage: /mute <player> [duration] [message]
+      description: Mutes a user, optionally for a duration
+      usage: /mute <player> [duration] [message]
+
+   kick:
+      description: Kicks a user
+      usage: /kick <player> [message]
 
    iplookup:
-         description: Inspect information about a players most recent IP address
-         usage: /iplookup <player>
+      description: Inspect information about a players most recent IP address
+      usage: /iplookup <player>

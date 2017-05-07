@@ -42,4 +42,8 @@ public class LocatorService {
     public Player player(User user) {
         return server.getPlayer(user.getId());
     }
+
+    public Player player(String name) {
+        return server.getPlayer(name);
+    }
 }

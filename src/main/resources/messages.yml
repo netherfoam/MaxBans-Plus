@@ -8,6 +8,12 @@ mute:
     broadcast: "{{name}} was muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     denied: "You're muted for {{reason|no reason}}. Expires: {{duration|never}}"
 
+kick:
+    message: |
+      You've been kicked by {{source}}. The reason given was:
+      {{reason|None}}
+    broadcast: "{{name}} was kicked by {{source}} for {{reason|no reason}}."
+
 permission:
     required: "That requires {{permission}} permission"
 
