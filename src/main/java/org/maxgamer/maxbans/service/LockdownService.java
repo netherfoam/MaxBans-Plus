@@ -61,7 +61,7 @@ public class LockdownService {
                 return !isJoining;
             case NEW:
                 // If your account is old, you're allowed
-                return user.getLastActive().isBefore(newQualifier());
+                return user.getFirstActive().isBefore(newQualifier());
             case OFF:
                 // Anyone's allowed: Happy days!
                 return true;
@@ -113,5 +113,9 @@ public class LockdownService {
 
     public Instant newQualifier() {
         return Instant.now().minus(30, ChronoUnit.MINUTES);
+    }
+
+    public Lockdown getState() {
+        return state;
     }
 }

@@ -21,6 +21,9 @@ public class User {
     @Column
     private String name;
 
+    @Column(name = "first_active")
+    private Instant firstActive;
+
     @Column(name = "last_active")
     private Instant lastActive;
 
@@ -88,5 +91,13 @@ public class User {
 
     public List<Warning> getWarnings() {
         return warnings;
+    }
+
+    public Instant getFirstActive() {
+        return firstActive;
+    }
+
+    public void setFirstActive(Instant firstActive) {
+        this.firstActive = firstActive;
     }
 }

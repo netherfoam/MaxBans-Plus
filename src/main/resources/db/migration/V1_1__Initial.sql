@@ -1,6 +1,7 @@
 CREATE TABLE `Users` (
     id UUID NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
+    first_active TIMESTAMP NOT NULL DEFAULT 0,
     last_active TIMESTAMP NOT NULL DEFAULT 0,
     ban_id UUID,
     mute_id UUID,
