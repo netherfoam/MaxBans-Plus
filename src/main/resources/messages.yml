@@ -13,11 +13,10 @@ warn:
     broadcast: "{{name}} was warned by {{source}} for {{reason|no reason}}."
 
 kick:
+    broadcast: "{{name}} was kicked by {{source}} for {{reason|no reason}}."
     message: |
       You've been kicked by {{source}}. The reason given was:
       {{reason|None}}
-
-    broadcast: "{{name}} was kicked by {{source}} for {{reason|no reason}}."
 
 lockdown:
     broadcast: |
@@ -29,6 +28,10 @@ lockdown:
       The server is currently in lockdown.
       Reason: {{reason|None}}
 
+notification:
+    banned: "{{name}} tried to join but is currently banned."
+    muted: "{{name}} tried to chat, but is currently muted."
+    lockdown: "{{name}} tried to join, but the server is in lockdown."
 
 permission:
     required: "That requires {{permission}} permission"

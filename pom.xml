@@ -22,7 +22,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <!-- H2 flatfile and in memory database -->
         <dependency>
             <groupId>com.h2database</groupId>

@@ -86,7 +86,7 @@ public class MaxBans extends JavaPlugin {
         
         migrate();
         
-        RestrictionListener restrictionListener = new RestrictionListener(context.getTransactor(), context.getUserService(), context.getLockdownService());
+        RestrictionListener restrictionListener = new RestrictionListener(context.getTransactor(), context.getUserService(), context.getLockdownService(), context.getBroadcastService(), locale);
         
         getServer().getPluginManager().registerEvents(restrictionListener, this);
         getCommand("ban").setExecutor(new BanCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));

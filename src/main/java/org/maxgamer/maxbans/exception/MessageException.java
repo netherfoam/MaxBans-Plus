@@ -23,17 +23,27 @@ public class MessageException extends Exception {
     }
 
     public void send(Locale locale, CommandSender sender) {
+        sender.sendMessage(getMessage(locale));
+    }
+
+    public String getMessage(Locale locale) {
         if(locale.has(getMessage())) {
             // The message has a translation
-            Locale.MessageBuilder builder = locale.get();
-            for (Map.Entry<String, Object> entry : substitutions.entrySet()) {
-                builder.with(entry.getKey(), entry.getValue());
-            }
+            Locale.MessageBuilder builder = toBuilder(locale);
 
-            sender.sendMessage(builder.get(getMessage()));
+           return builder.get(getMessage());
         } else {
             // This message has no translation. Perhaps it's not defined or perhaps it's a lazy message
-            sender.sendMessage(getMessage());
+            return super.getMessage();
         }
+    }
+
+    public Locale.MessageBuilder toBuilder(Locale locale) {
+        Locale.MessageBuilder builder = locale.get();
+        for (Map.Entry<String, Object> entry : substitutions.entrySet()) {
+            builder.with(entry.getKey(), entry.getValue());
+        }
+
+        return builder;
     }
 }

@@ -2,12 +2,18 @@ package org.maxgamer.maxbans.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.maxgamer.maxbans.exception.RejectedException;
+import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LockdownService;
 import org.maxgamer.maxbans.service.UserService;
 import org.maxgamer.maxbans.transaction.Transactor;
+
+import java.time.Duration;
 
 /**
  * @author Dirk Jamieson
@@ -16,11 +22,15 @@ public class RestrictionListener implements Listener {
     private Transactor transactor;
     private UserService userService;
     private LockdownService lockdownService;
+    private BroadcastService broadcastService;
+    private Locale locale;
 
-    public RestrictionListener(Transactor transactor, UserService userService, LockdownService lockdownService) {
+    public RestrictionListener(Transactor transactor, UserService userService, LockdownService lockdownService, BroadcastService broadcastService, Locale locale) {
         this.transactor = transactor;
         this.userService = userService;
         this.lockdownService = lockdownService;
+        this.broadcastService = broadcastService;
+        this.locale = locale;
     }
 
     @EventHandler
@@ -30,10 +40,20 @@ public class RestrictionListener implements Listener {
 
             try {
                 userService.onJoin(user);
+            } catch (RejectedException r) {
+                e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+                e.setKickMessage(r.getMessage(locale));
+
+                broadcastService.moderators("banned", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.banned"));
+            }
+
+            try {
                 lockdownService.onJoin(user);
             } catch (RejectedException r) {
                 e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-                e.setKickMessage(r.getMessage());
+                e.setKickMessage(r.getMessage(locale));
+
+                broadcastService.moderators("lockdown", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.lockdown"));
             }
         });
     }
@@ -48,7 +68,9 @@ public class RestrictionListener implements Listener {
                 userService.onChat(user);
             } catch (RejectedException r) {
                 e.setCancelled(true);
-                e.getPlayer().sendMessage(r.getMessage());
+                e.getPlayer().sendMessage(r.getMessage(locale));
+
+                broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.muted"));
             }
         });
     }
@@ -63,7 +85,9 @@ public class RestrictionListener implements Listener {
                 userService.onCommand(user, e.getMessage());
             } catch (RejectedException r) {
                 e.setCancelled(true);
-                e.getPlayer().sendMessage(r.getMessage());
+                e.getPlayer().sendMessage(r.getMessage(locale));
+
+                broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.muted"));
             }
         });
     }
