@@ -7,6 +7,7 @@ import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
+import org.maxgamer.maxbans.util.RestrictionUtil;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ public class KickCommand extends StandardCommandExecutor {
     @Override
     public void perform(CommandSender sender, Command command, String s, String[] userArgs) throws MessageException {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(userArgs));
+        boolean silent = RestrictionUtil.isSilent(args);
 
         if(args.size() <= 0) {
             sender.sendMessage("Must supply target name");
@@ -47,6 +49,6 @@ public class KickCommand extends StandardCommandExecutor {
 
         player.kickPlayer(properties.get("kick.message"));
 
-        broadcastService.broadcast(properties.get("kick.broadcast"), false);
+        broadcastService.broadcast(properties.get("kick.broadcast"), silent);
     }
 }

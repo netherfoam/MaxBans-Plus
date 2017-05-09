@@ -5,6 +5,7 @@ import org.maxgamer.maxbans.orm.Restriction;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +48,20 @@ public class RestrictionUtil {
             if(isActive(r)) return true;
         }
         
+        return false;
+    }
+
+    public static boolean isSilent(LinkedList<String> args) {
+        Iterator<String> it = args.iterator();
+        while(it.hasNext()) {
+            String arg = it.next();
+
+            if(arg.equalsIgnoreCase("-s")) {
+                it.remove();
+                return true;
+            }
+        }
+
         return false;
     }
     

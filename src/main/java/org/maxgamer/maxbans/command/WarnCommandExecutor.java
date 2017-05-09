@@ -25,9 +25,10 @@ public class WarnCommandExecutor extends RestrictionCommandExecutor {
     }
 
     @Override
-    public void restrict(CommandSender source, User user, Duration duration, String reason) {
+    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) {
         User banner = (source instanceof Player ? userService.getOrCreate((Player) source) : null);
 
+        // TODO: Silence.. and maybe this can be handled better?
         warningService.warn(banner, user, reason, locale);
     }
 }

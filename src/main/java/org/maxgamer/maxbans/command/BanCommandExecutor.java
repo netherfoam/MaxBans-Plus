@@ -26,7 +26,7 @@ public class BanCommandExecutor extends RestrictionCommandExecutor {
     }
 
     @Override
-    public void restrict(CommandSender source, User user, Duration duration, String reason) throws RejectedException {
+    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException {
         User banner = (source instanceof Player ? userService.getOrCreate((Player) source) : null);
 
         userService.ban(banner, user, reason, duration);
@@ -39,6 +39,6 @@ public class BanCommandExecutor extends RestrictionCommandExecutor {
 
         Player player = locatorService.player(user);
         if(player != null) player.kickPlayer(message.get("ban.kick"));
-        broadcastService.broadcast(message.get("ban.broadcast"), false);
+        broadcastService.broadcast(message.get("ban.broadcast"), silent);
     }
 }

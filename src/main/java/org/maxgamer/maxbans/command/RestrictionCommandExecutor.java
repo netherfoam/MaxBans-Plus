@@ -27,6 +27,7 @@ public abstract class RestrictionCommandExecutor extends StandardCommandExecutor
     @Override
     public final void perform(CommandSender sender, Command command, String s, String[] userArgs) throws RejectedException, PermissionException {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(userArgs));
+        boolean silent = RestrictionUtil.isSilent(args);
 
         if(args.size() <= 0) {
             sender.sendMessage("Must supply target name");
@@ -39,16 +40,11 @@ public abstract class RestrictionCommandExecutor extends StandardCommandExecutor
             return;
         }
 
-        Duration duration = null;
-        String reason = null;
+        Duration duration = RestrictionUtil.getDuration(args);
+        String reason = String.join(" ", args);
 
-        if(args.size() >= 2) {
-            duration = RestrictionUtil.getDuration(args);
-            reason = String.join(" ", args);
-        }
-
-        restrict(sender, user, duration, reason);
+        restrict(sender, user, duration, reason, silent);
     }
     
-    public abstract void restrict(CommandSender source, User user, Duration duration, String reason) throws RejectedException, PermissionException;
+    public abstract void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException;
 }

@@ -26,7 +26,7 @@ public class MuteCommandExecutor extends RestrictionCommandExecutor {
     }
 
     @Override
-    public void restrict(CommandSender source, User user, Duration duration, String reason) throws RejectedException {
+    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException {
         User banner = (source instanceof Player ? userService.getOrCreate((Player) source) : null);
         
         userService.mute(banner, user, reason, duration);
@@ -37,6 +37,6 @@ public class MuteCommandExecutor extends RestrictionCommandExecutor {
                 .with("source", source.getName())
                 .with("duration", TemporalDuration.of(duration));
         
-        broadcastService.broadcast(message.get("mute.broadcast"), false);
+        broadcastService.broadcast(message.get("mute.broadcast"), silent);
     }
 }
