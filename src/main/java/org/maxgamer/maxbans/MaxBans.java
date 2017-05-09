@@ -93,7 +93,8 @@ public class MaxBans extends JavaPlugin {
         getCommand("mute").setExecutor(new MuteCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
         getCommand("iplookup").setExecutor(new IPLookupCommandExecutor(locale, context.getLocatorService(), context.getAddressService()));
         getCommand("kick").setExecutor(new KickCommand(locale, context.getLocatorService(), context.getBroadcastService()));
-        getCommand("warn").setExecutor(new WarnCommandExecutor(locale, context.getLocatorService(), context.getUserService(), context.getWarningService()));
+        getCommand("warn").setExecutor(new WarnCommandExecutor(locale, context.getLocatorService(), context.getUserService(), context.getWarningService(), context.getBroadcastService()));
+        getCommand("lockdown").setExecutor(new LockdownCommandExecutor(locale, context.getLockdownService(), context.getUserService(), context.getBroadcastService()));
     }
 
     @Override

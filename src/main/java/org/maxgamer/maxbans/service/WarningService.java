@@ -31,7 +31,7 @@ public class WarningService {
         this.config = config;
     }
 
-    public void warn(User source, User user, String reason, Locale locale) {
+    public Locale.MessageBuilder warn(User source, User user, String reason, Locale locale) {
         List<Warning> warnings = user.getWarnings();
 
         Warning warning = new Warning(user);
@@ -45,33 +45,34 @@ public class WarningService {
 
         int strike = warnings.size() % config.getStrikes();
         String penalty = config.getPenalty(strike);
-        if(penalty == null) return;
+        if(penalty != null && !penalty.isEmpty()) {
+            if (penalty.startsWith("/")) {
+                penalty = penalty.substring(1);
+            }
 
-        if(penalty.startsWith("/")) {
-            penalty = penalty.substring(1);
+            Map<String, Object> substitutions = new HashMap<>();
+            substitutions.put("name", user.getName());
+            substitutions.put("source", source == null ? null : source.getName());
+            substitutions.put("reason", reason);
+            substitutions.put("strike", strike);
+
+            // Expand penalty as if it were a placeholder message
+            penalty = StringUtil.expand(penalty, substitutions);
+
+            server.dispatchCommand(server.getConsoleSender(), penalty);
         }
 
-        Map<String, Object> substitutions = new HashMap<>();
-        substitutions.put("name", user.getName());
-        substitutions.put("source", source == null ? null : source.getName());
-        substitutions.put("reason", reason);
-        substitutions.put("strike", strike);
-
-        penalty = StringUtil.expand(penalty, substitutions);
-
-        // TODO: Expand penalty as if it were a placeholder message
-        server.dispatchCommand(server.getConsoleSender(), penalty);
-
-        Locale.MessageBuilder builder = locale.get()
+        Locale.MessageBuilder message = locale.get()
                 .with("source", source == null ? null : source.getName())
                 .with("reason", reason)
                 .with("duration", config.getDuration())
                 .with("name", user.getName());
 
-        broadcastService.broadcast(builder.get("warn.broadcast"), false);
         Player player = locatorService.player(user);
         if(player != null) {
-            player.sendMessage(builder.get("warn.warned"));
+            player.sendMessage(message.get("warn.warned"));
         }
+
+        return message;
     }
 }

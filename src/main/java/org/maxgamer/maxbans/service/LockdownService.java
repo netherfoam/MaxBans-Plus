@@ -70,7 +70,7 @@ public class LockdownService {
         return true;
     }
 
-    public void lockdown(User source, String name, String reason, Locale locale) throws RejectedException {
+    public Locale.MessageBuilder lockdown(User source, String name, String reason, Locale locale) throws RejectedException {
         Lockdown type = Lockdown.get(name);
 
         if(type == null) {
@@ -107,8 +107,7 @@ public class LockdownService {
             }
         }
 
-        // Everyone else gets a message telling them what's happened
-        broadcastService.broadcast(message.get("lockdown.broadcast"), false);
+        return message;
     }
 
     public Instant newQualifier() {
