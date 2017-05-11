@@ -51,7 +51,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         executor.onCommand(sender, command, "dummy", args);
 
         verify(locator, times(1)).user(any(String.class));
-        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(Duration.of(5, ChronoUnit.HOURS)), eq("for being rude"), any());
+        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(Duration.of(5, ChronoUnit.HOURS)), eq("for being rude"), anyBoolean());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         executor.onCommand(sender, command, "dummy", args);
 
         verify(locator, times(1)).user(any(String.class));
-        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(Duration.of(5, ChronoUnit.HOURS)), any(String.class), any());
+        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(Duration.of(5, ChronoUnit.HOURS)), any(String.class), anyBoolean());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         executor.onCommand(sender, command, "dummy", args);
 
         verify(locator, times(1)).user(any(String.class));
-        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(null), any(String.class), any());
+        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(null), any(String.class), anyBoolean());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         executor.onCommand(sender, command, "dummy", args);
 
         verify(locator, times(1)).user(any(String.class));
-        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(null), eq("for being rude"), any());
+        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(null), eq("for being rude"), anyBoolean());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         executor.onCommand(sender, command, "dummy", args);
 
         verify(locator, never()).user(any(String.class));
-        verify(executor, never()).restrict(eq(sender), eq(user), eq(null), eq("for being rude"), any());
+        verify(executor, never()).restrict(eq(sender), eq(user), eq(null), eq("for being rude"), anyBoolean());
 
         // We should have sent the sender a message saying they don't have permission
         verify(sender, times(1)).sendMessage(any(String.class));
@@ -148,13 +148,13 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         doReturn(true).when(sender).hasPermission(eq(PERMISSION));
 
         DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, locator, PERMISSION));
-        doThrow(new RejectedException("not.ok")).when(executor).restrict(any(), any(), any(), any(), any());
+        doThrow(new RejectedException("not.ok")).when(executor).restrict(any(), any(), any(), any(), anyBoolean());
 
         String[] args = "player for being rude".split(" ");
         executor.onCommand(sender, command, "dummy", args);
 
         verify(locator, times(1)).user(any(String.class));
-        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(null), eq("for being rude"), any());
+        verify(executor, times(1)).restrict(eq(sender), eq(user), eq(null), eq("for being rude"), anyBoolean());
 
         // We should have sent the sender a message saying they don't have permission
         verify(sender, times(1)).sendMessage(any(String.class));

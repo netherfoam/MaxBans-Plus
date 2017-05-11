@@ -5,16 +5,13 @@ import org.maxgamer.maxbans.exception.ConfigException;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author netherfoam
  */
 public class WarningConfig {
-    private Map<Integer, String> penalties = new HashMap<>();
+    private Map<Integer, List<String>> penalties = new HashMap<>();
     private int strikes = 3;
     private Duration duration = Duration.ofDays(7);
 
@@ -25,7 +22,13 @@ public class WarningConfig {
         ConfigurationSection commands = section.getConfigurationSection("penalties");
         if(commands != null) {
             for(String key : commands.getKeys(false)) {
-                String value = commands.getString(key);
+                List<String> value = new LinkedList<>();
+                if(commands.isList(key)) {
+                    value.addAll(commands.getStringList(key));
+                } else {
+                    value.add(commands.getString(key));
+                }
+
                 try {
                     int strike = Integer.parseInt(key);
                     penalties.put(strike, value);
@@ -53,12 +56,19 @@ public class WarningConfig {
         }
     }
 
-    public String getPenalty(int strikes) {
-        return penalties.get(strikes);
+    public List<String> getPenalty(int strikes) {
+        List<String> penalties = this.penalties.get(strikes);
+        if(penalties == null) return Collections.emptyList();
+
+        return Collections.unmodifiableList(penalties);
     }
 
-    public void setPenalty(int strikes, String command) {
-        penalties.put(strikes, command);
+    public void setPenalties(int strikes, List<String> commands) {
+        penalties.put(strikes, commands);
+    }
+
+    public void setPenalties(int strikes, String... commands) {
+        setPenalties(strikes, Arrays.asList(commands));
     }
 
     public int getStrikes() {

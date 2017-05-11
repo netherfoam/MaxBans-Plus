@@ -47,3 +47,7 @@ iplookup:
       Mute: {{mute|None}}
       The following users have also used the IP Address:
       {{users|None}}
+
+# The locale to use for time units. Valid examples include:
+# en, fr, de, it, ja, ko, zh
+locale: en

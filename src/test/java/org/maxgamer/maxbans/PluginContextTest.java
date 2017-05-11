@@ -26,7 +26,7 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
         config.setJdbcConfig(getJdbc());
         Server server = mock(Server.class);
         File folder = new File("maxbans");
-        if(!folder.isDirectory() && folder.mkdir()) {
+        if(!folder.isDirectory() && !folder.mkdir()) {
             throw new IllegalStateException("Can't create data folder");
         }
 

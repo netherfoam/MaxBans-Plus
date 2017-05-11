@@ -2,7 +2,10 @@ package org.maxgamer.maxbans.locale;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.maxgamer.maxbans.util.StringUtil;
+import org.ocpsoft.prettytime.PrettyTime;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,11 +30,30 @@ public class Locale {
             String template = messages.get(name);
             if(template == null) throw new IllegalArgumentException("No such template: " + name);
 
+            Map<String, Object> preprocessed = new HashMap<>(substitutions.size());
+            for(Map.Entry<String, Object> entry : substitutions.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+
+                if(value instanceof Instant) {
+                    // Instants get turned into dates
+                    value = Date.from((Instant) value);
+                }
+
+                if(value instanceof Date) {
+                    // Instants and Dates get pretty printed
+                    value = prettyTime.format(((Date) value));
+                }
+
+                preprocessed.put(key, value);
+            }
+
             return StringUtil.expand(template, substitutions);
         }
     }
     
     private HashMap<String, String> messages;
+    private PrettyTime prettyTime = new PrettyTime(java.util.Locale.ENGLISH);
     
     public Locale(){
         messages = new HashMap<>();
@@ -54,6 +76,15 @@ public class Locale {
 
             messages.put(key, value);
         }
+
+        String locale = config.getString("locale");
+        if(locale != null) {
+            setLocale(locale);
+        }
+    }
+
+    public void setLocale(String locale) {
+        prettyTime.setLocale(java.util.Locale.forLanguageTag(locale));
     }
     
     public MessageBuilder get() {

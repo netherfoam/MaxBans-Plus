@@ -24,7 +24,7 @@ public class WarningServiceTest extends PluginContextTest implements Integration
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
         config.setDuration(Duration.ofMinutes(30));
-        config.setPenalty(1, "/strike {{name}}");
+        config.setPenalties(1, "/strike {{name}}");
 
         User user = getContext().getUserService().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
 
@@ -36,12 +36,29 @@ public class WarningServiceTest extends PluginContextTest implements Integration
     }
 
     @Test
+    public void testMultiCommandStrike() {
+        WarningService service = getContext().getWarningService();
+
+        WarningConfig config = getContext().getConfig().getWarningConfig();
+        config.setDuration(Duration.ofMinutes(30));
+        config.setPenalties(1, "/strike {{name}}", "/kill {{name}}");
+
+        User user = getContext().getUserService().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
+
+        Locale locale = new Locale();
+        locale.put("warn.broadcast", "broadcast message");
+
+        service.warn(null, user, "Warning", locale);
+        verify(getContext().getServer(), times(2)).dispatchCommand(any(), anyString());
+    }
+
+    @Test
     public void testWarnReset() {
         WarningService service = getContext().getWarningService();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
         config.setDuration(Duration.ofMinutes(30));
-        config.setPenalty(1, "/strike {{name}}");
+        config.setPenalties(1, "/strike {{name}}");
         config.setStrikes(2);
 
         User user = getContext().getUserService().create(UUID.randomUUID(), "JoeBlogs", Instant.now());

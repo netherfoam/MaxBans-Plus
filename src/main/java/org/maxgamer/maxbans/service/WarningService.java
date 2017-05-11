@@ -44,22 +44,17 @@ public class WarningService {
         warnings.add(warning);
 
         int strike = warnings.size() % config.getStrikes();
-        String penalty = config.getPenalty(strike);
-        if(penalty != null && !penalty.isEmpty()) {
-            if (penalty.startsWith("/")) {
-                penalty = penalty.substring(1);
-            }
-
+        List<String> penalties = config.getPenalty(strike);
+        if(penalties != null && !penalties.isEmpty()) {
             Map<String, Object> substitutions = new HashMap<>();
             substitutions.put("name", user.getName());
             substitutions.put("source", source == null ? null : source.getName());
             substitutions.put("reason", reason);
             substitutions.put("strike", strike);
 
-            // Expand penalty as if it were a placeholder message
-            penalty = StringUtil.expand(penalty, substitutions);
-
-            server.dispatchCommand(server.getConsoleSender(), penalty);
+            for(String penalty : penalties) {
+                penalise(penalty, substitutions);
+            }
         }
 
         Locale.MessageBuilder message = locale.get()
@@ -74,5 +69,16 @@ public class WarningService {
         }
 
         return message;
+    }
+
+    private void penalise(String penalty, Map<String, Object> substitutions) {
+        if (penalty.startsWith("/")) {
+            penalty = penalty.substring(1);
+        }
+
+        // Expand penalty as if it were a placeholder message
+        penalty = StringUtil.expand(penalty, substitutions);
+
+        server.dispatchCommand(server.getConsoleSender(), penalty);
     }
 }

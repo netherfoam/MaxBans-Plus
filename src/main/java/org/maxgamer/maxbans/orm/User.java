@@ -49,6 +49,8 @@ public class User {
     }
 
     public User(UUID id, String name) {
+        this.firstActive = Instant.now();
+        this.lastActive = firstActive;
         this.id = id;
         this.name = name;
     }
