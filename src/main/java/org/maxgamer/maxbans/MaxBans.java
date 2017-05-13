@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
-import org.maxgamer.maxbans.command.*;
+import org.maxgamer.maxbans.command.executor.*;
 import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;

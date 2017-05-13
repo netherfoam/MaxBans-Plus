@@ -1,4 +1,4 @@
-package org.maxgamer.maxbans.command;
+package org.maxgamer.maxbans.command.executor;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

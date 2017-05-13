@@ -3,6 +3,9 @@ package org.maxgamer.maxbans.service;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.repository.UserRepository;
+
+import java.util.List;
 
 /**
  * @author netherfoam
@@ -10,10 +13,15 @@ import org.maxgamer.maxbans.orm.User;
 public class LocatorService {
     private Server server;
     private UserService userService;
+    private UserRepository userRepository;
 
     public LocatorService(Server server, UserService userService) {
         this.server = server;
         this.userService = userService;
+    }
+
+    public List<User> users(String prefix, int limit) {
+        return userRepository.findByName(prefix, limit);
     }
 
     public User user(String name) {

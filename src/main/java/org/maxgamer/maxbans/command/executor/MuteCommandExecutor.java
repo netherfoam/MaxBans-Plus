@@ -1,4 +1,4 @@
-package org.maxgamer.maxbans.command;
+package org.maxgamer.maxbans.command.executor;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,12 +15,12 @@ import java.time.Duration;
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
-public class BanCommandExecutor extends RestrictionCommandExecutor {
+public class MuteCommandExecutor extends RestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private UserService userService;
 
-    public BanCommandExecutor(LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale) {
-        super(locale, locatorService, "maxbans.ban");
+    public MuteCommandExecutor(LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale) {
+        super(locale, locatorService, "maxbans.mute");
         this.userService = userService;
         this.broadcastService = broadcastService;
     }
@@ -28,18 +28,15 @@ public class BanCommandExecutor extends RestrictionCommandExecutor {
     @Override
     public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException {
         User banner = (source instanceof Player ? userService.getOrCreate((Player) source) : null);
-
-        userService.ban(banner, user, reason, duration);
+        
+        userService.mute(banner, user, reason, duration);
         
         Locale.MessageBuilder message = locale.get()
                 .with("name", user.getName())
                 .with("reason", reason)
                 .with("source", source.getName())
                 .with("duration", TemporalDuration.of(duration));
-
-        Player player = locatorService.player(user);
-        if(player != null) player.kickPlayer(message.get("ban.kick"));
-
-        broadcastService.broadcast(message.get("ban.broadcast"), silent);
+        
+        broadcastService.broadcast(message.get("mute.broadcast"), silent);
     }
 }

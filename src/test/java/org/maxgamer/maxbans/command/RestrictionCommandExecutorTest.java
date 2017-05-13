@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.junit.Test;
+import org.maxgamer.maxbans.command.executor.RestrictionCommandExecutor;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;

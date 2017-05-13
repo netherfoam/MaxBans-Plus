@@ -53,4 +53,4 @@ CREATE TABLE Warning (
     reason TEXT DEFAULT NULL
 );
 
--- TODO: Indices on all user_id, expires_at, source_id, name columns
+-- TODO: Indices on all user_id, expires_at, source_id, name, lastActive columns
