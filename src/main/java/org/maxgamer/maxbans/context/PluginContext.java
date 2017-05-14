@@ -64,7 +64,7 @@ public class PluginContext {
         userService = new UserService(config, userRepository, banRepository, muteRepository);
         locatorService = new LocatorService(server, userService);
         addressService = new AddressService(addressRepository, geoIPService);
-        warningService = new WarningService(server, warningRepository, broadcastService, locatorService, warnings);
+        warningService = new WarningService(server, warningRepository, locatorService, warnings);
         lockdownService = new LockdownService(server, userService, broadcastService, lockdownConfig);
     }
 

@@ -34,4 +34,8 @@ public abstract class Repository<ID extends Serializable, T> {
     public List<T> findAll() {
         return (List<T>) worker.retrieve(session -> session.createCriteria(entityClass).list());
     }
+
+    public Transactor getWorker() {
+        return worker;
+    }
 }

@@ -9,6 +9,7 @@ import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
 
@@ -19,8 +20,8 @@ public class UnbanCommandExecutor extends RestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private UserService userService;
 
-    public UnbanCommandExecutor(Locale locale, LocatorService locatorService, BroadcastService broadcastService, UserService userService) {
-        super(locale, locatorService, "maxbans.mute");
+    public UnbanCommandExecutor(Transactor transactor, Locale locale, LocatorService locatorService, BroadcastService broadcastService, UserService userService) {
+        super(locale, locatorService, "maxbans.mute", transactor);
 
         this.broadcastService = broadcastService;
         this.userService = userService;

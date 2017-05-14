@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.repository;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.transaction.Transactor;
 
+import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -15,10 +16,13 @@ public class UserRepository extends Repository<UUID, User> {
     
     public User findByName(String name) {
         return worker.retrieve(session -> {
-            return (User) session.createQuery("SELECT u FROM Users u WHERE u.name LIKE :name")
+            Iterator iterator = session.createQuery("SELECT u FROM User u WHERE u.name LIKE :name")
                     .setParameter("name", name)
-                    .iterate()
-                    .next();
+                    .iterate();
+
+            if(!iterator.hasNext()) return null;
+
+            return (User) iterator.next();
         });
     }
 }

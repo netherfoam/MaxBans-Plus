@@ -8,6 +8,7 @@ import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.service.UserService;
 import org.maxgamer.maxbans.service.WarningService;
+import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
 
@@ -19,8 +20,8 @@ public class WarnCommandExecutor extends RestrictionCommandExecutor {
     private WarningService warningService;
     private BroadcastService broadcastService;
 
-    public WarnCommandExecutor(Locale locale, LocatorService locatorService, UserService userService, WarningService warningService, BroadcastService broadcastService) {
-        super(locale, locatorService, "maxbans.warn");
+    public WarnCommandExecutor(Locale locale, Transactor transactor, LocatorService locatorService, UserService userService, WarningService warningService, BroadcastService broadcastService) {
+        super(locale, locatorService, "maxbans.warn", transactor);
 
         this.userService = userService;
         this.warningService = warningService;

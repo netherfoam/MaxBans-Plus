@@ -10,6 +10,7 @@ import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LockdownService;
 import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.Lockdown;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
@@ -24,8 +25,8 @@ public class LockdownCommandExecutor extends StandardCommandExecutor {
     private UserService userService;
     private BroadcastService broadcastService;
 
-    public LockdownCommandExecutor(Locale locale, LockdownService lockdownService, UserService userService, BroadcastService broadcastService) {
-        super(locale, "maxbans.lockdown");
+    public LockdownCommandExecutor(Transactor transactor, Locale locale, LockdownService lockdownService, UserService userService, BroadcastService broadcastService) {
+        super(transactor, locale, "maxbans.lockdown");
 
         this.lockdownService = lockdownService;
         this.userService = userService;

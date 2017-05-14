@@ -19,6 +19,8 @@ public class WarningConfig {
     }
 
     public WarningConfig(ConfigurationSection section) throws ConfigException {
+        if(section == null) return;
+
         ConfigurationSection commands = section.getConfigurationSection("penalties");
         if(commands != null) {
             for(String key : commands.getKeys(false)) {

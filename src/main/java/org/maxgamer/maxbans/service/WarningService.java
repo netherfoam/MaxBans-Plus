@@ -19,14 +19,12 @@ import java.util.Map;
 public class WarningService {
     private Server server;
     private WarningRepository repository;
-    private BroadcastService broadcastService;
     private LocatorService locatorService;
     private WarningConfig config;
 
-    public WarningService(Server server, WarningRepository repository, BroadcastService broadcastService, LocatorService locatorService, WarningConfig config) {
+    public WarningService(Server server, WarningRepository repository, LocatorService locatorService, WarningConfig config) {
         this.server = server;
         this.repository = repository;
-        this.broadcastService = broadcastService;
         this.locatorService = locatorService;
         this.config = config;
     }

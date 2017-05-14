@@ -9,6 +9,7 @@ import org.maxgamer.maxbans.repository.AddressRepository;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 import org.maxgamer.maxbans.util.geoip.GeoCountry;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,29 @@ public class AddressService {
 
     public Address get(String ip) {
         return addressRepository.find(ip);
+    }
+
+    public void onJoin(User user, String ip) {
+        Address address = addressRepository.find(ip);
+        UserAddress userAddress = null;
+
+        if(address == null) {
+            address = new Address(ip);
+            addressRepository.save(address);
+        } else {
+            for (UserAddress history : user.getAddresses()) {
+                if(history.getAddress().getHost().equals(address.getHost())) {
+                    userAddress = history;
+                }
+            }
+        }
+
+        if(userAddress == null) {
+            userAddress = new UserAddress(user, address);
+        }
+        userAddress.setLastActive(Instant.now());
+
+        user.getAddresses().add(userAddress);
     }
 
     public Locale.MessageBuilder report(User user, Locale locale) throws RejectedException {

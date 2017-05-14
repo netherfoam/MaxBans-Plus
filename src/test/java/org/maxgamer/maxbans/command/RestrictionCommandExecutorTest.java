@@ -2,12 +2,14 @@ package org.maxgamer.maxbans.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.test.UnitTest;
+import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -22,8 +24,8 @@ public class RestrictionCommandExecutorTest implements UnitTest {
      * A subclass for testing
      */
     private static class DummyCommandExecutor extends RestrictionCommandExecutor {
-        public DummyCommandExecutor(Locale locale, LocatorService locatorService, String permission) {
-            super(locale, locatorService, permission);
+        public DummyCommandExecutor(Locale locale, Transactor transactor, LocatorService locatorService, String permission) {
+            super(locale, locatorService, permission, transactor);
         }
 
         @Override
@@ -33,6 +35,24 @@ public class RestrictionCommandExecutorTest implements UnitTest {
     }
 
     private static final String PERMISSION = "maxbans.test";
+
+    private Transactor transactor;
+
+    @Before
+    public void init() {
+        transactor = mock(Transactor.class);
+        doAnswer(invocationOnMock -> {
+            Transactor.VoidJob work = (Transactor.VoidJob) invocationOnMock.getArguments()[0];
+            work.run(null);
+            return null;
+        }).when(transactor).work(any());
+
+        doAnswer(invocationOnMock -> {
+            Transactor.VoidJob work = (Transactor.VoidJob) invocationOnMock.getArguments()[0];
+            work.run(null);
+            return null;
+        }).when(transactor).retrieve(any());
+    }
 
     @Test
     public void testWithReason() throws RejectedException {
@@ -45,7 +65,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         doReturn(user).when(locator).user(any(String.class));
         doReturn(true).when(sender).hasPermission(eq(PERMISSION));
 
-        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, locator, PERMISSION));
+        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, transactor, locator, PERMISSION));
 
         String[] args = "player 5 hours for being rude".split(" ");
         executor.onCommand(sender, command, "dummy", args);
@@ -65,7 +85,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         doReturn(user).when(locator).user(any(String.class));
         doReturn(true).when(sender).hasPermission(eq(PERMISSION));
 
-        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, locator, PERMISSION));
+        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, transactor, locator, PERMISSION));
 
         String[] args = "player 5 hours".split(" ");
         executor.onCommand(sender, command, "dummy", args);
@@ -85,7 +105,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         doReturn(user).when(locator).user(any(String.class));
         doReturn(true).when(sender).hasPermission(eq(PERMISSION));
 
-        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, locator, PERMISSION));
+        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, transactor, locator, PERMISSION));
 
         String[] args = "player".split(" ");
         executor.onCommand(sender, command, "dummy", args);
@@ -105,7 +125,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         doReturn(user).when(locator).user(any(String.class));
         doReturn(true).when(sender).hasPermission(eq(PERMISSION));
 
-        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, locator, PERMISSION));
+        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, transactor, locator, PERMISSION));
 
         String[] args = "player for being rude".split(" ");
         executor.onCommand(sender, command, "dummy", args);
@@ -124,7 +144,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
 
         doReturn(false).when(sender).hasPermission(eq(PERMISSION));
 
-        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, locator, PERMISSION));
+        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, transactor, locator, PERMISSION));
 
         String[] args = "player".split(" ");
         executor.onCommand(sender, command, "dummy", args);
@@ -147,7 +167,7 @@ public class RestrictionCommandExecutorTest implements UnitTest {
         doReturn(user).when(locator).user(any(String.class));
         doReturn(true).when(sender).hasPermission(eq(PERMISSION));
 
-        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, locator, PERMISSION));
+        DummyCommandExecutor executor = spy(new DummyCommandExecutor(locale, transactor, locator, PERMISSION));
         doThrow(new RejectedException("not.ok")).when(executor).restrict(any(), any(), any(), any(), anyBoolean());
 
         String[] args = "player for being rude".split(" ");

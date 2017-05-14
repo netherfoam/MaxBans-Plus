@@ -1,20 +1,22 @@
 package org.maxgamer.maxbans.command;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.transaction.Transactor;
 
 /**
  * @author netherfoam
  */
-public abstract class StandardCommandExecutor implements CommandExecutor {
+public abstract class StandardCommandExecutor extends TransactionalCommandExecutor {
     protected final Locale locale;
     protected final String permission;
 
-    public StandardCommandExecutor(Locale locale, String permission) {
+    public StandardCommandExecutor(Transactor transactor, Locale locale, String permission) {
+        super(transactor);
+
         this.locale = locale;
         this.permission = permission;
     }
@@ -26,7 +28,7 @@ public abstract class StandardCommandExecutor implements CommandExecutor {
     }
 
     @Override
-    public final boolean onCommand(CommandSender sender, Command command, String name, String[] args) {
+    public final void transact(CommandSender sender, Command command, String name, String[] args) {
         try {
             permiss(sender);
             perform(sender, command, name, args);
@@ -35,8 +37,6 @@ public abstract class StandardCommandExecutor implements CommandExecutor {
         } catch (MessageException e) {
             e.send(locale, sender);
         }
-
-        return true;
     }
 
     public abstract void perform(CommandSender commandSender, Command command, String s, String[] strings) throws MessageException;

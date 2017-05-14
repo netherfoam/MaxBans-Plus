@@ -5,3 +5,13 @@ database:
    password: "password"
 
 offline: false
+
+warnings:
+   penalties:
+     1: "tell {{name}} Please behave"
+     2: "tell {{name}} This is your final warning"
+     3: "ban {{name}} 1 hour Warning limit reached."
+   strikes: 3
+   duration: "3 days"
+
+chat-commands: []

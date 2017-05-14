@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.service.AddressService;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LockdownService;
 import org.maxgamer.maxbans.service.UserService;
@@ -23,13 +24,15 @@ public class RestrictionListener implements Listener {
     private UserService userService;
     private LockdownService lockdownService;
     private BroadcastService broadcastService;
+    private AddressService addressService;
     private Locale locale;
 
-    public RestrictionListener(Transactor transactor, UserService userService, LockdownService lockdownService, BroadcastService broadcastService, Locale locale) {
+    public RestrictionListener(Transactor transactor, UserService userService, LockdownService lockdownService, BroadcastService broadcastService, AddressService addressService, Locale locale) {
         this.transactor = transactor;
         this.userService = userService;
         this.lockdownService = lockdownService;
         this.broadcastService = broadcastService;
+        this.addressService = addressService;
         this.locale = locale;
     }
 
@@ -54,6 +57,10 @@ public class RestrictionListener implements Listener {
                 e.setKickMessage(r.getMessage(locale));
 
                 broadcastService.moderators("lockdown", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.lockdown"));
+            }
+
+            if(e.getResult() == PlayerLoginEvent.Result.ALLOWED) {
+                addressService.onJoin(user, e.getAddress().getHostAddress());
             }
         });
     }
