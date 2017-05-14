@@ -15,7 +15,6 @@ import java.util.UUID;
 @Table(name = "Users")
 public class User {
     @Id
-    @Column
     private UUID id;
 
     @Column
@@ -27,13 +26,23 @@ public class User {
     @Column(name = "last_active")
     private Instant lastActive;
 
-    @OneToOne
-    @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
-    private Mute mute;
+    @ManyToMany
+    @JoinTable(
+            name = "Users_Mute",
+            inverseJoinColumns = @JoinColumn(name = "mute_id"),
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Where(clause = "(expiresAt > now() OR expiresAt IS NULL) AND revokedAt IS NULL")
+    private List<Mute> mutes = new LinkedList<>();
 
-    @OneToOne
-    @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
-    private Ban ban;
+    @ManyToMany
+    @JoinTable(
+            name = "Users_Ban",
+            inverseJoinColumns = @JoinColumn(name = "ban_id"),
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Where(clause = "(expiresAt > now() OR expiresAt IS NULL) AND revokedAt IS NULL")
+    private List<Ban> bans = new LinkedList<>();
 
     @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
     @OrderBy("lastActive ASC")
@@ -71,20 +80,12 @@ public class User {
         this.lastActive = lastActive;
     }
 
-    public Mute getMute() {
-        return mute;
+    public List<Mute> getMutes() {
+        return mutes;
     }
 
-    public void setMute(Mute mute) {
-        this.mute = mute;
-    }
-
-    public Ban getBan() {
-        return ban;
-    }
-
-    public void setBan(Ban ban) {
-        this.ban = ban;
+    public List<Ban> getBans() {
+        return bans;
     }
 
     public List<UserAddress> getAddresses() {

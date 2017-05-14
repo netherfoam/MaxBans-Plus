@@ -90,7 +90,9 @@ public class MaxBans extends JavaPlugin {
         
         getServer().getPluginManager().registerEvents(restrictionListener, this);
         getCommand("ban").setExecutor(new BanCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
+        getCommand("unban").setExecutor(new UnbanCommandExecutor(locale, context.getLocatorService(), context.getBroadcastService(), context.getUserService()));
         getCommand("mute").setExecutor(new MuteCommandExecutor(context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
+        getCommand("unmute").setExecutor(new UnmuteCommandExecutor(locale, context.getLocatorService(), context.getBroadcastService(), context.getUserService()));
         getCommand("iplookup").setExecutor(new IPLookupCommandExecutor(locale, context.getLocatorService(), context.getAddressService()));
         getCommand("kick").setExecutor(new KickCommand(locale, context.getLocatorService(), context.getBroadcastService()));
         getCommand("warn").setExecutor(new WarnCommandExecutor(locale, context.getLocatorService(), context.getUserService(), context.getWarningService(), context.getBroadcastService()));

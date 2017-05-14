@@ -13,6 +13,7 @@ import org.maxgamer.maxbans.util.RestrictionUtil;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -68,16 +69,17 @@ public class UserService {
     }
     
     public boolean isBanned(User user) {
-        return RestrictionUtil.isActive(user.getBan());
+        return RestrictionUtil.isActive(user.getBans());
     }
     
     public boolean isMuted(User user) {
-        return RestrictionUtil.isActive(user.getMute());
+        return RestrictionUtil.isActive(user.getMutes());
     }
     
     public void onJoin(User user) throws RejectedException {
         if(isBanned(user)) {
-            Ban ban = user.getBan();
+            List<Ban> bans = user.getBans();
+            Ban ban = bans.get(bans.size() - 1);
 
             throw new RejectedException("ban.denied")
                     .with("reason", ban.getReason())
@@ -87,7 +89,8 @@ public class UserService {
     
     public void onChat(User user) throws RejectedException {
         if(isMuted(user)) {
-            Mute mute = user.getMute();
+            List<Mute> mutes = user.getMutes();
+            Mute mute = mutes.get(mutes.size() - 1);
 
             throw new RejectedException("mute.denied")
                     .with("reason", mute.getReason())
@@ -96,12 +99,9 @@ public class UserService {
     }
 
     public void onCommand(User user, String command) throws RejectedException {
-        if(config.getChatCommands().contains(command.toLowerCase()) && isMuted(user)) {
-            Mute mute = user.getMute();
-
-            throw new RejectedException("mute.denied")
-                    .with("reason", mute.getReason())
-                    .with("duration", mute.getExpiresAt());
+        if(config.getChatCommands().contains(command.toLowerCase())) {
+            // It's the same as chatting
+            onChat(user);
         }
     }
 
@@ -115,9 +115,9 @@ public class UserService {
             ban.setExpiresAt((Instant) duration.addTo(ban.getCreated()));
         }
 
-        RestrictionUtil.assertRestrictionLonger(user.getBan(), ban);
+        RestrictionUtil.assertRestrictionLonger(user.getBans(), ban);
         bans.save(ban);
-        user.setBan(ban);
+        user.getBans().add(ban);
         users.save(user);
     }
     
@@ -131,12 +131,38 @@ public class UserService {
             mute.setExpiresAt(((Instant) duration.addTo(mute.getCreated())));
         }
         
-        RestrictionUtil.assertRestrictionLonger(user.getMute(), mute);
+        RestrictionUtil.assertRestrictionLonger(user.getMutes(), mute);
         
         mutes.save(mute);
 
-        user.setMute(mute);
+        user.getMutes().add(mute);
         users.save(user);
+    }
+
+    public void unmute(User source, User user) throws RejectedException {
+        List<Mute> list = user.getMutes();
+        if(!RestrictionUtil.isActive(list)) {
+            throw new RejectedException("mute.error.not-muted").with("name", user.getName());
+        }
+
+        Mute mute = list.get(list.size() - 1);
+        mute.setRevokedAt(Instant.now());
+        mute.setRevoker(source);
+
+        mutes.save(mute);
+    }
+
+    public void unban(User source, User user) throws RejectedException {
+        List<Ban> list = user.getBans();
+        if(!RestrictionUtil.isActive(list)) {
+            throw new RejectedException("ban.error.not-banned").with("name", user.getName());
+        }
+
+        Ban ban = list.get(list.size() - 1);
+        ban.setRevokedAt(Instant.now());
+        ban.setRevoker(source);
+
+        bans.save(ban);
     }
 }
 

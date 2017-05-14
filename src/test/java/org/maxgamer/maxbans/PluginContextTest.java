@@ -35,8 +35,14 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
 
     @After
     public void destroy() {
-        for(File f : context.getDataFolder().listFiles()) {
-            f.delete();
+        if(context == null) return;
+        if(context.getDataFolder() == null) return;
+
+        File[] files = context.getDataFolder().listFiles();
+        if(files != null) {
+            for (File f : context.getDataFolder().listFiles()) {
+                f.delete();
+            }
         }
 
         context.getDataFolder().delete();

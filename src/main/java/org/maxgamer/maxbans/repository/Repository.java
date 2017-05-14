@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.repository;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Dirk Jamieson
@@ -28,5 +29,9 @@ public abstract class Repository<ID extends Serializable, T> {
     
     public void save(T t) {
         worker.work((session) -> session.saveOrUpdate(t));
+    }
+
+    public List<T> findAll() {
+        return (List<T>) worker.retrieve(session -> session.createCriteria(entityClass).list());
     }
 }

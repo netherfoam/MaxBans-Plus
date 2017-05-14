@@ -2,11 +2,15 @@ ban:
     kick: "You've been banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     broadcast: "{{name}} was banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     denied: "You're banned for {{reason|no reason}}. Expires: {{duration|never}}"
+    unban: "{{name}} was unbanned by {{source}}."
 
 mute:
     muted: "You've been muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     broadcast: "{{name}} was muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     denied: "You're muted for {{reason|no reason}}. Expires: {{duration|never}}"
+    unmute: "{{name}} was unmuted by {{source}}"
+    error:
+        not-muted: "{{name}} is not muted"
 
 warn:
     warned: "You've been warned by {{source}} for {{reason|no reason}}. The warning expires in {{duration}}"

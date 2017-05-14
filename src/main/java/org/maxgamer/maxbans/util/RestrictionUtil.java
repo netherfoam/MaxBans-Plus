@@ -15,6 +15,11 @@ import java.util.concurrent.TimeUnit;
 public class RestrictionUtil {
     public static <R extends Restriction> void assertRestrictionLonger(R existing, R replacement) throws RejectedException {
         if(existing == null) return;
+
+        if(!isActive(existing)) {
+            return;
+        }
+
         if(existing.getExpiresAt() == null) {
             // The old restriction lasts forever
             throw new RejectedException("Existing restriction lasts longer");
@@ -38,6 +43,7 @@ public class RestrictionUtil {
     
     public static boolean isActive(Restriction r) {
         if(r == null) return false;
+        if(r.getRevokedAt() != null) return false;
         if(r.getExpiresAt() == null) return true;
         
         return r.getExpiresAt().isAfter(Instant.now());

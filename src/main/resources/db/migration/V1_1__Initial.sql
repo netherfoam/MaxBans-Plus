@@ -2,9 +2,7 @@ CREATE TABLE `Users` (
     id UUID NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     first_active TIMESTAMP NOT NULL DEFAULT 0,
-    last_active TIMESTAMP NOT NULL DEFAULT 0,
-    ban_id UUID,
-    mute_id UUID,
+    last_active TIMESTAMP NOT NULL DEFAULT 0
 );
 
 CREATE TABLE Mute (
@@ -12,7 +10,15 @@ CREATE TABLE Mute (
     source_id UUID DEFAULT NULL REFERENCES Users(id),
     created TIMESTAMP NOT NULL,
     expires_at TIMESTAMP,
+    revoked_at TIMESTAMP,
+    revoker_id UUID DEFAULT NULL REFERENCES Users(id),
     reason TEXT DEFAULT NULL
+);
+
+CREATE TABLE Users_Mute (
+    user_id UUID NOT NULL REFERENCES `Users`(id),
+    mute_id UUID NOT NULL REFERENCES Mute(id),
+    PRIMARY KEY(user_id, mute_id)
 );
 
 CREATE TABLE Ban (
@@ -20,20 +26,21 @@ CREATE TABLE Ban (
     source_id UUID DEFAULT NULL REFERENCES Users(id),
     created TIMESTAMP NOT NULL,
     expires_at TIMESTAMP,
+    revoked_at TIMESTAMP,
+    revoker_id UUID DEFAULT NULL REFERENCES Users(id),
     reason TEXT DEFAULT NULL
 );
 
--- Now that these tables exist, we can create them
-ALTER TABLE `Users`
-    ADD FOREIGN KEY(ban_id) REFERENCES Ban(id);
-
-ALTER TABLE `Users`
-    ADD FOREIGN KEY(mute_id) REFERENCES Mute(id);
+CREATE TABLE Users_Ban (
+    user_id UUID NOT NULL REFERENCES `Users`(id),
+    ban_id UUID NOT NULL REFERENCES Ban(id),
+    PRIMARY KEY(user_id, ban_id)
+);
 
 CREATE TABLE Address (
     host VARCHAR(50) NOT NULL PRIMARY KEY,
     ban_id UUID REFERENCES Ban(id),
-    mute_id UUID REFERENCES Mute(id),
+    mute_id UUID REFERENCES Mute(id)
 );
 
 CREATE TABLE Address_User (
@@ -50,6 +57,8 @@ CREATE TABLE Warning (
     source_id UUID DEFAULT NULL REFERENCES Users(id),
     created TIMESTAMP NOT NULL,
     expires_at TIMESTAMP,
+    revoked_at TIMESTAMP,
+    revoker_id UUID DEFAULT NULL REFERENCES Users(id),
     reason TEXT DEFAULT NULL
 );
 

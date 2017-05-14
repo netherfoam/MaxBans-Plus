@@ -5,11 +5,19 @@ main: org.maxgamer.maxbans.MaxBans
 commands:
    ban:
       description: Bans a user, optionally for a duration
-      usage: /ban <player> [duration] [message]
+      usage: /ban <user> [duration] [message]
+
+   unban:
+      description: Unbans a user
+      usage: /unban <user>
       
    mute:
       description: Mutes a user, optionally for a duration
-      usage: /mute <player> [duration] [message]
+      usage: /mute <user> [duration] [message]
+
+   unmute:
+      description: Unmutes a user
+      usage: /unmute <user>
 
    kick:
       description: Kicks a user
@@ -17,11 +25,11 @@ commands:
 
    iplookup:
       description: Inspect information about a players most recent IP address
-      usage: /iplookup <player>
+      usage: /iplookup <user>
 
    warn:
       description: Warn a player for misbehaviour
-      usage: /warn <player> [message]
+      usage: /warn <user> [message]
 
    lockdown:
       description: Prevent players from joining the server.

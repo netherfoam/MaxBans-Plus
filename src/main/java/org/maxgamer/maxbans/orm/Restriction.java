@@ -17,12 +17,18 @@ public abstract class Restriction {
     
     @Column(name = "expires_at")
     protected Instant expiresAt;
-    
+
+    @Column(name = "revoked_at")
+    protected Instant revokedAt;
+
     @Column
     protected String reason;
-    
+
     @ManyToOne
     protected User source;
+
+    @ManyToOne
+    protected User revoker;
 
     public UUID getId() {
         return id;
@@ -62,5 +68,21 @@ public abstract class Restriction {
     public Restriction setSource(User source) {
         this.source = source;
         return this;
+    }
+
+    public Instant getRevokedAt() {
+        return revokedAt;
+    }
+
+    public void setRevokedAt(Instant revokedAt) {
+        this.revokedAt = revokedAt;
+    }
+
+    public User getRevoker() {
+        return revoker;
+    }
+
+    public void setRevoker(User revoker) {
+        this.revoker = revoker;
     }
 }
