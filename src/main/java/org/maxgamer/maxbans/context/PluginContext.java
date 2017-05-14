@@ -37,6 +37,7 @@ public class PluginContext {
     private AddressService addressService;
     private WarningService warningService;
     private LockdownService lockdownService;
+    private GeoIPService geoIPService;
     
     public PluginContext(PluginConfig config, Server server, File dataFolder) {
         this.config = config;
@@ -57,10 +58,12 @@ public class PluginContext {
         addressRepository = new AddressRepository(transactor);
         warningRepository = new WarningRepository(transactor);
 
+        // TODO: Tests can be sped up by not doing this or having a smaller database
+        geoIPService = new GeoIPService(getClass().getClassLoader().getResourceAsStream("GeoLite.zip"));
         broadcastService = new BroadcastService(server);
         userService = new UserService(config, userRepository, banRepository, muteRepository);
         locatorService = new LocatorService(server, userService);
-        addressService = new AddressService(addressRepository);
+        addressService = new AddressService(addressRepository, geoIPService);
         warningService = new WarningService(server, warningRepository, broadcastService, locatorService, warnings);
         lockdownService = new LockdownService(server, userService, broadcastService, lockdownConfig);
     }

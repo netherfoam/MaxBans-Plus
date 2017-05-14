@@ -14,6 +14,14 @@
     </properties>
 
     <dependencies>
+        <!-- Apache Commons CSV for GeoLite Parsing -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+
         <!-- PrettyTime for formatting dates -->
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
