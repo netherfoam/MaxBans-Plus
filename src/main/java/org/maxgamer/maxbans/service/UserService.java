@@ -68,34 +68,37 @@ public class UserService {
         return create(player);
     }
     
-    public boolean isBanned(User user) {
-        return RestrictionUtil.isActive(user.getBans());
+    public Ban getBan(User user) {
+        for(Ban ban : user.getBans()) {
+            if(RestrictionUtil.isActive(ban)) return ban;
+        }
+
+        return null;
     }
     
-    public boolean isMuted(User user) {
-        return RestrictionUtil.isActive(user.getMutes());
+    public Mute getMute(User user) {
+        for(Mute mute : user.getMutes()) {
+            if(RestrictionUtil.isActive(mute)) return mute;
+        }
+
+        return null;
     }
     
     public void onJoin(User user) throws RejectedException {
-        if(isBanned(user)) {
-            List<Ban> bans = user.getBans();
-            Ban ban = bans.get(bans.size() - 1);
+        Ban ban = getBan(user);
+        if(ban == null) return;
 
-            throw new RejectedException("ban.denied")
-                    .with("reason", ban.getReason())
-                    .with("duration", ban.getExpiresAt());
-        }
+        throw new RejectedException("ban.denied")
+                .with("reason", ban.getReason())
+                .with("duration", ban.getExpiresAt());
     }
     
     public void onChat(User user) throws RejectedException {
-        if(isMuted(user)) {
-            List<Mute> mutes = user.getMutes();
-            Mute mute = mutes.get(mutes.size() - 1);
+        Mute mute = getMute(user);
 
-            throw new RejectedException("mute.denied")
-                    .with("reason", mute.getReason())
-                    .with("duration", mute.getExpiresAt());
-        }
+        throw new RejectedException("mute.denied")
+                .with("reason", mute.getReason())
+                .with("duration", mute.getExpiresAt());
     }
 
     public void onCommand(User user, String command) throws RejectedException {
@@ -145,11 +148,14 @@ public class UserService {
             throw new RejectedException("mute.error.not-muted").with("name", user.getName());
         }
 
-        Mute mute = list.get(list.size() - 1);
-        mute.setRevokedAt(Instant.now());
-        mute.setRevoker(source);
+        for(Mute mute : list) {
+            if(!RestrictionUtil.isActive(mute)) continue;
 
-        mutes.save(mute);
+            mute.setRevokedAt(Instant.now());
+            mute.setRevoker(source);
+
+            mutes.save(mute);
+        }
     }
 
     public void unban(User source, User user) throws RejectedException {
@@ -158,11 +164,14 @@ public class UserService {
             throw new RejectedException("ban.error.not-banned").with("name", user.getName());
         }
 
-        Ban ban = list.get(list.size() - 1);
-        ban.setRevokedAt(Instant.now());
-        ban.setRevoker(source);
+        for(Ban ban : list) {
+            if(!RestrictionUtil.isActive(ban)) continue;
 
-        bans.save(ban);
+            ban.setRevokedAt(Instant.now());
+            ban.setRevoker(source);
+
+            bans.save(ban);
+        }
     }
 }
 

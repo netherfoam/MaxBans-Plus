@@ -35,7 +35,7 @@ public class MuteCommandExecutor extends RestrictionCommandExecutor {
         Locale.MessageBuilder message = locale.get()
                 .with("name", user.getName())
                 .with("reason", reason)
-                .with("source", source.getName())
+                .with("source", banner == null ? "Console" : banner.getName())
                 .with("duration", TemporalDuration.of(duration));
         
         broadcastService.broadcast(message.get("mute.broadcast"), silent);

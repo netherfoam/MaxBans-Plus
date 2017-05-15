@@ -9,9 +9,9 @@ offline: false
 
 warnings:
    penalties:
-     1: "tell {{name}} Please behave"
+     1: "tell {{name}} This is your first warning"
      2: "tell {{name}} This is your final warning"
-     3: "ban {{name}} 1 hour Warning limit reached."
+     3: "ban {{name}} 1 hour Warning limit reached:\n{{reason|No reason given}}"
    strikes: 3
    duration: "3 days"
 

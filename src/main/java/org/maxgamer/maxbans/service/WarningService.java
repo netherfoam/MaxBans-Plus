@@ -39,14 +39,14 @@ public class WarningService {
 
         repository.save(warning);
 
+        int strike = warnings.size() % config.getStrikes() + 1;
         warnings.add(warning);
 
-        int strike = warnings.size() % config.getStrikes();
         List<String> penalties = config.getPenalty(strike);
         if(penalties != null && !penalties.isEmpty()) {
             Map<String, Object> substitutions = new HashMap<>();
             substitutions.put("name", user.getName());
-            substitutions.put("source", source == null ? null : source.getName());
+            substitutions.put("source", source == null ? "Console" : source.getName());
             substitutions.put("reason", reason);
             substitutions.put("strike", strike);
 
@@ -56,7 +56,7 @@ public class WarningService {
         }
 
         Locale.MessageBuilder message = locale.get()
-                .with("source", source == null ? null : source.getName())
+                .with("source", source == null ? "Console" : source.getName())
                 .with("reason", reason)
                 .with("duration", config.getDuration())
                 .with("name", user.getName());

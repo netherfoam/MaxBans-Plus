@@ -1,5 +1,6 @@
 package org.maxgamer.maxbans.locale;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.maxgamer.maxbans.util.StringUtil;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -47,6 +48,9 @@ public class Locale {
 
                 preprocessed.put(key, value);
             }
+
+            // Now we expand the template before parsing in variable substitutions
+            template = ChatColor.translateAlternateColorCodes('&', template);
 
             return StringUtil.expand(template, substitutions);
         }

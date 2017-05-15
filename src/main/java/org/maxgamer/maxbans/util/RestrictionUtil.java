@@ -24,12 +24,12 @@ public class RestrictionUtil {
             // The old restriction lasts forever
             throw new RejectedException("Existing restriction lasts longer");
         }
-        
+
         if(replacement.getExpiresAt() == null) {
             // The new restriction lasts forever and is replacing a temporary one
             return;
         }
-        
+
         if(existing.getExpiresAt().isAfter(replacement.getExpiresAt())) {
             throw new RejectedException("Existing restriction lasts longer");
         }

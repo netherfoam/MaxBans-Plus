@@ -19,9 +19,9 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
         UserService users = getContext().getUserService();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
-        Assert.assertFalse("Expect user to be unbanned", users.isBanned(user));
+        Assert.assertNull("Expect user to be unbanned", users.getBan(user));
         users.ban(null, user, "Breaking Rules", null);
-        Assert.assertTrue("Expect user to be banned", users.isBanned(user));
+        Assert.assertNotNull("Expect user to be banned", users.getBan(user));
     }
     
     @Test
@@ -29,9 +29,9 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
         UserService users = getContext().getUserService();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
-        Assert.assertFalse("Expect user to be unmuted", users.isMuted(user));
+        Assert.assertNull("Expect user to be unmuted", users.getMute(user));
         users.mute(null, user, "Breaking Rules", null);
-        Assert.assertTrue("Expect user to be muted", users.isMuted(user));
+        Assert.assertNotNull("Expect user to be muted", users.getMute(user));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
 
         users.mute(null, user, "Breaking Rules", null);
         users.unmute(null, user);
-        Assert.assertFalse("Expect user to be unmuted", users.isMuted(user));
+        Assert.assertNull("Expect user to be unmuted", users.getMute(user));
     }
 
     @Test
@@ -51,6 +51,6 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
 
         users.ban(null, user, "Breaking Rules", null);
         users.unban(null, user);
-        Assert.assertFalse("Expect user to be unmuted", users.isBanned(user));
+        Assert.assertNull("Expect user to be unbanned", users.getBan(user));
     }
 }

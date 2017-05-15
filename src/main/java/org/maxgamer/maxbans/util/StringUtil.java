@@ -33,7 +33,7 @@ public class StringUtil {
             }
 
             Object value = substitutions.get(identifier);
-            if(value == null) value = defaultValue;
+            if(value == null || value.toString().isEmpty()) value = defaultValue;
 
             result += value;
         }

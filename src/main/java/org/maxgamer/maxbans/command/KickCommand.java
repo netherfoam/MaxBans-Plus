@@ -45,7 +45,8 @@ public class KickCommand extends StandardCommandExecutor {
 
         String reason = String.join(" ", args);
         Locale.MessageBuilder properties = locale.get()
-                .with("source", sender.getName())
+                .with("source", sender instanceof Player ? sender.getName() : "Console")
+                .with("name", player.getName())
                 .with("reason", reason);
 
         player.kickPlayer(properties.get("kick.message"));
