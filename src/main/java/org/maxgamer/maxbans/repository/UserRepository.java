@@ -14,10 +14,10 @@ public class UserRepository extends Repository<UUID, User> {
         super(worker, UUID.class, User.class);
     }
     
-    public User findByName(String name) {
+    public User findByAlias(String name) {
         return worker.retrieve(session -> {
-            Iterator iterator = session.createQuery("SELECT u FROM User u WHERE u.name LIKE :name")
-                    .setParameter("name", name)
+            Iterator iterator = session.createQuery("SELECT u FROM User u WHERE u.alias LIKE :name")
+                    .setParameter("name", name.toLowerCase())
                     .iterate();
 
             if(!iterator.hasNext()) return null;

@@ -3,6 +3,7 @@ database:
    url: "jdbc:h2:./plugins/MaxBans/storage"
    user: "root"
    password: "password"
+   show-sql: false
 
 offline: false
 

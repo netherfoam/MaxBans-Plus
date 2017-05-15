@@ -101,6 +101,8 @@ public class MaxBans extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        
+        if(context != null) {
+            context.close();
+        }
     }
 }

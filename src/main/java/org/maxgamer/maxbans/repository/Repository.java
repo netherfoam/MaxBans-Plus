@@ -10,8 +10,8 @@ import java.util.List;
  */
 public abstract class Repository<ID extends Serializable, T> {
     protected final Transactor worker;
-    private Class<ID> idClass;
-    private Class<T> entityClass;
+    protected final Class<ID> idClass;
+    protected final Class<T> entityClass;
 
     public Repository(Transactor worker, Class<ID> idClass, Class<T> entityClass) {
         this.worker = worker;

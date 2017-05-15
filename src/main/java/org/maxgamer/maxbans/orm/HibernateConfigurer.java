@@ -23,7 +23,7 @@ public class HibernateConfigurer {
         config.setProperty("hibernate.connection.url", jdbc.getUrl());
         config.setProperty("hibernate.connection.username", jdbc.getUsername());
         config.setProperty("hibernate.connection.password", jdbc.getPassword());
-        config.setProperty("hibernate.show_sql", "true");
+        config.setProperty("hibernate.show_sql", String.valueOf(jdbc.isShowSql()));
 
         return config;
     }

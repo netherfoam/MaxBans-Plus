@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.transaction;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.maxgamer.maxbans.exception.TransactionException;
 
 /**
@@ -54,12 +55,14 @@ public class Transactor {
             transaction.rollback();
 
             throw new TransactionException(t);
-        }
-
-        if(created) {
-            transaction.commit();
-            session.close();
-            sessions.set(null);
+        } finally {
+            if(created) {
+                sessions.set(null);
+                if (transaction.getStatus() != TransactionStatus.ROLLED_BACK) {
+                    transaction.commit();
+                }
+                session.close();
+            }
         }
 
         return value;

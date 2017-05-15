@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.transactor;
 import junit.framework.Assert;
 import org.hibernate.cfg.Configuration;
 import org.junit.Test;
+import org.maxgamer.maxbans.exception.TransactionException;
 import org.maxgamer.maxbans.orm.Ban;
 import org.maxgamer.maxbans.orm.HibernateConfigurer;
 import org.maxgamer.maxbans.repository.H2Test;
@@ -67,5 +68,32 @@ public class TransactorTest extends H2Test implements IntegrationTest {
         });
 
         Assert.assertNotNull("Must retrieve ban", ban);
+    }
+
+    @Test
+    public void testNoQueries() {
+        Configuration hibernate = HibernateConfigurer.configuration(getJdbc());
+        Transactor transactor = new Transactor(hibernate.buildSessionFactory());
+
+        transactor.work(session -> {
+            // Nothing
+        });
+    }
+
+    @Test
+    public void testException() {
+        Configuration hibernate = HibernateConfigurer.configuration(getJdbc());
+        Transactor transactor = new Transactor(hibernate.buildSessionFactory());
+
+        final String identifier = "WOOPS";
+        try {
+            transactor.work(session -> {
+                throw new IllegalStateException(identifier);
+            });
+        } catch (TransactionException e) {
+            Throwable inner = e.getCause();
+            Assert.assertTrue("Expect inner to be IllegalStateException", inner instanceof IllegalStateException);
+            Assert.assertEquals("Expect inner exception to be correct one", identifier, inner.getMessage());
+        }
     }
 }

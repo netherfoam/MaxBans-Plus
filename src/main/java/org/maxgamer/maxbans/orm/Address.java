@@ -19,13 +19,23 @@ public class Address {
     @OneToMany(mappedBy = "id.address", cascade = CascadeType.ALL)
     private List<UserAddress> users = new LinkedList<>();
 
-    @OneToOne
+    @ManyToMany
+    @JoinTable(
+            name = "Address_Ban",
+            inverseJoinColumns = @JoinColumn(name = "ban_id"),
+            joinColumns = @JoinColumn(name = "host")
+    )
     @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
-    private Ban ban;
+    private List<Ban> bans = new LinkedList<>();
     
-    @OneToOne
+    @ManyToMany
+    @JoinTable(
+            name = "Address_Mute",
+            inverseJoinColumns = @JoinColumn(name = "mute_id"),
+            joinColumns = @JoinColumn(name = "host")
+    )
     @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
-    private Mute mute;
+    private List<Mute> mutes = new LinkedList<>();
 
     private Address() {
         // Hibernate constructor
@@ -43,19 +53,11 @@ public class Address {
         return users;
     }
 
-    public Ban getBan() {
-        return ban;
+    public List<Ban> getBans() {
+        return bans;
     }
 
-    public void setBan(Ban ban) {
-        this.ban = ban;
-    }
-
-    public Mute getMute() {
-        return mute;
-    }
-
-    public void setMute(Mute mute) {
-        this.mute = mute;
+    public List<Mute> getMutes() {
+        return mutes;
     }
 }

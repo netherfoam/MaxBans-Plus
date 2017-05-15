@@ -59,13 +59,17 @@ public class PluginContext {
         warningRepository = new WarningRepository(transactor);
 
         // TODO: Tests can be sped up by not doing this or having a smaller database
-        geoIPService = new GeoIPService(getClass().getClassLoader().getResourceAsStream("GeoLite.zip"));
+        geoIPService = new GeoIPService(getClass().getClassLoader().getResourceAsStream("GeoLite.zip"), "en");
         broadcastService = new BroadcastService(server);
         userService = new UserService(config, userRepository, banRepository, muteRepository);
         locatorService = new LocatorService(server, userService);
         addressService = new AddressService(addressRepository, geoIPService);
         warningService = new WarningService(server, warningRepository, locatorService, warnings);
         lockdownService = new LockdownService(server, userService, broadcastService, lockdownConfig);
+    }
+
+    public void close() {
+        sessionFactory.close();
     }
 
     public PluginConfig getConfig() {

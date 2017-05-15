@@ -1,6 +1,7 @@
 CREATE TABLE `Users` (
     id UUID NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
+    alias VARCHAR(50) NOT NULL,
     first_active TIMESTAMP NOT NULL DEFAULT 0,
     last_active TIMESTAMP NOT NULL DEFAULT 0
 );
@@ -41,6 +42,18 @@ CREATE TABLE Address (
     host VARCHAR(50) NOT NULL PRIMARY KEY,
     ban_id UUID REFERENCES Ban(id),
     mute_id UUID REFERENCES Mute(id)
+);
+
+CREATE TABLE Address_Mute (
+    host VARCHAR(15) NOT NULL REFERENCES Address(host),
+    mute_id UUID NOT NULL REFERENCES Mute(id),
+    PRIMARY KEY(host, mute_id)
+);
+
+CREATE TABLE Address_Ban (
+    host VARCHAR(15) NOT NULL REFERENCES Address(host),
+    ban_id UUID NOT NULL REFERENCES Ban(id),
+    PRIMARY KEY(host, ban_id)
 );
 
 CREATE TABLE Address_User (

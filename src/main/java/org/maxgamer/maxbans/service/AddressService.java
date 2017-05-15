@@ -75,12 +75,12 @@ public class AddressService {
                 builder.with("continent", country.getContinentName());
             }
 
-            if(RestrictionUtil.isActive(address.getBan())) {
-                builder.with("ban", address.getBan().getExpiresAt());
+            if(RestrictionUtil.isActive(address.getBans())) {
+                builder.with("ban", address.getBans().get(0).getExpiresAt());
             }
 
-            if(RestrictionUtil.isActive(address.getMute())) {
-                builder.with("mute", address.getMute().getExpiresAt());
+            if(RestrictionUtil.isActive(address.getMutes())) {
+                builder.with("mute", address.getMutes().get(0).getExpiresAt());
             }
 
             List<User> users = address.getUsers().stream().map(UserAddress::getUser).collect(Collectors.toList());

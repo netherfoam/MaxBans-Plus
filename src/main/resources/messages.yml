@@ -46,11 +46,19 @@ iplookup:
       {{name}} IP Address Report:
       First Login: {{firstActive|Never}}
       Last Login: {{lastActive|Never}}
-      Address: {{ip}}
+      Address: {{ip}} {{continent}} ({{country}})
       Ban: {{ban|None}}
       Mute: {{mute|None}}
       The following users have also used the IP Address:
       {{users|None}}
+
+history:
+    ban: "{{name}} was banned by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
+    unban: "{{name}} was unbanned by {{source|console}}"
+    mute: "{{name}} was muted by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
+    unmute: "{{name}} was muted by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
+    warn: "{{name}} was warned by {{source|console}}: {{reason|No reason}}"
+
 
 # The locale to use for time units. Valid examples include:
 # en, fr, de, it, ja, ko, zh

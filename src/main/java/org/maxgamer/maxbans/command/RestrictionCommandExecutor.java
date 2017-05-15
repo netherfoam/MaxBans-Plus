@@ -2,8 +2,10 @@ package org.maxgamer.maxbans.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
+import org.maxgamer.maxbans.exception.TransactionException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.LocatorService;
@@ -28,7 +30,7 @@ public abstract class RestrictionCommandExecutor extends StandardCommandExecutor
     }
 
     @Override
-    public final void perform(CommandSender sender, Command command, String s, String[] userArgs) throws RejectedException, PermissionException {
+    public final void perform(CommandSender sender, Command command, String s, String[] userArgs) throws MessageException {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(userArgs));
         boolean silent = RestrictionUtil.isSilent(args);
 
@@ -37,18 +39,26 @@ public abstract class RestrictionCommandExecutor extends StandardCommandExecutor
             return;
         }
 
-        transactor.work(session -> {
-            User user = locatorService.user(args.pop());
-            if(user == null) {
-                sender.sendMessage("Player not found");
-                return;
+        try {
+            transactor.work(session -> {
+                User user = locatorService.user(args.pop());
+                if (user == null) {
+                    sender.sendMessage("Player not found");
+                    return;
+                }
+
+                Duration duration = RestrictionUtil.getDuration(args);
+                String reason = String.join(" ", args);
+
+                restrict(sender, user, duration, reason, silent);
+            });
+        } catch (TransactionException e) {
+            if(e.getCause() instanceof MessageException) {
+                throw (MessageException) e.getCause();
             }
 
-            Duration duration = RestrictionUtil.getDuration(args);
-            String reason = String.join(" ", args);
-
-            restrict(sender, user, duration, reason, silent);
-        });
+            throw e;
+        }
     }
     
     public abstract void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException;

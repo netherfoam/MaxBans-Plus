@@ -15,13 +15,13 @@ import java.util.zip.ZipInputStream;
 public class GeoIPService {
     private GeoTable table;
 
-    public GeoIPService(InputStream geoliteSrc) {
+    public GeoIPService(InputStream geoliteSrc, String localeCode) {
         try {
             ZipInputStream zipInput = new ZipInputStream(geoliteSrc);
 
             ZipEntry entry;
 
-            String countryFile = "GeoLite2-Country-Locations-en.csv";
+            String countryFile = "GeoLite2-Country-Locations-" + localeCode + ".csv";
             String ipv4File = "GeoLite2-Country-Blocks-IPv4.csv";
 
             InputStream countrySrc = null;

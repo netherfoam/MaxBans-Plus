@@ -1,6 +1,8 @@
 name: MaxBans
 version: 1.0
 main: org.maxgamer.maxbans.MaxBans
+description: "Advanced banning and muting plugin allowing for some better management of misbehaved players."
+author: netherfoam
 
 commands:
    ban:
@@ -34,3 +36,32 @@ commands:
    lockdown:
       description: Prevent players from joining the server.
       usage: /lockdown <ALL|JOIN|NEW|OFF> [reason]
+
+permissions:
+   maxbans.ban:
+      description: Use the /ban and /unban commands
+
+   maxbans.mute:
+      description: Use the /mute and /unmute commands
+
+   maxbans.lockdown:
+      description: Use the /lockdown command
+
+   maxbans.iplookup:
+      description: Use the /iplookup command
+
+   maxbans.kick:
+      description: Use the /kick command
+
+   maxbans.warn:
+      description: Use the /warn command
+
+   maxbans.silent:
+      description: See command announcements even when they're silenced using the -s flag
+
+   maxbans.broadcast:
+      description: See broadcasted messages
+      default: true
+
+   maxbans.mod:
+      description: See moderator only messages such as alerts when banned players try to join

@@ -20,6 +20,12 @@ public class User {
     @Column
     private String name;
 
+    /**
+     * Name except as lowercase
+     */
+    @Column
+    private String alias;
+
     @Column(name = "first_active")
     private Instant firstActive;
 
@@ -62,6 +68,7 @@ public class User {
         this.lastActive = firstActive;
         this.id = id;
         this.name = name;
+        this.alias = name.toLowerCase();
     }
 
     public UUID getId() {
@@ -102,5 +109,9 @@ public class User {
 
     public void setFirstActive(Instant firstActive) {
         this.firstActive = firstActive;
+    }
+
+    public String getAlias() {
+        return alias;
     }
 }

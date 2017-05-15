@@ -33,7 +33,7 @@ public class UserService {
     }
     
     public User get(String name) {
-        return users.findByName(name);
+        return users.findByAlias(name);
     }
     
     public User get(UUID id) {
