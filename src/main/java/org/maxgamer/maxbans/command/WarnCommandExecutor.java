@@ -15,7 +15,7 @@ import java.time.Duration;
 /**
  * @author netherfoam
  */
-public class WarnCommandExecutor extends RestrictionCommandExecutor {
+public class WarnCommandExecutor extends UserRestrictionCommandExecutor {
     private UserService userService;
     private WarningService warningService;
     private BroadcastService broadcastService;

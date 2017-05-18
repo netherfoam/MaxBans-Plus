@@ -16,7 +16,7 @@ import java.time.Duration;
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
-public class MuteCommandExecutor extends RestrictionCommandExecutor {
+public class MuteCommandExecutor extends UserRestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private UserService userService;
 

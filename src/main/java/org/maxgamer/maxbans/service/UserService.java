@@ -95,6 +95,7 @@ public class UserService {
     
     public void onChat(User user) throws RejectedException {
         Mute mute = getMute(user);
+        if(mute == null) return;
 
         throw new RejectedException("mute.denied")
                 .with("reason", mute.getReason())

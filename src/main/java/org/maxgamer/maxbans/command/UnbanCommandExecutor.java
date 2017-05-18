@@ -5,7 +5,9 @@ import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.service.AddressService;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.service.UserService;
@@ -16,26 +18,42 @@ import java.time.Duration;
 /**
  * @author netherfoam
  */
-public class UnbanCommandExecutor extends RestrictionCommandExecutor {
+public class UnbanCommandExecutor extends IPRestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private UserService userService;
 
-    public UnbanCommandExecutor(Transactor transactor, Locale locale, LocatorService locatorService, BroadcastService broadcastService, UserService userService) {
-        super(locale, locatorService, "maxbans.mute", transactor);
+    public UnbanCommandExecutor(Transactor transactor, Locale locale, LocatorService locatorService, AddressService addressService, BroadcastService broadcastService, UserService userService) {
+        super(locale, locatorService, "maxbans.ban", addressService, transactor);
 
         this.broadcastService = broadcastService;
         this.userService = userService;
     }
 
     @Override
-    public void restrict(CommandSender sender, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException {
+    public void restrict(CommandSender sender, Address address, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException {
         User source = (sender instanceof Player ? userService.getOrCreate((Player) sender) : null);
 
-        userService.unban(source, user);
-
         Locale.MessageBuilder message = locale.get()
-                .with("source", source == null ? "Console" : source.getName())
-                .with("name", user.getName());
+                .with("source", source == null ? "Console" : source.getName());
+
+        broadcastService.broadcast(message.get("ban.unban"), silent);
+
+        boolean any = false;
+        if(user != null && userService.getBan(user) != null) {
+            userService.unban(source, user);
+            message.with("name", user.getName());
+            any = true;
+        }
+
+        if(addressService.getBan(address) != null) {
+            addressService.unban(source, address);
+            message.with("address", address.getHost());
+            any = true;
+        }
+
+        if(!any) {
+            throw new RejectedException("No ban found");
+        }
 
         broadcastService.broadcast(message.get("ban.unban"), silent);
     }

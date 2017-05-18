@@ -9,6 +9,10 @@ commands:
       description: Bans a user, optionally for a duration
       usage: /ban <user> [duration] [message]
 
+   ipban:
+      description: Bans an IP address, optionally for a duration
+      usage: /ipban <user|ip> [duration] [message]
+
    unban:
       description: Unbans a user
       usage: /unban <user>
@@ -16,6 +20,10 @@ commands:
    mute:
       description: Mutes a user, optionally for a duration
       usage: /mute <user> [duration] [message]
+
+   ipmute:
+      description: Mutes an IP address, optionally for a duration
+      usage: /ipmute <user|ip> [duration] [message]
 
    unmute:
       description: Unmutes a user

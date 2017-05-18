@@ -196,7 +196,10 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
         return addresses;
     }
 
-    @Test
+    /**
+     * Even on slow machines, this should be triple the time we need
+     */
+    @Test(timeout = 20000)
     public void populate() {
         List<User> users = users(1000);
         userBans(500, users);

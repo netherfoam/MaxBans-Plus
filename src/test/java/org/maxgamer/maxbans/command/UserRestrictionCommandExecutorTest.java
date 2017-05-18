@@ -19,11 +19,11 @@ import static org.mockito.Mockito.*;
 /**
  * @author netherfoam
  */
-public class RestrictionCommandExecutorTest implements UnitTest {
+public class UserRestrictionCommandExecutorTest implements UnitTest {
     /**
      * A subclass for testing
      */
-    private static class DummyCommandExecutor extends RestrictionCommandExecutor {
+    private static class DummyCommandExecutor extends UserRestrictionCommandExecutor {
         public DummyCommandExecutor(Locale locale, Transactor transactor, LocatorService locatorService, String permission) {
             super(locale, locatorService, permission, transactor);
         }

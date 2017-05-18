@@ -1,56 +1,72 @@
 ban:
+    kick: "&fYou've been banned by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    broadcast: "&a{{name}}&r was banned by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    denied: "&fYou're banned for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    unban: "&f{{name}} was unbanned by {{source}}."
+
+ipban:
     kick: "You've been banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
-    broadcast: "{{name}} was banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    broadcast: "{{name|An IP address}} was banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     denied: "You're banned for {{reason|no reason}}. Expires: {{duration|never}}"
-    unban: "{{name}} was unbanned by {{source}}."
+    unban: "{{name|An IP address}} was unbanned by {{source}}."
 
 mute:
-    muted: "You've been muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
-    broadcast: "{{name}} was muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
-    denied: "You're muted for {{reason|no reason}}. Expires: {{duration|never}}"
-    unmute: "{{name}} was unmuted by {{source}}"
+    muted: "&fYou've been muted by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    broadcast: "&a{{name}}&r was muted by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    denied: "&fYou're muted for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    unmute: "&a{{name}}&r was unmuted by &a{{source}}&r"
     error:
-        not-muted: "{{name}} is not muted"
+        not-muted: "&a{{name}}&r is not muted"
+
+ipmute:
+    muted: "You've been muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    broadcast: "{{name|An IP address}} was muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    denied: "You're muted for {{reason|no reason}}. Expires: {{duration|never}}"
+    unmute: "{{name|An IP address}} was unmuted by {{source}}"
+    error:
+        not-muted: "{{name|That IP address}} is not muted"
 
 warn:
-    warned: "You've been warned by {{source}} for {{reason|no reason}}. The warning expires in {{duration}}"
-    broadcast: "{{name}} was warned by {{source}} for {{reason|no reason}}."
+    warned: "&fYou've been warned by &a{{source}}&r for &a{{reason|no reason}}&r. The warning expires in &a{{duration}}&r"
+    broadcast: "&a{{name}}&r was warned by &a{{source}}&r for &a{{reason|no reason}}&r."
 
 kick:
-    broadcast: "{{name}} was kicked by {{source}} for {{reason|no reason}}."
+    broadcast: "&a{{name}}&r was kicked by &a{{source}}&r for &a{{reason|no reason}}&r."
     message: |
-      You've been kicked by {{source}}. The reason given was:
-      {{reason|None}}
+      You've been kicked by &a{{source}}&r. The reason given was:
+      &a{{reason|None}}&r
 
 lockdown:
     broadcast: |
-      The server has been switched to lockdown mode: {{type}} by {{source}}
-      This means: {{description}}.
-      The reason was: {{reason|None}}
+      The server has been switched to lockdown mode: &a{{type}}&r by &a{{source}}&r
+      This means: &a{{description}}&r.
+      The reason was: &a{{reason|None}}&r
 
     message: |
       The server is currently in lockdown.
-      Reason: {{reason|None}}
+      Reason: &a{{reason|None}}&r
 
 notification:
-    banned: "{{name}} tried to join but is currently banned."
-    muted: "{{name}} tried to chat, but is currently muted."
-    lockdown: "{{name}} tried to join, but the server is in lockdown."
+    ipbanned: "&a{{name|An IP address}}&r tried to join but is currently banned."
+    banned: "&a{{name}}&r tried to join but is currently banned."
+    ipmuted: "&a{{name|An IP address}}&r tried to chat, but is currently muted."
+    muted: "&a{{name}}&r tried to chat, but is currently muted."
+    lockdown: "&a{{name}}&r tried to join, but the server is in lockdown."
 
 permission:
-    required: "That requires {{permission}} permission"
+    required: "That requires &c{{permission}}&r permission"
 
 iplookup:
-    never: "{{name}} has no IP history"
+    never: "&a{{name}}&r has no IP history"
     format: |
-      {{name}} IP Address Report:
-      First Login: {{firstActive|Never}}
-      Last Login: {{lastActive|Never}}
-      Address: {{ip}} {{continent}} ({{country}})
-      Ban: {{ban|None}}
-      Mute: {{mute|None}}
+      &a{{name}}&r IP Address Report:
+      First Login: &a{{firstActive|Never}}&r
+      Last Login: &a{{lastActive|Never}}&r
+      Address: &a{{ip}}&r
+      Ban: &a{{ban|None}}&r
+      Mute: &a{{mute|None}}&r
       The following users have also used the IP Address:
-      {{users|None}}
+      &a{{users|None}}&r
 
 history:
     ban: "{{name}} was banned by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
@@ -58,7 +74,6 @@ history:
     mute: "{{name}} was muted by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
     unmute: "{{name}} was muted by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
     warn: "{{name}} was warned by {{source|console}}: {{reason|No reason}}"
-
 
 # The locale to use for time units. Valid examples include:
 # en, fr, de, it, ja, ko, zh

@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
 import org.maxgamer.maxbans.exception.MessageException;
+import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
@@ -18,6 +19,46 @@ import java.util.UUID;
  * @author netherfoam
  */
 public class AddressServiceTest extends PluginContextTest implements IntegrationTest {
+    @Test
+    public void testBan() throws RejectedException {
+        AddressService addresses = getContext().getAddressService();
+        Address address = addresses.create("127.0.0.1");
+
+        Assert.assertNull("Expect address to be unbanned", addresses.getBan(address));
+        addresses.ban(null, address, "Breaking Rules", null);
+        Assert.assertNotNull("Expect address to be banned", addresses.getBan(address));
+    }
+
+    @Test
+    public void testMute() throws RejectedException {
+        AddressService addresses = getContext().getAddressService();
+        Address address = addresses.create("127.0.0.1");
+
+        Assert.assertNull("Expect address to be unmuted", addresses.getMute(address));
+        addresses.mute(null, address, "Breaking Rules", null);
+        Assert.assertNotNull("Expect address to be muted", addresses.getMute(address));
+    }
+
+    @Test
+    public void testUnmute() throws RejectedException {
+        AddressService addresses = getContext().getAddressService();
+        Address address = addresses.create("127.0.0.1");
+
+        addresses.mute(null, address, "Breaking Rules", null);
+        addresses.unmute(null, address);
+        Assert.assertNull("Expect address to be unmuted", addresses.getMute(address));
+    }
+
+    @Test
+    public void testUnban() throws RejectedException {
+        AddressService addresses = getContext().getAddressService();
+        Address address = addresses.create("127.0.0.1");
+
+        addresses.ban(null, address, "Breaking Rules", null);
+        addresses.unban(null, address);
+        Assert.assertNull("Expect address to be unbanned", addresses.getBan(address));
+    }
+
     @Test
     public void testReport() throws MessageException {
         UserService users = getContext().getUserService();

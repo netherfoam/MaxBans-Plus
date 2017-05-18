@@ -19,11 +19,11 @@ import java.util.LinkedList;
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
-public abstract class RestrictionCommandExecutor extends StandardCommandExecutor {
+public abstract class UserRestrictionCommandExecutor extends StandardCommandExecutor {
     protected final LocatorService locatorService;
     protected final Transactor transactor;
 
-    public RestrictionCommandExecutor(Locale locale, LocatorService locatorService, String permission, Transactor transactor) {
+    public UserRestrictionCommandExecutor(Locale locale, LocatorService locatorService, String permission, Transactor transactor) {
         super(transactor, locale, permission);
         this.locatorService = locatorService;
         this.transactor = transactor;

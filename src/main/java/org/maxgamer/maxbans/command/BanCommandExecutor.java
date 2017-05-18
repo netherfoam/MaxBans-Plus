@@ -16,7 +16,7 @@ import java.time.Duration;
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
-public class BanCommandExecutor extends RestrictionCommandExecutor {
+public class BanCommandExecutor extends UserRestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private UserService userService;
 

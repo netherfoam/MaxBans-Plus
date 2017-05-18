@@ -87,12 +87,13 @@ public class MaxBans extends JavaPlugin {
         migrate();
         
         RestrictionListener restrictionListener = new RestrictionListener(context.getTransactor(), context.getUserService(), context.getLockdownService(), context.getBroadcastService(), context.getAddressService(), locale);
-        
         getServer().getPluginManager().registerEvents(restrictionListener, this);
         getCommand("ban").setExecutor(new BanCommandExecutor(context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
-        getCommand("unban").setExecutor(new UnbanCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService(), context.getUserService()));
+        getCommand("ipban").setExecutor(new IPBanCommandExecutor(locale, context.getLocatorService(), context.getTransactor(), context.getAddressService(), context.getUserService(), context.getBroadcastService()));
+        getCommand("unban").setExecutor(new UnbanCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getAddressService(), context.getBroadcastService(), context.getUserService()));
         getCommand("mute").setExecutor(new MuteCommandExecutor(context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
-        getCommand("unmute").setExecutor(new UnmuteCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService(), context.getUserService()));
+        getCommand("ipmute").setExecutor(new IPMuteCommandExecutor(locale, context.getLocatorService(), context.getTransactor(), context.getAddressService(), context.getUserService(), context.getBroadcastService()));
+        getCommand("unmute").setExecutor(new UnmuteCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService(), context.getAddressService(), context.getUserService()));
         getCommand("iplookup").setExecutor(new IPLookupCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getAddressService()));
         getCommand("kick").setExecutor(new KickCommand(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService()));
         getCommand("warn").setExecutor(new WarnCommandExecutor(locale, context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getWarningService(), context.getBroadcastService()));

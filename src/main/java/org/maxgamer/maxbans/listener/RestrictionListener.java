@@ -48,6 +48,17 @@ public class RestrictionListener implements Listener {
                 e.setKickMessage(r.getMessage(locale));
 
                 broadcastService.moderators("banned", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.banned"));
+                return;
+            }
+
+            try {
+                addressService.onJoin(user, e.getAddress().getHostAddress());
+            } catch (RejectedException r) {
+                e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+                e.setKickMessage(r.getMessage(locale));
+                broadcastService.moderators("banned", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.ipbanned"));
+
+                return;
             }
 
             try {
@@ -57,6 +68,7 @@ public class RestrictionListener implements Listener {
                 e.setKickMessage(r.getMessage(locale));
 
                 broadcastService.moderators("lockdown", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.lockdown"));
+                return;
             }
 
             if(e.getResult() == PlayerLoginEvent.Result.ALLOWED) {
@@ -68,8 +80,7 @@ public class RestrictionListener implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         transactor.work(session -> {
-            User user = userService.get(e.getPlayer());
-            if (user == null) return;
+            User user = userService.getOrCreate(e.getPlayer());
 
             try {
                 userService.onChat(user);
@@ -78,6 +89,17 @@ public class RestrictionListener implements Listener {
                 e.getPlayer().sendMessage(r.getMessage(locale));
 
                 broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.muted"));
+                return;
+            }
+
+            try {
+                addressService.onChat(addressService.getOrCreate(e.getPlayer().getAddress().getAddress().getHostAddress()));
+            } catch (RejectedException r) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(r.getMessage(locale));
+
+                broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.ipmuted"));
+                return;
             }
         });
     }
