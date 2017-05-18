@@ -7,6 +7,7 @@ import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
+import org.maxgamer.maxbans.service.MetricService;
 import org.maxgamer.maxbans.service.UserService;
 import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.TemporalDuration;
@@ -19,11 +20,13 @@ import java.time.Duration;
 public class BanCommandExecutor extends UserRestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private UserService userService;
+    private MetricService metricService;
 
-    public BanCommandExecutor(Transactor transactor, LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale) {
+    public BanCommandExecutor(Transactor transactor, LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale, MetricService metrics) {
         super(locale, locatorService, "maxbans.ban", transactor);
         this.userService = userService;
         this.broadcastService = broadcastService;
+        this.metricService = metrics;
     }
 
     @Override
@@ -42,5 +45,7 @@ public class BanCommandExecutor extends UserRestrictionCommandExecutor {
         if(player != null) player.kickPlayer(message.get("ban.kick"));
 
         broadcastService.broadcast(message.get("ban.broadcast"), silent);
+
+        metricService.increment(MetricService.USER_BANS);
     }
 }

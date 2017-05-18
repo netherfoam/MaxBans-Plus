@@ -7,6 +7,7 @@ import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
+import org.maxgamer.maxbans.service.MetricService;
 import org.maxgamer.maxbans.service.UserService;
 import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.TemporalDuration;
@@ -19,11 +20,13 @@ import java.time.Duration;
 public class MuteCommandExecutor extends UserRestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private UserService userService;
+    private MetricService metricService;
 
-    public MuteCommandExecutor(Transactor transactor, LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale) {
+    public MuteCommandExecutor(Transactor transactor, LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale, MetricService metrics) {
         super(locale, locatorService, "maxbans.mute", transactor);
         this.userService = userService;
         this.broadcastService = broadcastService;
+        this.metricService = metrics;
     }
 
     @Override
@@ -39,5 +42,6 @@ public class MuteCommandExecutor extends UserRestrictionCommandExecutor {
                 .with("duration", TemporalDuration.of(duration));
         
         broadcastService.broadcast(message.get("mute.broadcast"), silent);
+        metricService.increment(MetricService.USER_MUTES);
     }
 }

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.repository.H2Test;
+import org.maxgamer.maxbans.service.MetricService;
 import org.maxgamer.maxbans.test.IntegrationTest;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
             throw new IllegalStateException("Can't create data folder");
         }
 
-        context = new PluginContext(config, server, folder);
+        context = new PluginContext(config, server, folder, mock(MetricService.class));
     }
 
     @After

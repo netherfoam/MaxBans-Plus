@@ -1,4 +1,4 @@
-name: MaxBans
+name: MaxBans-4
 version: 1.0
 main: org.maxgamer.maxbans.MaxBans
 description: "Advanced banning and muting plugin allowing for some better management of misbehaved players."

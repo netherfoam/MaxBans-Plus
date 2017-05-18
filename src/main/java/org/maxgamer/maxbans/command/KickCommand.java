@@ -7,6 +7,7 @@ import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
+import org.maxgamer.maxbans.service.MetricService;
 import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
@@ -19,12 +20,14 @@ import java.util.LinkedList;
 public class KickCommand extends StandardCommandExecutor {
     private LocatorService locatorService;
     private BroadcastService broadcastService;
+    private MetricService metricService;
 
-    public KickCommand(Transactor transactor, Locale locale, LocatorService locatorService, BroadcastService broadcastService) {
+    public KickCommand(Transactor transactor, Locale locale, LocatorService locatorService, BroadcastService broadcastService, MetricService metrics) {
         super(transactor, locale, "maxbans.kick");
 
         this.locatorService = locatorService;
         this.broadcastService = broadcastService;
+        this.metricService = metrics;
     }
 
     @Override
@@ -52,5 +55,6 @@ public class KickCommand extends StandardCommandExecutor {
         player.kickPlayer(properties.get("kick.message"));
 
         broadcastService.broadcast(properties.get("kick.broadcast"), silent);
+        metricService.increment(MetricService.KICKS);
     }
 }

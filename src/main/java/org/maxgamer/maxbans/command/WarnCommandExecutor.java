@@ -4,10 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.service.BroadcastService;
-import org.maxgamer.maxbans.service.LocatorService;
-import org.maxgamer.maxbans.service.UserService;
-import org.maxgamer.maxbans.service.WarningService;
+import org.maxgamer.maxbans.service.*;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
@@ -19,13 +16,15 @@ public class WarnCommandExecutor extends UserRestrictionCommandExecutor {
     private UserService userService;
     private WarningService warningService;
     private BroadcastService broadcastService;
+    private MetricService metricService;
 
-    public WarnCommandExecutor(Locale locale, Transactor transactor, LocatorService locatorService, UserService userService, WarningService warningService, BroadcastService broadcastService) {
+    public WarnCommandExecutor(Locale locale, Transactor transactor, LocatorService locatorService, UserService userService, WarningService warningService, BroadcastService broadcastService, MetricService metrics) {
         super(locale, locatorService, "maxbans.warn", transactor);
 
         this.userService = userService;
         this.warningService = warningService;
         this.broadcastService = broadcastService;
+        this.metricService = metrics;
     }
 
     @Override
@@ -34,5 +33,6 @@ public class WarnCommandExecutor extends UserRestrictionCommandExecutor {
 
         Locale.MessageBuilder message = warningService.warn(banner, user, reason, locale);
         broadcastService.broadcast(message.get("warn.broadcast"), silent);
+        metricService.increment(MetricService.WARNINGS);
     }
 }

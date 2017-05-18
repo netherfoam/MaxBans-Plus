@@ -102,11 +102,13 @@ public class UserService {
                 .with("duration", mute.getExpiresAt());
     }
 
-    public void onCommand(User user, String command) throws RejectedException {
+    public boolean isChatCommand(String command) {
         if(config.getChatCommands().contains(command.toLowerCase())) {
             // It's the same as chatting
-            onChat(user);
+            return true;
         }
+
+        return false;
     }
 
     public void ban(User source, User user, String reason, Duration duration) throws RejectedException {

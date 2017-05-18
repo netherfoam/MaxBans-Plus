@@ -1,5 +1,6 @@
 package org.maxgamer.maxbans.listener;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -36,87 +37,85 @@ public class RestrictionListener implements Listener {
         this.locale = locale;
     }
 
+    public void onJoin(Player player, String address) throws RejectedException {
+        User user = userService.getOrCreate(player);
+
+        try {
+            userService.onJoin(user);
+        } catch (RejectedException r) {
+            broadcastService.moderators("banned", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.banned"));
+
+            throw r;
+        }
+
+        try {
+            addressService.onJoin(user, address);
+        } catch (RejectedException r) {
+            broadcastService.moderators("banned", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.ipbanned"));
+
+            throw r;
+        }
+
+        try {
+            lockdownService.onJoin(user);
+        } catch (RejectedException r) {
+            broadcastService.moderators("lockdown", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.lockdown"));
+            throw r;
+        }
+    }
+
     @EventHandler
     public void onJoin(PlayerLoginEvent e) {
         transactor.work(session -> {
-            User user = userService.getOrCreate(e.getPlayer());
-
             try {
-                userService.onJoin(user);
+                onJoin(e.getPlayer(), e.getAddress().getHostAddress());
             } catch (RejectedException r) {
                 e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
                 e.setKickMessage(r.getMessage(locale));
-
-                broadcastService.moderators("banned", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.banned"));
-                return;
-            }
-
-            try {
-                addressService.onJoin(user, e.getAddress().getHostAddress());
-            } catch (RejectedException r) {
-                e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-                e.setKickMessage(r.getMessage(locale));
-                broadcastService.moderators("banned", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.ipbanned"));
-
-                return;
-            }
-
-            try {
-                lockdownService.onJoin(user);
-            } catch (RejectedException r) {
-                e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-                e.setKickMessage(r.getMessage(locale));
-
-                broadcastService.moderators("lockdown", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.lockdown"));
-                return;
-            }
-
-            if(e.getResult() == PlayerLoginEvent.Result.ALLOWED) {
-                addressService.onJoin(user, e.getAddress().getHostAddress());
             }
         });
+    }
+
+    public void onChat(Player player) throws RejectedException {
+        User user = userService.getOrCreate(player);
+
+        try {
+            userService.onChat(user);
+        } catch (RejectedException r) {
+            broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.muted"));
+            throw r;
+        }
+
+        try {
+            addressService.onChat(addressService.getOrCreate(player.getAddress().getAddress().getHostAddress()));
+        } catch (RejectedException r) {
+            broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.ipmuted"));
+            throw r;
+        }
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         transactor.work(session -> {
-            User user = userService.getOrCreate(e.getPlayer());
-
             try {
-                userService.onChat(user);
+                onChat(e.getPlayer());
             } catch (RejectedException r) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(r.getMessage(locale));
-
-                broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.muted"));
-                return;
-            }
-
-            try {
-                addressService.onChat(addressService.getOrCreate(e.getPlayer().getAddress().getAddress().getHostAddress()));
-            } catch (RejectedException r) {
-                e.setCancelled(true);
-                e.getPlayer().sendMessage(r.getMessage(locale));
-
-                broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.ipmuted"));
-                return;
             }
         });
     }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
-        transactor.work(session -> {
-            User user = userService.get(e.getPlayer());
-            if (user == null) return;
+        if(!userService.isChatCommand(e.getMessage())) return;
 
+        transactor.work(session -> {
             try {
-                userService.onCommand(user, e.getMessage());
+                onChat(e.getPlayer());
             } catch (RejectedException r) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(r.getMessage(locale));
-
-                broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.muted"));
             }
         });
     }

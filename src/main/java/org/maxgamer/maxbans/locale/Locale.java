@@ -90,6 +90,10 @@ public class Locale {
     public void setLocale(String locale) {
         prettyTime.setLocale(java.util.Locale.forLanguageTag(locale));
     }
+
+    public String getLocale() {
+        return prettyTime.getLocale().toString();
+    }
     
     public MessageBuilder get() {
         return new MessageBuilder();

@@ -2,6 +2,7 @@ package org.maxgamer.maxbans;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
 import org.maxgamer.maxbans.command.*;
@@ -9,8 +10,10 @@ import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.exception.ConfigException;
+import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.listener.RestrictionListener;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.service.MetricService;
 
 import java.io.File;
 
@@ -82,22 +85,32 @@ public class MaxBans extends JavaPlugin {
             return;
         }
 
-        context = new PluginContext(config, getServer(), getDataFolder());
+        context = new PluginContext(config, getServer(), getDataFolder(), new MetricService(this));
         
         migrate();
         
         RestrictionListener restrictionListener = new RestrictionListener(context.getTransactor(), context.getUserService(), context.getLockdownService(), context.getBroadcastService(), context.getAddressService(), locale);
         getServer().getPluginManager().registerEvents(restrictionListener, this);
-        getCommand("ban").setExecutor(new BanCommandExecutor(context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
-        getCommand("ipban").setExecutor(new IPBanCommandExecutor(locale, context.getLocatorService(), context.getTransactor(), context.getAddressService(), context.getUserService(), context.getBroadcastService()));
-        getCommand("unban").setExecutor(new UnbanCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getAddressService(), context.getBroadcastService(), context.getUserService()));
-        getCommand("mute").setExecutor(new MuteCommandExecutor(context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale));
-        getCommand("ipmute").setExecutor(new IPMuteCommandExecutor(locale, context.getLocatorService(), context.getTransactor(), context.getAddressService(), context.getUserService(), context.getBroadcastService()));
-        getCommand("unmute").setExecutor(new UnmuteCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService(), context.getAddressService(), context.getUserService()));
+        getCommand("ban").setExecutor(new BanCommandExecutor(context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale, context.getMetricService()));
+        getCommand("ipban").setExecutor(new IPBanCommandExecutor(locale, context.getLocatorService(), context.getTransactor(), context.getAddressService(), context.getUserService(), context.getBroadcastService(), context.getMetricService()));
+        getCommand("unban").setExecutor(new UnbanCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getAddressService(), context.getBroadcastService(), context.getUserService(), context.getMetricService()));
+        getCommand("mute").setExecutor(new MuteCommandExecutor(context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale, context.getMetricService()));
+        getCommand("ipmute").setExecutor(new IPMuteCommandExecutor(locale, context.getLocatorService(), context.getTransactor(), context.getAddressService(), context.getUserService(), context.getBroadcastService(), context.getMetricService()));
+        getCommand("unmute").setExecutor(new UnmuteCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService(), context.getAddressService(), context.getUserService(), context.getMetricService()));
         getCommand("iplookup").setExecutor(new IPLookupCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getAddressService()));
-        getCommand("kick").setExecutor(new KickCommand(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService()));
-        getCommand("warn").setExecutor(new WarnCommandExecutor(locale, context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getWarningService(), context.getBroadcastService()));
+        getCommand("kick").setExecutor(new KickCommand(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService(), context.getMetricService()));
+        getCommand("warn").setExecutor(new WarnCommandExecutor(locale, context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getWarningService(), context.getBroadcastService(), context.getMetricService()));
         getCommand("lockdown").setExecutor(new LockdownCommandExecutor(context.getTransactor(), locale, context.getLockdownService(), context.getUserService(), context.getBroadcastService()));
+
+        context.getTransactor().work(session -> {
+            for(Player player : context.getServer().getOnlinePlayers()) {
+                try {
+                    restrictionListener.onJoin(player, player.getAddress().getAddress().getHostAddress());
+                } catch (RejectedException e) {
+                    player.kickPlayer(e.getMessage(locale));
+                }
+            }
+        });
     }
 
     @Override
@@ -105,5 +118,13 @@ public class MaxBans extends JavaPlugin {
         if(context != null) {
             context.close();
         }
+    }
+
+    public PluginContext getContext() {
+        return context;
+    }
+
+    public Locale getLocale() {
+        return locale;
     }
 }

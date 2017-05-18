@@ -7,10 +7,7 @@ import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.service.AddressService;
-import org.maxgamer.maxbans.service.BroadcastService;
-import org.maxgamer.maxbans.service.LocatorService;
-import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.service.*;
 import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.TemporalDuration;
 
@@ -22,11 +19,13 @@ import java.time.Duration;
 public class IPBanCommandExecutor extends IPRestrictionCommandExecutor {
     private UserService userService;
     private BroadcastService broadcastService;
+    private MetricService metricService;
 
-    public IPBanCommandExecutor(Locale locale, LocatorService locatorService, Transactor transactor, AddressService addressService, UserService userService, BroadcastService broadcastService) {
+    public IPBanCommandExecutor(Locale locale, LocatorService locatorService, Transactor transactor, AddressService addressService, UserService userService, BroadcastService broadcastService, MetricService metrics) {
         super(locale, locatorService, "maxbans.ipban", addressService, transactor);
         this.userService = userService;
         this.broadcastService = broadcastService;
+        this.metricService = metrics;
     }
 
     @Override
@@ -49,5 +48,6 @@ public class IPBanCommandExecutor extends IPRestrictionCommandExecutor {
         }
 
         // Shouldn't be necessary, if everything else is working, to kick the player by retrieving them by the user object here.
+        metricService.increment(MetricService.IP_BANS);
     }
 }

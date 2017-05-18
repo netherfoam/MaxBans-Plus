@@ -38,11 +38,14 @@ public class PluginContext {
     private WarningService warningService;
     private LockdownService lockdownService;
     private GeoIPService geoIPService;
+
+    private MetricService metricService;
     
-    public PluginContext(PluginConfig config, Server server, File dataFolder) {
+    public PluginContext(PluginConfig config, Server server, File dataFolder, MetricService metrics) {
         this.config = config;
         this.server = server;
         this.dataFolder = dataFolder;
+        this.metricService = metrics;
 
         JdbcConfig jdbc = config.getJdbcConfig();
         WarningConfig warnings = config.getWarningConfig();
@@ -134,5 +137,13 @@ public class PluginContext {
 
     public LockdownService getLockdownService() {
         return lockdownService;
+    }
+
+    public MetricService getMetricService() {
+        return metricService;
+    }
+
+    public GeoIPService getGeoIPService() {
+        return geoIPService;
     }
 }

@@ -7,10 +7,7 @@ import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.service.AddressService;
-import org.maxgamer.maxbans.service.BroadcastService;
-import org.maxgamer.maxbans.service.LocatorService;
-import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.service.*;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
@@ -22,13 +19,15 @@ public class UnmuteCommandExecutor extends IPRestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private AddressService addressService;
     private UserService userService;
+    private MetricService metricService;
 
-    public UnmuteCommandExecutor(Transactor transactor, Locale locale, LocatorService locatorService, BroadcastService broadcastService, AddressService addressService, UserService userService) {
+    public UnmuteCommandExecutor(Transactor transactor, Locale locale, LocatorService locatorService, BroadcastService broadcastService, AddressService addressService, UserService userService, MetricService metrics) {
         super(locale, locatorService, "maxbans.mute", addressService, transactor);
 
         this.broadcastService = broadcastService;
         this.addressService = addressService;
         this.userService = userService;
+        this.metricService = metrics;
     }
 
     @Override
