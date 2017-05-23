@@ -1,7 +1,7 @@
 package org.maxgamer.maxbans.service;
 
 import org.bstats.Metrics;
-import org.maxgamer.maxbans.MaxBans;
+import org.maxgamer.maxbans.MaxBansPlus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class MetricService {
     private Metrics metrics;
     private Map<String, Integer> increments = new HashMap<>();
 
-    public MetricService(MaxBans plugin) {
+    public MetricService(MaxBansPlus plugin) {
         metrics = new Metrics(plugin);
 
         metrics.addCustomChart(new Metrics.SimplePie(LOCALE) {

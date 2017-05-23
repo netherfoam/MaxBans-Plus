@@ -1,7 +1,5 @@
 package org.maxgamer.maxbans.orm;
 
-import com.avaje.ebean.annotation.Where;
-
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +23,6 @@ public class Address {
             inverseJoinColumns = @JoinColumn(name = "ban_id"),
             joinColumns = @JoinColumn(name = "host")
     )
-    @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
     private List<Ban> bans = new LinkedList<>();
     
     @ManyToMany
@@ -34,7 +31,6 @@ public class Address {
             inverseJoinColumns = @JoinColumn(name = "mute_id"),
             joinColumns = @JoinColumn(name = "host")
     )
-    @Where(clause = "expiresAt > now() OR expiresAt IS NULL")
     private List<Mute> mutes = new LinkedList<>();
 
     private Address() {

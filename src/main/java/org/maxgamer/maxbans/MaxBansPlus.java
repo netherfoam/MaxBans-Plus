@@ -20,7 +20,7 @@ import java.io.File;
 /**
  * @author Dirk Jamieson
  */
-public class MaxBans extends JavaPlugin {
+public class MaxBansPlus extends JavaPlugin {
     private Locale locale = new Locale();
     private PluginContext context;
     private File messagesFile;

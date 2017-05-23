@@ -30,11 +30,7 @@ public class BroadcastService {
     }
 
     public void moderators(String message) {
-        for(Player player : server.getOnlinePlayers()) {
-            if(!player.hasPermission(MODERATOR_PERMISSION)) continue;
-
-            player.sendMessage(message);
-        }
+        server.broadcast(message, MODERATOR_PERMISSION);
     }
 
     /**
@@ -69,10 +65,6 @@ public class BroadcastService {
         // Block this message from going out again
         firewall.put(key, Instant.now().plus(timeout));
 
-        for(Player player : server.getOnlinePlayers()) {
-            if(!player.hasPermission(MODERATOR_PERMISSION)) continue;
-
-            player.sendMessage(message);
-        }
+        moderators(message);
     }
 }

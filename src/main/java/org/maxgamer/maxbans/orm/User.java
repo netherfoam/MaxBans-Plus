@@ -1,7 +1,5 @@
 package org.maxgamer.maxbans.orm;
 
-import com.avaje.ebean.annotation.Where;
-
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -38,7 +36,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "mute_id"),
             joinColumns = @JoinColumn(name = "user_id")
     )
-    @Where(clause = "(expiresAt > now() OR expiresAt IS NULL) AND revokedAt IS NULL")
     private List<Mute> mutes = new LinkedList<>();
 
     @ManyToMany
@@ -47,7 +44,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "ban_id"),
             joinColumns = @JoinColumn(name = "user_id")
     )
-    @Where(clause = "(expiresAt > now() OR expiresAt IS NULL) AND revokedAt IS NULL")
     private List<Ban> bans = new LinkedList<>();
 
     @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
@@ -56,7 +52,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @OrderBy("expiresAt")
-    @Where(clause = "expiresAt > now()")
     private List<Warning> warnings = new LinkedList<>();
 
     private User() {
