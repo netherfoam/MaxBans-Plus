@@ -1,6 +1,7 @@
 package org.maxgamer.maxbans.service;
 
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.util.Permissions;
 
@@ -21,11 +22,28 @@ public class BroadcastService {
         this.server = server;
     }
 
-    public void broadcast(String message, boolean silent) {
+    /**
+     * Broadcasts the given message to the appropriate players
+     * @param message the message to broadcast
+     * @param silent true if the broadcast should only notify moderators, false if it should notify players
+     * @param required the list of players who must, indisputably, be sent the message. May contain nulls.
+     */
+    public void broadcast(String message, boolean silent, CommandSender... required) {
+        String permission;
+
         if(silent) {
-            server.broadcast(message, Permissions.SEE_SILENT);
+            permission = Permissions.SEE_SILENT;
         } else {
-            server.broadcast(message, Permissions.SEE_BROADCAST);
+            permission = Permissions.SEE_BROADCAST;
+        }
+
+        server.broadcast(message, permission);
+        for(CommandSender involved : required) {
+            // If the target already has permission, we've already messaged them!
+            if(involved == null || involved.hasPermission(permission)) continue;
+
+            // Target doesn't have permission so wasn't notified by the broadcast!
+            involved.sendMessage(message);
         }
     }
 

@@ -35,13 +35,13 @@ public class IPMuteCommandExecutor extends IPRestrictionCommandExecutor {
         addressService.mute(muter, address, reason, duration);
 
         Locale.MessageBuilder message = locale.get()
-                .with("name", user == null ? null : user.getName())
+                .with("name", user.getName())
                 .with("address", address.getHost())
                 .with("reason", reason)
                 .with("source", muter == null ? "Console" : muter.getName())
                 .with("duration", TemporalDuration.of(duration));
 
-        broadcastService.broadcast(message.get("ipmute.broadcast"), silent);
+        broadcastService.broadcast(message.get("ipmute.broadcast"), silent, source, locatorService.player(user));
 
         metricService.increment(MetricService.IP_MUTES);
     }

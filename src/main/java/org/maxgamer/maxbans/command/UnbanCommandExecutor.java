@@ -54,6 +54,6 @@ public class UnbanCommandExecutor extends IPRestrictionCommandExecutor {
             throw new RejectedException("No ban found");
         }
 
-        broadcastService.broadcast(message.get("ban.unban"), silent);
+        broadcastService.broadcast(message.get("ban.unban"), silent, sender);
     }
 }

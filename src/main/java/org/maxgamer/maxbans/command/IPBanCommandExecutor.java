@@ -41,7 +41,7 @@ public class IPBanCommandExecutor extends IPRestrictionCommandExecutor {
                 .with("source", banner == null ? "Console" : banner.getName())
                 .with("duration", TemporalDuration.of(duration));
 
-        broadcastService.broadcast(message.get("ipban.broadcast"), silent);
+        broadcastService.broadcast(message.get("ipban.broadcast"), silent, source);
 
         for(Player player : locatorService.players(address)) {
             player.kickPlayer(message.get("ipban.kick"));

@@ -1,6 +1,6 @@
 database:
    driver: "org.h2.Driver"
-   url: "jdbc:h2:./plugins/MaxBans/storage"
+   url: "jdbc:h2:./plugins/MaxBansPlus/storage"
    user: "root"
    password: "password"
    show-sql: false

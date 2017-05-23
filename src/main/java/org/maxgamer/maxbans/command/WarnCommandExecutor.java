@@ -32,7 +32,7 @@ public class WarnCommandExecutor extends UserRestrictionCommandExecutor {
         User banner = (source instanceof Player ? userService.getOrCreate((Player) source) : null);
 
         Locale.MessageBuilder message = warningService.warn(banner, user, reason, locale);
-        broadcastService.broadcast(message.get("warn.broadcast"), silent);
+        broadcastService.broadcast(message.get("warn.broadcast"), silent, source, locatorService.player(user));
         metricService.increment(MetricService.WARNINGS);
     }
 }

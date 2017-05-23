@@ -48,6 +48,6 @@ public class LockdownCommandExecutor extends StandardCommandExecutor {
         Locale.MessageBuilder message = lockdownService.lockdown(source, type, String.join(" ", args), locale);
 
         // Everyone else gets a message telling them what's happened
-        broadcastService.broadcast(message.get("lockdown.broadcast"), silent);
+        broadcastService.broadcast(message.get("lockdown.broadcast"), silent, sender);
     }
 }

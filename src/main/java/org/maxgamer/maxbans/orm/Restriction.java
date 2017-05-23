@@ -24,10 +24,10 @@ public abstract class Restriction {
     @Column
     protected String reason;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     protected User source;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     protected User revoker;
 
     public UUID getId() {

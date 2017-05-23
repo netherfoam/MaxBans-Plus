@@ -75,4 +75,8 @@ CREATE TABLE Warning (
     reason TEXT DEFAULT NULL
 );
 
--- TODO: Indices on all user_id, expires_at, source_id, name columns
+CREATE INDEX users_alias ON Users(alias);
+CREATE INDEX users_mute_user_id ON Users_Mute(user_id);
+CREATE INDEX users_ban_user_id ON Users_Ban(user_id);
+
+CREATE INDEX warning_user_id ON Warning(user_id);

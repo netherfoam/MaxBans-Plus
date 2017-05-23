@@ -44,7 +44,7 @@ public class BanCommandExecutor extends UserRestrictionCommandExecutor {
         Player player = locatorService.player(user);
         if(player != null) player.kickPlayer(message.get("ban.kick"));
 
-        broadcastService.broadcast(message.get("ban.broadcast"), silent);
+        broadcastService.broadcast(message.get("ban.broadcast"), silent, source, player);
 
         metricService.increment(MetricService.USER_BANS);
     }

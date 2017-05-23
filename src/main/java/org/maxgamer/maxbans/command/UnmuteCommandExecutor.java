@@ -54,6 +54,6 @@ public class UnmuteCommandExecutor extends IPRestrictionCommandExecutor {
             throw new RejectedException("No mute found");
         }
 
-        broadcastService.broadcast(message.get("mute.unmute"), silent);
+        broadcastService.broadcast(message.get("mute.unmute"), silent, sender);
     }
 }
