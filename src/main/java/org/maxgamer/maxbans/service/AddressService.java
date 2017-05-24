@@ -22,12 +22,14 @@ public class AddressService {
     private MuteRepository mutes;
     private AddressRepository addressRepository;
     private GeoIPService geoIPService;
+    private UserService userService;
 
-    public AddressService(BanRepository bans, MuteRepository mutes, AddressRepository addressRepository, GeoIPService geoIPService) {
+    public AddressService(BanRepository bans, MuteRepository mutes, AddressRepository addressRepository, GeoIPService geoIPService, UserService userService) {
         this.bans = bans;
         this.mutes = mutes;
         this.addressRepository = addressRepository;
         this.geoIPService = geoIPService;
+        this.userService = userService;
     }
 
     public Address get(String ip) {
@@ -179,15 +181,24 @@ public class AddressService {
 
         List<UserAddress> history = address.getUsers();
         Locale.MessageBuilder builder = locale.get();
+        builder.with("ip", address.getHost());
 
         if(!history.isEmpty()) {
-            UserAddress userAddress = history.get(history.size() - 1);
+            Instant lastActive = null;
+            Instant firstActive = null;
 
-            builder.with("lastActive", userAddress.getLastActive());
-            builder.with("firstActive", userAddress.getFirstActive());
+            for(UserAddress userAddress : history) {
+                if(lastActive == null || userAddress.getLastActive().isAfter(lastActive)) {
+                    lastActive = userAddress.getLastActive();
+                }
 
-            User user = userAddress.getUser();
-            builder.with("name", user.getName());
+                if(firstActive == null || userAddress.getFirstActive().isBefore(firstActive)) {
+                    firstActive = userAddress.getFirstActive();
+                }
+            }
+
+            builder.with("lastActive", lastActive);
+            builder.with("firstActive", firstActive);
 
             GeoCountry country = geoIPService.getCountry(address.getHost());
             if (country != null) {
@@ -197,20 +208,21 @@ public class AddressService {
 
             Ban ban = getBan(address);
             if(ban != null) {
-                builder.with("ban",ban.getExpiresAt());
+                String reason = ban.getReason();
+                if(reason == null || reason.isEmpty()) reason = "No reason";
+                builder.with("ban", reason);
             }
 
             Mute mute = getMute(address);
             if(mute != null) {
-                builder.with("mute", mute.getExpiresAt());
+                String reason = mute.getReason();
+                if(reason == null || reason.isEmpty()) reason = "No reason";
+                builder.with("mute", reason);
             }
 
             List<User> users = address.getUsers().stream().map(UserAddress::getUser).collect(Collectors.toList());
             StringBuilder stringBuilder = new StringBuilder();
             for(User related : users) {
-                // Don't include the user whose active
-                if(related == user) continue;
-
                 // Prefix with a comma if this isn't the first element
                 if(stringBuilder.length() > 0) stringBuilder.append(", ");
 
@@ -229,6 +241,7 @@ public class AddressService {
 
         List<UserAddress> history = user.getAddresses();
         Locale.MessageBuilder builder = locale.get();
+        builder.with("name", user.getName());
 
         if(!history.isEmpty()) {
             UserAddress userAddress = history.get(history.size() - 1);
@@ -245,12 +258,18 @@ public class AddressService {
                 builder.with("continent", country.getContinentName());
             }
 
-            if(RestrictionUtil.isActive(address.getBans())) {
-                builder.with("ban", address.getBans().get(0).getExpiresAt());
+            Ban ban = getBan(address);
+            if(ban != null) {
+                String reason = ban.getReason();
+                if(reason == null || reason.isEmpty()) reason = "No reason";
+                builder.with("ban", reason);
             }
 
-            if(RestrictionUtil.isActive(address.getMutes())) {
-                builder.with("mute", address.getMutes().get(0).getExpiresAt());
+            Mute mute = getMute(address);
+            if(mute != null) {
+                String reason = mute.getReason();
+                if(reason == null || reason.isEmpty()) reason = "No reason";
+                builder.with("mute", reason);
             }
 
             List<User> users = address.getUsers().stream().map(UserAddress::getUser).collect(Collectors.toList());
@@ -268,12 +287,18 @@ public class AddressService {
         }
 
         // These override the IP restrictions, since the user was explicitly banned
-        if(RestrictionUtil.isActive(user.getBans())) {
-            builder.with("ban", user.getBans().get(0).getExpiresAt());
+        Ban ban = userService.getBan(user);
+        if(ban != null) {
+            String reason = ban.getReason();
+            if(reason == null || reason.isEmpty()) reason = "No reason";
+            builder.with("ban", reason);
         }
 
-        if(RestrictionUtil.isActive(user.getMutes())) {
-            builder.with("mute", user.getMutes().get(0).getExpiresAt());
+        Mute mute = userService.getMute(user);
+        if(mute != null) {
+            String reason = mute.getReason();
+            if(reason == null || reason.isEmpty()) reason = "No reason";
+            builder.with("mute", reason);
         }
 
         return builder;

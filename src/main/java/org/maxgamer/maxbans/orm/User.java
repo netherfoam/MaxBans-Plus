@@ -36,7 +36,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "mute_id"),
             joinColumns = @JoinColumn(name = "user_id")
     )
-    @OrderBy("lastActive ASC")
     private List<Mute> mutes = new LinkedList<>();
 
     @ManyToMany

@@ -6,7 +6,6 @@
 
     <groupId>org.maxgamer</groupId>
     <artifactId>maxbans-plus</artifactId>
-    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -49,7 +48,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.193</version>
-            <scope>test</scope>
+            <scope>compile</scope>
         </dependency>
 
         <!--Spigot API-->
@@ -116,7 +115,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
+                            <minimizeJar>false</minimizeJar>
                             <relocations>
                                 <relocation>
                                     <pattern>javax.persistence</pattern>

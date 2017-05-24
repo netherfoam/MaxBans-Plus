@@ -58,7 +58,7 @@ permission:
 
 iplookup:
     never: "&a{{name}}&r has no IP history"
-    format: |
+    user: |
       &a{{name}}&r IP Address Report:
       First Login: &a{{firstActive|Never}}&r
       Last Login: &a{{lastActive|Never}}&r
@@ -66,6 +66,15 @@ iplookup:
       Ban: &a{{ban|None}}&r
       Mute: &a{{mute|None}}&r
       The following users have also used the IP Address:
+      &a{{users|None}}&r
+
+    ip: |
+      &a{{ip}}&r IP Address Report:
+      First Seen: &a{{firstActive|Never}}&r
+      Last Seen: &a{{lastActive|Never}}&r
+      Ban: &a{{ban|None}}&r
+      Mute: &a{{mute|None}}&r
+      The following users have used the IP Address:
       &a{{users|None}}&r
 
 history:

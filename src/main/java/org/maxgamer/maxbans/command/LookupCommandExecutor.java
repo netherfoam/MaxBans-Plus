@@ -25,7 +25,7 @@ public class LookupCommandExecutor extends IPRestrictionCommandExecutor {
         if(user != null) {
             String message = addressService
                     .report(user, locale)
-                    .get("iplookup.format");
+                    .get("iplookup.user");
 
             source.sendMessage(message);
             return;
@@ -34,7 +34,7 @@ public class LookupCommandExecutor extends IPRestrictionCommandExecutor {
         // Address can't be null
         String message = addressService
                 .report(address, locale)
-                .get("iplookup.format");
+                .get("iplookup.ip");
 
         source.sendMessage(message);
     }

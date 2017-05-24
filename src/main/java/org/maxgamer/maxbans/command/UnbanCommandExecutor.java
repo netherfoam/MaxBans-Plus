@@ -35,25 +35,23 @@ public class UnbanCommandExecutor extends IPRestrictionCommandExecutor {
         Locale.MessageBuilder message = locale.get()
                 .with("source", source == null ? "Console" : source.getName());
 
-        broadcastService.broadcast(message.get("ban.unban"), silent);
-
         boolean any = false;
         if(user != null && userService.getBan(user) != null) {
             userService.unban(source, user);
             message.with("name", user.getName());
+            broadcastService.broadcast(message.get("ban.unban"), silent, sender);
             any = true;
         }
 
         if(addressService.getBan(address) != null) {
             addressService.unban(source, address);
             message.with("address", address.getHost());
+            broadcastService.broadcast(message.get("ipban.unban"), silent, sender);
             any = true;
         }
 
         if(!any) {
             throw new RejectedException("No ban found");
         }
-
-        broadcastService.broadcast(message.get("ban.unban"), silent, sender);
     }
 }
