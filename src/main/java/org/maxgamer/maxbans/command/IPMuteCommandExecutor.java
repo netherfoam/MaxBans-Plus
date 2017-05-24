@@ -35,7 +35,7 @@ public class IPMuteCommandExecutor extends IPRestrictionCommandExecutor {
         addressService.mute(muter, address, reason, duration);
 
         Locale.MessageBuilder message = locale.get()
-                .with("name", user.getName())
+                .with("name", user == null ? null : user.getName())
                 .with("address", address.getHost())
                 .with("reason", reason)
                 .with("source", muter == null ? "Console" : muter.getName())

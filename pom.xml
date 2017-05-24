@@ -28,7 +28,6 @@
             <version>1.4</version>
         </dependency>
 
-
         <!-- PrettyTime for formatting dates -->
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
@@ -49,6 +48,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.193</version>
+            <scope>compile</scope>
         </dependency>
 
         <!--Spigot API-->
@@ -115,6 +115,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <minimizeJar>false</minimizeJar>
                             <relocations>
                                 <relocation>
                                     <pattern>javax.persistence</pattern>

@@ -97,7 +97,7 @@ public class MaxBansPlus extends JavaPlugin {
         getCommand("mute").setExecutor(new MuteCommandExecutor(context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getBroadcastService(), locale, context.getMetricService()));
         getCommand("ipmute").setExecutor(new IPMuteCommandExecutor(locale, context.getLocatorService(), context.getTransactor(), context.getAddressService(), context.getUserService(), context.getBroadcastService(), context.getMetricService()));
         getCommand("unmute").setExecutor(new UnmuteCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService(), context.getAddressService(), context.getUserService(), context.getMetricService()));
-        getCommand("iplookup").setExecutor(new IPLookupCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getAddressService()));
+        getCommand("iplookup").setExecutor(new LookupCommandExecutor(context.getTransactor(), locale, context.getLocatorService(), context.getAddressService()));
         getCommand("kick").setExecutor(new KickCommand(context.getTransactor(), locale, context.getLocatorService(), context.getBroadcastService(), context.getMetricService()));
         getCommand("warn").setExecutor(new WarnCommandExecutor(locale, context.getTransactor(), context.getLocatorService(), context.getUserService(), context.getWarningService(), context.getBroadcastService(), context.getMetricService()));
         getCommand("lockdown").setExecutor(new LockdownCommandExecutor(context.getTransactor(), locale, context.getLockdownService(), context.getUserService(), context.getBroadcastService()));

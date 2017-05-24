@@ -36,6 +36,7 @@ commands:
    iplookup:
       description: Inspect information about a players most recent IP address
       usage: /iplookup <user>
+      aliases: ["lookup", "checkban", "dupeip"]
 
    warn:
       description: Warn a player for misbehaviour
