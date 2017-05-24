@@ -172,6 +172,56 @@ public class AddressService {
         user.getAddresses().add(userAddress);
     }
 
+    public Locale.MessageBuilder report(Address address, Locale locale) throws RejectedException {
+        if(address == null) {
+            throw new RejectedException("iplookup.never");
+        }
+
+        List<UserAddress> history = address.getUsers();
+        Locale.MessageBuilder builder = locale.get();
+
+        if(!history.isEmpty()) {
+            UserAddress userAddress = history.get(history.size() - 1);
+
+            builder.with("lastActive", userAddress.getLastActive());
+            builder.with("firstActive", userAddress.getFirstActive());
+
+            User user = userAddress.getUser();
+            builder.with("name", user.getName());
+
+            GeoCountry country = geoIPService.getCountry(address.getHost());
+            if (country != null) {
+                builder.with("country", country.getCountryName());
+                builder.with("continent", country.getContinentName());
+            }
+
+            Ban ban = getBan(address);
+            if(ban != null) {
+                builder.with("ban",ban.getExpiresAt());
+            }
+
+            Mute mute = getMute(address);
+            if(mute != null) {
+                builder.with("mute", mute.getExpiresAt());
+            }
+
+            List<User> users = address.getUsers().stream().map(UserAddress::getUser).collect(Collectors.toList());
+            StringBuilder stringBuilder = new StringBuilder();
+            for(User related : users) {
+                // Don't include the user whose active
+                if(related == user) continue;
+
+                // Prefix with a comma if this isn't the first element
+                if(stringBuilder.length() > 0) stringBuilder.append(", ");
+
+                stringBuilder.append(related.getName());
+            }
+            builder.with("users", stringBuilder.toString());
+        }
+
+        return builder;
+    }
+
     public Locale.MessageBuilder report(User user, Locale locale) throws RejectedException {
         if(user == null || user.getAddresses().isEmpty()) {
             throw new RejectedException("iplookup.never");

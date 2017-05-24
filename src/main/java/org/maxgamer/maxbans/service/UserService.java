@@ -98,6 +98,7 @@ public class UserService {
         if(mute == null) return;
 
         throw new RejectedException("mute.denied")
+                .with("name", user.getName())
                 .with("reason", mute.getReason())
                 .with("duration", mute.getExpiresAt());
     }

@@ -28,6 +28,6 @@ public class BroadcastServiceTest {
         broadcast.moderators("test", Duration.ofMinutes(1), "Hello");
         broadcast.moderators("test", Duration.ofMinutes(1), "Hello");
 
-        verify(player, times(1)).sendMessage(eq("Hello"));
+        verify(server, times(1)).broadcast(eq("Hello"), any());
     }
 }
