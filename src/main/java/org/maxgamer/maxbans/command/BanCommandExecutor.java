@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
@@ -35,7 +36,7 @@ public class BanCommandExecutor extends UserRestrictionCommandExecutor {
 
         userService.ban(banner, user, reason, duration);
         
-        Locale.MessageBuilder message = locale.get()
+        MessageBuilder message = locale.get()
                 .with("name", user.getName())
                 .with("reason", reason)
                 .with("source", banner == null ? "Console" : banner.getName())

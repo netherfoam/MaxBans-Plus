@@ -1,30 +1,22 @@
 ban:
     kick: "&fYou've been banned by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
-    broadcast: "&a{{name}}&r was banned by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    broadcast: "&a{{name|address}}&r was banned by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
     denied: "&fYou're banned for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
-    unban: "&f{{name}} was unbanned by {{source}}."
+    unban: "&f{{name|address}} was unbanned by {{source}}."
 
 ipban:
     kick: "You've been banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
-    broadcast: "{{name|An IP address}} was banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    broadcast: "{{name|address}} was banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
     denied: "You're banned for {{reason|no reason}}. Expires: {{duration|never}}"
-    unban: "{{name|An IP address}} was unbanned by {{source}}."
+    unban: "{{name|address}} was unbanned by {{source}}."
 
 mute:
     muted: "&fYou've been muted by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
-    broadcast: "&a{{name}}&r was muted by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    broadcast: "&a{{name|address}}&r was muted by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
     denied: "&fYou're muted for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
-    unmute: "&a{{name}}&r was unmuted by &a{{source}}&r"
+    unmute: "&a{{name|address}}&r was unmuted by &a{{source}}&r"
     error:
         not-muted: "&a{{name}}&r is not muted"
-
-ipmute:
-    muted: "You've been muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
-    broadcast: "{{name|An IP address}} was muted by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
-    denied: "You're muted for {{reason|no reason}}. Expires: {{duration|never}}"
-    unmute: "{{name|An IP address}} was unmuted by {{source}}"
-    error:
-        not-muted: "{{name|That IP address}} is not muted"
 
 warn:
     warned: "&fYou've been warned by &a{{source}}&r for &a{{reason|no reason}}&r. The warning expires in &a{{duration}}&r"
@@ -47,9 +39,9 @@ lockdown:
       Reason: &a{{reason|None}}&r
 
 notification:
-    ipbanned: "&a{{name|An IP address}}&r tried to join but is currently banned."
+    ipbanned: "&a{{name|address}}&r tried to join but is currently banned."
     banned: "&a{{name}}&r tried to join but is currently banned."
-    ipmuted: "&a{{name|An IP address}}&r tried to chat, but is currently muted."
+    ipmuted: "&a{{name|address}}&r tried to chat, but is currently muted."
     muted: "&a{{name}}&r tried to chat, but is currently muted."
     lockdown: "&a{{name}}&r tried to join, but the server is in lockdown."
 

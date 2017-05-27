@@ -45,7 +45,7 @@ public class MaxBansPlus extends JavaPlugin {
         
         if(context != null) {
             try {
-                context.getConfig().load(getConfig());
+                context.getConfig().load(getConfig(), getServer());
             } catch (ConfigException e) {
                 getLogger().severe("Configuration failed validation at " + e.getSection().getCurrentPath() + ": " + e.getMessage());
                 getPluginLoader().disablePlugin(this);
@@ -78,7 +78,7 @@ public class MaxBansPlus extends JavaPlugin {
 
         PluginConfig config;
         try {
-            config = new PluginConfig(getConfig());
+            config = new PluginConfig(getConfig(), getServer());
         } catch (ConfigException e) {
             getLogger().severe("Configuration failed validation at " + e.getSection().getCurrentPath() + ": " + e.getMessage());
             getPluginLoader().disablePlugin(this);

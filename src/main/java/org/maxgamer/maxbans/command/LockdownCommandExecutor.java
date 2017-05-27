@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LockdownService;
@@ -45,7 +46,7 @@ public class LockdownCommandExecutor extends StandardCommandExecutor {
 
         String type = args.pop();
 
-        Locale.MessageBuilder message = lockdownService.lockdown(source, type, String.join(" ", args), locale);
+        MessageBuilder message = lockdownService.lockdown(source, type, String.join(" ", args), locale);
 
         // Everyone else gets a message telling them what's happened
         broadcastService.broadcast(message.get("lockdown.broadcast"), silent, sender);

@@ -6,6 +6,7 @@ import org.maxgamer.maxbans.PluginContextTest;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.orm.UserAddress;
@@ -88,7 +89,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
         });
 
         getContext().getTransactor().work(session -> {
-            Locale.MessageBuilder builder = service.report(users.get(id), new Locale());
+            MessageBuilder builder = service.report(users.get(id), new Locale());
 
             Assert.assertEquals("expect no ban", builder.preview("ban"), null);
             Assert.assertEquals("expect no mute", builder.preview("mute"), null);

@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.service.MetricService;
@@ -47,7 +48,7 @@ public class KickCommand extends StandardCommandExecutor {
         }
 
         String reason = String.join(" ", args);
-        Locale.MessageBuilder properties = locale.get()
+        MessageBuilder properties = locale.get()
                 .with("source", sender instanceof Player ? sender.getName() : "Console")
                 .with("name", player.getName())
                 .with("reason", reason);

@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.*;
@@ -34,14 +35,14 @@ public class IPMuteCommandExecutor extends IPRestrictionCommandExecutor {
 
         addressService.mute(muter, address, reason, duration);
 
-        Locale.MessageBuilder message = locale.get()
+        MessageBuilder message = locale.get()
                 .with("name", user == null ? null : user.getName())
                 .with("address", address.getHost())
                 .with("reason", reason)
                 .with("source", muter == null ? "Console" : muter.getName())
                 .with("duration", TemporalDuration.of(duration));
 
-        broadcastService.broadcast(message.get("ipmute.broadcast"), silent, source, locatorService.player(user));
+        broadcastService.broadcast(message.get("mute.broadcast"), silent, source, locatorService.player(user));
 
         metricService.increment(MetricService.IP_MUTES);
     }

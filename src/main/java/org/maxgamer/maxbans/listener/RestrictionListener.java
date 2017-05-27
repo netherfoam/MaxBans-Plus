@@ -82,6 +82,8 @@ public class RestrictionListener implements Listener {
         try {
             userService.onChat(user);
         } catch (RejectedException r) {
+            r.with("name", player.getName());
+
             broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.muted"));
             throw r;
         }
@@ -89,6 +91,8 @@ public class RestrictionListener implements Listener {
         try {
             addressService.onChat(addressService.getOrCreate(player.getAddress().getAddress().getHostAddress()));
         } catch (RejectedException r) {
+            r.with("name", player.getName());
+
             broadcastService.moderators("muted", Duration.ofMinutes(3), r.toBuilder(locale).get("notification.ipmuted"));
             throw r;
         }

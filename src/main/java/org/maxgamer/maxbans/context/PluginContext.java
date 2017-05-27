@@ -77,6 +77,7 @@ public class PluginContext {
 
     public PluginConfig getConfig() {
         return config;
+        
     }
 
     public Server getServer() {

@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.service;
 
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.*;
 import org.maxgamer.maxbans.repository.AddressRepository;
 import org.maxgamer.maxbans.repository.BanRepository;
@@ -137,6 +138,7 @@ public class AddressService {
         if(mute == null) return;
 
         throw new RejectedException("mute.denied")
+                .with("address", address.getHost())
                 .with("banner", mute.getSource() == null ? "Console" : mute.getSource().getName())
                 .with("reason", mute.getReason())
                 .with("duration", mute.getExpiresAt());
@@ -163,7 +165,8 @@ public class AddressService {
 
         Ban ban = getBan(address);
         if(ban != null) {
-            throw new RejectedException("ipban.kick")
+            throw new RejectedException("ban.kick")
+                    .with("address", ip)
                     .with("banner", ban.getSource() == null ? "Console" : ban.getSource().getName())
                     .with("reason", ban.getReason())
                     .with("duration", ban.getExpiresAt());
@@ -174,13 +177,13 @@ public class AddressService {
         user.getAddresses().add(userAddress);
     }
 
-    public Locale.MessageBuilder report(Address address, Locale locale) throws RejectedException {
+    public MessageBuilder report(Address address, Locale locale) throws RejectedException {
         if(address == null) {
             throw new RejectedException("iplookup.never");
         }
 
         List<UserAddress> history = address.getUsers();
-        Locale.MessageBuilder builder = locale.get();
+        MessageBuilder builder = locale.get();
         builder.with("ip", address.getHost());
 
         if(!history.isEmpty()) {
@@ -234,13 +237,13 @@ public class AddressService {
         return builder;
     }
 
-    public Locale.MessageBuilder report(User user, Locale locale) throws RejectedException {
+    public MessageBuilder report(User user, Locale locale) throws RejectedException {
         if(user == null || user.getAddresses().isEmpty()) {
             throw new RejectedException("iplookup.never");
         }
 
         List<UserAddress> history = user.getAddresses();
-        Locale.MessageBuilder builder = locale.get();
+        MessageBuilder builder = locale.get();
         builder.with("name", user.getName());
 
         if(!history.isEmpty()) {

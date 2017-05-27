@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.util.Lockdown;
 
@@ -70,7 +71,7 @@ public class LockdownService {
         return true;
     }
 
-    public Locale.MessageBuilder lockdown(User source, String name, String reason, Locale locale) throws RejectedException {
+    public MessageBuilder lockdown(User source, String name, String reason, Locale locale) throws RejectedException {
         Lockdown type = Lockdown.get(name);
 
         if(type == null) {
@@ -91,7 +92,7 @@ public class LockdownService {
         file.set("state", state.toString());
         file.set("reason", reason);
 
-        Locale.MessageBuilder message = locale.get()
+        MessageBuilder message = locale.get()
                 .with("type", state.toString().toLowerCase())
                 .with("reason", reason)
                 .with("description", state.description())

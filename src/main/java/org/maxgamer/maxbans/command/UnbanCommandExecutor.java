@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.*;
@@ -32,7 +33,7 @@ public class UnbanCommandExecutor extends IPRestrictionCommandExecutor {
     public void restrict(CommandSender sender, Address address, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException {
         User source = (sender instanceof Player ? userService.getOrCreate((Player) sender) : null);
 
-        Locale.MessageBuilder message = locale.get()
+        MessageBuilder message = locale.get()
                 .with("source", source == null ? "Console" : source.getName());
 
         boolean any = false;
@@ -46,7 +47,7 @@ public class UnbanCommandExecutor extends IPRestrictionCommandExecutor {
         if(addressService.getBan(address) != null) {
             addressService.unban(source, address);
             message.with("address", address.getHost());
-            broadcastService.broadcast(message.get("ipban.unban"), silent, sender);
+            broadcastService.broadcast(message.get("ban.unban"), silent, sender);
             any = true;
         }
 

@@ -1,5 +1,6 @@
 package org.maxgamer.maxbans.util;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,24 +22,48 @@ public class StringUtil {
             result += template.substring(last, start);
             last = end;
 
-            int defaultSeparator = group.lastIndexOf('|');
-            String identifier;
-            String defaultValue;
-            if(defaultSeparator >= 0) {
-                identifier = group.substring(2, defaultSeparator);
-                defaultValue = group.substring(defaultSeparator + 1, group.length() - 2);
-            } else {
-                identifier = group.substring(2, group.length() - 2);
-                defaultValue = "MISSING";
-            }
-
-            Object value = substitutions.get(identifier);
-            if(value == null || value.toString().isEmpty()) value = defaultValue;
+            group = group.substring(2, group.length() - 2);
+            String[] options = split(group, '|');
+            String value = expand(options, substitutions);
 
             result += value;
         }
         result += template.substring(last);
 
         return result;
+    }
+
+    public static String expand(String[] options, Map<String, Object> substitutions) {
+        for(String option : options) {
+            Object value = substitutions.get(option);
+            if(value == null) continue;
+            String text = value.toString();
+            if(text.isEmpty()) continue;
+
+            return text;
+        }
+
+        return options[options.length - 1];
+    }
+
+    private static String[] split(String text, char delimiter) {
+        // Can't use string.split("\\|") because that splits "hello||" into just "hello" and not {"hello", "", ""} as it should
+
+        LinkedList<String> components = new LinkedList<>();
+
+        int start = 0;
+        int end;
+
+        while((end = text.indexOf(delimiter, start)) >= 0) {
+            String s = text.substring(start, end);
+            components.add(s);
+
+            // +1 so we skip the | next.
+            start = end + 1;
+        }
+
+        components.add(text.substring(start, text.length()));
+
+        return components.toArray(new String[components.size()]);
     }
 }

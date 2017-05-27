@@ -23,6 +23,7 @@ public class LocaleTest implements UnitTest {
         
         messages.put("test.message", "Here is a {{type}} {{mode|message}} {{punc|}}");
         messages.put("ban.kick", "You've been banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}");
+        messages.put("greeting", "Hello {{planet|person}}");
         locale = new Locale(messages);
     }
     
@@ -44,6 +45,25 @@ public class LocaleTest implements UnitTest {
                 .with("duration", new TemporalDuration(ChronoUnit.HOURS.getDuration()))
                 .get("ban.kick");
         
+        Assert.assertEquals(expected, got);
+    }
+
+    @Test
+    public void testFallbackSubstitution() {
+        String expected = "Hello Sweetie";
+        String got = locale.get()
+                .with("person", "Sweetie")
+                .get("greeting");
+
+        Assert.assertEquals(expected, got);
+    }
+
+    @Test
+    public void testFallBackWithNoValue() {
+        String expected = "Hello person";
+        String got = locale.get()
+                .get("greeting");
+
         Assert.assertEquals(expected, got);
     }
 }

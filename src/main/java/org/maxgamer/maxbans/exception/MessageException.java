@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.exception;
 
 import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class MessageException extends Exception {
     public String getMessage(Locale locale) {
         if(locale.has(getMessage())) {
             // The message has a translation
-            Locale.MessageBuilder builder = toBuilder(locale);
+            MessageBuilder builder = toBuilder(locale);
 
            return builder.get(getMessage());
         } else {
@@ -38,8 +39,8 @@ public class MessageException extends Exception {
         }
     }
 
-    public Locale.MessageBuilder toBuilder(Locale locale) {
-        Locale.MessageBuilder builder = locale.get();
+    public MessageBuilder toBuilder(Locale locale) {
+        MessageBuilder builder = locale.get();
         for (Map.Entry<String, Object> entry : substitutions.entrySet()) {
             builder.with(entry.getKey(), entry.getValue());
         }

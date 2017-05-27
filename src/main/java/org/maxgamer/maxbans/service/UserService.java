@@ -63,7 +63,12 @@ public class UserService {
     public User getOrCreate(Player player) {
         User user = get(player);
         
-        if(user != null) return user;
+        if(user != null) {
+            if(!player.getName().equals(user.getName())) {
+                user.setName(player.getName());
+            }
+            return user;
+        }
         
         return create(player);
     }
@@ -92,7 +97,7 @@ public class UserService {
                 .with("reason", ban.getReason())
                 .with("duration", ban.getExpiresAt());
     }
-    
+
     public void onChat(User user) throws RejectedException {
         Mute mute = getMute(user);
         if(mute == null) return;

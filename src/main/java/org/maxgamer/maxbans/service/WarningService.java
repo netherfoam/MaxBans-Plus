@@ -4,6 +4,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.config.WarningConfig;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.orm.Warning;
 import org.maxgamer.maxbans.repository.WarningRepository;
@@ -29,7 +30,7 @@ public class WarningService {
         this.config = config;
     }
 
-    public Locale.MessageBuilder warn(User source, User user, String reason, Locale locale) {
+    public MessageBuilder warn(User source, User user, String reason, Locale locale) {
         List<Warning> warnings = user.getWarnings();
 
         Warning warning = new Warning(user);
@@ -55,7 +56,7 @@ public class WarningService {
             }
         }
 
-        Locale.MessageBuilder message = locale.get()
+        MessageBuilder message = locale.get()
                 .with("source", source == null ? "Console" : source.getName())
                 .with("reason", reason)
                 .with("duration", config.getDuration())
