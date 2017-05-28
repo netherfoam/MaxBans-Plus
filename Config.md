@@ -33,6 +33,7 @@ database:
 ```
 
 The options are as follows:
+
 Option | Description
 -------|------------
 driver | The database driver to use. Common ones are `com.mysql.jdbc.Driver` and `org.h2.Driver`
@@ -40,6 +41,16 @@ url    | The JDBC url for the driver. Varies depending on the driver
 user   | The user to connect to the database with
 password | The password to use for the database
 show-sql | Whether SQL statements should be printed to the console. This is a debugging tool.
+
+
+#### MySQL Example:
+```yml
+database:
+   driver: "com.mysql.jdbc.Driver"
+   url: "jdbc:mysql://localhost:3306/maxbansplus"
+   user: "root"
+   password: "password"
+```
 
 ```yml
 offline: false
