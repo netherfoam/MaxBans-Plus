@@ -1,1 +1,4 @@
-[Config][Config.md]
+# Configuration
+
+The configuration explanation can be found [here](Config.md).
+

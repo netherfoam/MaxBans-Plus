@@ -4,6 +4,7 @@ import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.test.IntegrationTest;
+import org.maxgamer.maxbans.util.FlywayUtil;
 
 import java.io.File;
 
@@ -27,9 +28,7 @@ public abstract class H2Test implements IntegrationTest {
         jdbc.setUsername("root");
         jdbc.setPassword("password");
 
-        Flyway flyway = new Flyway();
-        flyway.setClassLoader(getClass().getClassLoader());
-        flyway.setDataSource(jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
+        Flyway flyway = FlywayUtil.migrater(jdbc);
         flyway.migrate();
         
         initialized = true;

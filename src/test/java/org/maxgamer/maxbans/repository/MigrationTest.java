@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.orm.HibernateConfigurer;
 import org.maxgamer.maxbans.test.IntegrationTest;
+import org.maxgamer.maxbans.util.FlywayUtil;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
@@ -19,7 +20,6 @@ public class MigrationTest implements IntegrationTest {
     
     @Before
     public void init() {
-        
         jdbc = new JdbcConfig();
         jdbc.setUrl("jdbc:h2:mem:");
         jdbc.setDriver("org.h2.Driver");
@@ -29,9 +29,7 @@ public class MigrationTest implements IntegrationTest {
         Configuration hibernate = HibernateConfigurer.configuration(jdbc);
         sessionFactory = hibernate.buildSessionFactory();
 
-        flyway = new Flyway();
-        flyway.setClassLoader(getClass().getClassLoader());
-        flyway.setDataSource(jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
+        flyway = FlywayUtil.migrater(jdbc);
     }
     
     @Test

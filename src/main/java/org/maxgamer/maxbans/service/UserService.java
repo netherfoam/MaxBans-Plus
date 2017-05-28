@@ -91,11 +91,13 @@ public class UserService {
     
     public void onJoin(User user) throws RejectedException {
         Ban ban = getBan(user);
-        if(ban == null) return;
+        if(ban != null) {
+            throw new RejectedException("ban.denied")
+                    .with("reason", ban.getReason())
+                    .with("duration", ban.getExpiresAt());
+        }
 
-        throw new RejectedException("ban.denied")
-                .with("reason", ban.getReason())
-                .with("duration", ban.getExpiresAt());
+        user.setLastActive(Instant.now());
     }
 
     public void onChat(User user) throws RejectedException {

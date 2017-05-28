@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
 import org.maxgamer.maxbans.command.*;
-import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.exception.ConfigException;
@@ -14,6 +13,7 @@ import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.listener.RestrictionListener;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.service.MetricService;
+import org.maxgamer.maxbans.util.FlywayUtil;
 
 import java.io.File;
 
@@ -62,12 +62,7 @@ public class MaxBansPlus extends JavaPlugin {
      * this will raise an exception.
      */
     public void migrate() {
-        Flyway flyway = new Flyway();
-        JdbcConfig jdbc = context.getConfig().getJdbcConfig();
-        
-        flyway.setClassLoader(getClass().getClassLoader());
-        flyway.setDataSource(jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
-        
+        Flyway flyway = FlywayUtil.migrater(context.getConfig().getJdbcConfig());
         flyway.migrate();
     }
 
