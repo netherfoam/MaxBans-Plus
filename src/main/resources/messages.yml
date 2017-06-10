@@ -54,7 +54,7 @@ iplookup:
       &a{{name}}&r IP Address Report:
       First Login: &a{{firstActive|Never}}&r
       Last Login: &a{{lastActive|Never}}&r
-      Address: &a{{ip}}&r
+      Address: &a{{ip}}&r (&a{{country|continent|Unknown Country}}&r)
       Ban: &a{{ban|None}}&r
       Mute: &a{{mute|None}}&r
       The following users have also used the IP Address:
@@ -64,7 +64,7 @@ iplookup:
       &a{{ip}}&r IP Address Report:
       First Seen: &a{{firstActive|Never}}&r
       Last Seen: &a{{lastActive|Never}}&r
-      Ban: &a{{ban|None}}&r
+      Ban: &a{{ban|None}}&r (&a{{country|continent|Unknown Country}}&r)
       Mute: &a{{mute|None}}&r
       The following users have used the IP Address:
       &a{{users|None}}&r
