@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.locale;
 import org.bukkit.ChatColor;
 import org.maxgamer.maxbans.util.StringUtil;
 
+import java.time.Duration;
 import java.util.Date;
 import java.time.Instant;
 import java.util.HashMap;
@@ -46,6 +47,16 @@ public class MessageBuilder {
             if (value instanceof Date) {
                 // Instants and Dates get pretty printed
                 value = locale.prettyTime.format(((Date) value));
+            }
+
+            if (value instanceof Duration) {
+                // Little bit of a hack because we have a Java 8 Duration object
+                // instead of a PrettyTime Duration object. So we add the duration
+                // to the current time, and then get pretty time to write the difference
+                // between now and then, which hopefully looks like "1 week from now".
+                Duration d = (Duration) value;
+                Instant duration = Instant.now().plus(d);
+                value = locale.prettyTime.format(Date.from(duration));
             }
 
             preprocessed.put(key, value);
