@@ -1,5 +1,5 @@
 name: MaxBansPlus
-version: 1.0
+version: ${version}
 main: org.maxgamer.maxbans.MaxBansPlus
 description: "Advanced banning and muting plugin allowing for some better management of misbehaved players."
 author: netherfoam

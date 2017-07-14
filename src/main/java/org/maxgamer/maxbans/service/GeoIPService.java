@@ -38,9 +38,7 @@ public class GeoIPService {
                     }
 
                     countrySrc = new ByteArrayInputStream(out.toByteArray());
-                }
-
-                if (entry.getName().endsWith(ipv4File)) {
+                } else if (entry.getName().endsWith(ipv4File)) {
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     byte[] data = new byte[4096];
 
