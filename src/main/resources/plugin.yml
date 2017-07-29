@@ -16,7 +16,7 @@ commands:
    unban:
       description: Unbans a user
       usage: /unban <user>
-      
+
    mute:
       description: Mutes a user, optionally for a duration
       usage: /mute <user> [duration] [message]
