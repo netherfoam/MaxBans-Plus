@@ -1,6 +1,7 @@
 package org.maxgamer.maxbans.util;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.MigrationVersion;
 import org.maxgamer.maxbans.config.JdbcConfig;
 
 /**
@@ -18,6 +19,10 @@ public class FlywayUtil {
         if(jdbc.getDriver().contains("mysql")) {
             // MySQL uses a different set of migrations
             type = "mysql";
+
+            // This allows use of databases which have existing tables in their database
+            flyway.setBaselineVersion(MigrationVersion.fromVersion("1.0"));
+            flyway.setBaselineOnMigrate(true);
         }
 
         flyway.setLocations("db/migration/" + type);
