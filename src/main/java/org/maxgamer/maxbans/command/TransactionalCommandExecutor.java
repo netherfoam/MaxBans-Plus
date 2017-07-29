@@ -5,21 +5,33 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.transaction.Transactor;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * @author netherfoam
  */
 public abstract class TransactionalCommandExecutor implements CommandExecutor {
     protected final Transactor transactor;
+    protected final Logger logger;
 
-    public TransactionalCommandExecutor(Transactor transactor) {
+    public TransactionalCommandExecutor(Transactor transactor, Logger logger) {
         this.transactor = transactor;
+        this.logger = logger;
     }
 
     @Override
     public final boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        transactor.work(session -> transact(commandSender, command, s, strings));
+        try {
+            transactor.work(session -> transact(commandSender, command, s, strings));
+            return true;
+        } catch (Throwable t) {
+            // Log our exception to Sentry so it can be fixed
+            logger.log(Level.WARNING, "Failed to execute " + command.getLabel(), t);
 
-        return true;
+            // Rethrow our exception
+            throw t;
+        }
     }
 
     public abstract void transact(CommandSender sender, Command command, String commandName, String[] args);

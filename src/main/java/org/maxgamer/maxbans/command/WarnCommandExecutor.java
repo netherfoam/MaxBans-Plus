@@ -9,6 +9,7 @@ import org.maxgamer.maxbans.service.*;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
+import java.util.logging.Logger;
 
 /**
  * @author netherfoam
@@ -19,8 +20,8 @@ public class WarnCommandExecutor extends UserRestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private MetricService metricService;
 
-    public WarnCommandExecutor(Locale locale, Transactor transactor, LocatorService locatorService, UserService userService, WarningService warningService, BroadcastService broadcastService, MetricService metrics) {
-        super(locale, locatorService, "maxbans.warn", transactor);
+    public WarnCommandExecutor(Locale locale, Logger logger, Transactor transactor, LocatorService locatorService, UserService userService, WarningService warningService, BroadcastService broadcastService, MetricService metrics) {
+        super(locale, locatorService, "maxbans.warn", transactor, logger);
 
         this.userService = userService;
         this.warningService = warningService;

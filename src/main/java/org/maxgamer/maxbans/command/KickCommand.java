@@ -14,6 +14,7 @@ import org.maxgamer.maxbans.util.RestrictionUtil;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * @author netherfoam
@@ -23,8 +24,8 @@ public class KickCommand extends StandardCommandExecutor {
     private BroadcastService broadcastService;
     private MetricService metricService;
 
-    public KickCommand(Transactor transactor, Locale locale, LocatorService locatorService, BroadcastService broadcastService, MetricService metrics) {
-        super(transactor, locale, "maxbans.kick");
+    public KickCommand(Transactor transactor, Locale locale, Logger logger, LocatorService locatorService, BroadcastService broadcastService, MetricService metrics) {
+        super(transactor, locale, logger, "maxbans.kick");
 
         this.locatorService = locatorService;
         this.broadcastService = broadcastService;

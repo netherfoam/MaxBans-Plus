@@ -11,13 +11,14 @@ import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
+import java.util.logging.Logger;
 
 /**
  * @author netherfoam
  */
 public class LookupCommandExecutor extends IPRestrictionCommandExecutor {
-    public LookupCommandExecutor(Transactor transactor, Locale locale, LocatorService locatorService, AddressService addressService) {
-        super(locale, locatorService, "maxbans.iplookup", addressService, transactor);
+    public LookupCommandExecutor(Transactor transactor, Locale locale, Logger logger, LocatorService locatorService, AddressService addressService) {
+        super(locale, logger, locatorService, "maxbans.iplookup", addressService, transactor);
     }
 
     @Override

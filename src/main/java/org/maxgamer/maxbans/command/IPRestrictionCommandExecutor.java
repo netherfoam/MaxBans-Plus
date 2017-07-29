@@ -18,6 +18,7 @@ import org.maxgamer.maxbans.util.RestrictionUtil;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
@@ -27,8 +28,8 @@ public abstract class IPRestrictionCommandExecutor extends StandardCommandExecut
     protected final LocatorService locatorService;
     protected final Transactor transactor;
 
-    public IPRestrictionCommandExecutor(Locale locale, LocatorService locatorService, String permission, AddressService addressService, Transactor transactor) {
-        super(transactor, locale, permission);
+    public IPRestrictionCommandExecutor(Locale locale, Logger logger, LocatorService locatorService, String permission, AddressService addressService, Transactor transactor) {
+        super(transactor, locale, logger, permission);
         this.locatorService = locatorService;
         this.addressService = addressService;
         this.transactor = transactor;

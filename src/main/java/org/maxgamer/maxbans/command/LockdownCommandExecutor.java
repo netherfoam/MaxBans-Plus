@@ -17,6 +17,7 @@ import org.maxgamer.maxbans.util.RestrictionUtil;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * @author netherfoam
@@ -26,8 +27,8 @@ public class LockdownCommandExecutor extends StandardCommandExecutor {
     private UserService userService;
     private BroadcastService broadcastService;
 
-    public LockdownCommandExecutor(Transactor transactor, Locale locale, LockdownService lockdownService, UserService userService, BroadcastService broadcastService) {
-        super(transactor, locale, "maxbans.lockdown");
+    public LockdownCommandExecutor(Transactor transactor, Locale locale, Logger logger, LockdownService lockdownService, UserService userService, BroadcastService broadcastService) {
+        super(transactor, locale, logger, "maxbans.lockdown");
 
         this.lockdownService = lockdownService;
         this.userService = userService;

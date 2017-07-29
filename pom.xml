@@ -14,6 +14,13 @@
     </properties>
 
     <dependencies>
+        <!-- Sentry lets us log exceptions remotely so that they can be resolved -->
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+
         <!-- bStats Metrics -->
         <dependency>
             <groupId>org.bstats</groupId>

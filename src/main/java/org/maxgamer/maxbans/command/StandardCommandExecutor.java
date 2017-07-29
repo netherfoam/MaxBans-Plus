@@ -7,6 +7,8 @@ import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.transaction.Transactor;
 
+import java.util.logging.Logger;
+
 /**
  * @author netherfoam
  */
@@ -14,8 +16,8 @@ public abstract class StandardCommandExecutor extends TransactionalCommandExecut
     protected final Locale locale;
     protected final String permission;
 
-    public StandardCommandExecutor(Transactor transactor, Locale locale, String permission) {
-        super(transactor);
+    public StandardCommandExecutor(Transactor transactor, Locale locale, Logger logger, String permission) {
+        super(transactor, logger);
 
         this.locale = locale;
         this.permission = permission;

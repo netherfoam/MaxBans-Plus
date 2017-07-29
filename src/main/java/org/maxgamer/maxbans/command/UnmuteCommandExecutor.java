@@ -12,6 +12,7 @@ import org.maxgamer.maxbans.service.*;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
+import java.util.logging.Logger;
 
 /**
  * @author netherfoam
@@ -22,8 +23,8 @@ public class UnmuteCommandExecutor extends IPRestrictionCommandExecutor {
     private UserService userService;
     private MetricService metricService;
 
-    public UnmuteCommandExecutor(Transactor transactor, Locale locale, LocatorService locatorService, BroadcastService broadcastService, AddressService addressService, UserService userService, MetricService metrics) {
-        super(locale, locatorService, "maxbans.mute", addressService, transactor);
+    public UnmuteCommandExecutor(Transactor transactor, Locale locale, Logger logger, LocatorService locatorService, BroadcastService broadcastService, AddressService addressService, UserService userService, MetricService metrics) {
+        super(locale, logger, locatorService, "maxbans.mute", addressService, transactor);
 
         this.broadcastService = broadcastService;
         this.addressService = addressService;

@@ -14,6 +14,7 @@ import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.TemporalDuration;
 
 import java.time.Duration;
+import java.util.logging.Logger;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
@@ -23,8 +24,8 @@ public class BanCommandExecutor extends UserRestrictionCommandExecutor {
     private UserService userService;
     private MetricService metricService;
 
-    public BanCommandExecutor(Transactor transactor, LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale, MetricService metrics) {
-        super(locale, locatorService, "maxbans.ban", transactor);
+    public BanCommandExecutor(Transactor transactor, LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale, Logger logger, MetricService metrics) {
+        super(locale, locatorService, "maxbans.ban", transactor, logger);
         this.userService = userService;
         this.broadcastService = broadcastService;
         this.metricService = metrics;

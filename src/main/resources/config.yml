@@ -1,3 +1,4 @@
+# The database to store bans, mutes, and addresses in
 database:
    driver: "org.h2.Driver"
    url: "jdbc:h2:./plugins/MaxBansPlus/storage"
@@ -5,8 +6,11 @@ database:
    password: "password"
    show-sql: false
 
+# Whether the server should be treated as offline. Deleting this line means the servers configuration will be used.
+# This serves as an override. Offline servers use names to uniquely identify players, online servers use their UUID's.
 offline: false
 
+# Each time a player is warned, they receive a strike. This specifies what each of those strikes mean for the player
 warnings:
    penalties:
      1: "tell {{name}} This is your first warning"
@@ -15,4 +19,10 @@ warnings:
    strikes: 3
    duration: "3 days"
 
+# List of chat commands which are not allowed to be used when a player is muted. Examples are /tell and /broadcast
 chat-commands: []
+
+# This sends any errors that occur to Sentry (See https://sentry.io). These errors are then analysed by me, the author,
+# and fixed! It means I can deliver you a more stable plugin, and you don't have to report problems. Disabling or
+# deleting this line means I won't receive error reports and can't help you automagically :(
+error-tracking: true

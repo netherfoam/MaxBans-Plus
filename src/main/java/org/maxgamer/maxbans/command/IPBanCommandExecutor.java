@@ -13,6 +13,7 @@ import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.TemporalDuration;
 
 import java.time.Duration;
+import java.util.logging.Logger;
 
 /**
  * @author netherfoam
@@ -22,8 +23,8 @@ public class IPBanCommandExecutor extends IPRestrictionCommandExecutor {
     private BroadcastService broadcastService;
     private MetricService metricService;
 
-    public IPBanCommandExecutor(Locale locale, LocatorService locatorService, Transactor transactor, AddressService addressService, UserService userService, BroadcastService broadcastService, MetricService metrics) {
-        super(locale, locatorService, "maxbans.ipban", addressService, transactor);
+    public IPBanCommandExecutor(Locale locale, LocatorService locatorService, Transactor transactor, AddressService addressService, UserService userService, BroadcastService broadcastService, Logger logger, MetricService metrics) {
+        super(locale, logger, locatorService, "maxbans.ipban", addressService, transactor);
         this.userService = userService;
         this.broadcastService = broadcastService;
         this.metricService = metrics;

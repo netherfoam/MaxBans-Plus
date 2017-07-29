@@ -16,6 +16,8 @@ import org.maxgamer.maxbans.service.UserService;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Dirk Jamieson
@@ -27,14 +29,16 @@ public class RestrictionListener implements Listener {
     private BroadcastService broadcastService;
     private AddressService addressService;
     private Locale locale;
+    private Logger logger;
 
-    public RestrictionListener(Transactor transactor, UserService userService, LockdownService lockdownService, BroadcastService broadcastService, AddressService addressService, Locale locale) {
+    public RestrictionListener(Transactor transactor, UserService userService, LockdownService lockdownService, BroadcastService broadcastService, AddressService addressService, Locale locale, Logger logger) {
         this.transactor = transactor;
         this.userService = userService;
         this.lockdownService = lockdownService;
         this.broadcastService = broadcastService;
         this.addressService = addressService;
         this.locale = locale;
+        this.logger = logger;
     }
 
     public void onJoin(Player player, String address) throws RejectedException {
@@ -66,14 +70,20 @@ public class RestrictionListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerLoginEvent e) {
-        transactor.work(session -> {
-            try {
-                onJoin(e.getPlayer(), e.getAddress().getHostAddress());
-            } catch (RejectedException r) {
-                e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-                e.setKickMessage(r.getMessage(locale));
-            }
-        });
+        try {
+            transactor.work(session -> {
+                try {
+                    onJoin(e.getPlayer(), e.getAddress().getHostAddress());
+                } catch (RejectedException r) {
+                    e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+                    e.setKickMessage(r.getMessage(locale));
+                }
+            });
+        } catch (Throwable t) {
+            logger.log(Level.SEVERE, "An error occurred when a player tried to join", t);
+
+            throw t;
+        }
     }
 
     public void onChat(Player player) throws RejectedException {
@@ -100,27 +110,39 @@ public class RestrictionListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        transactor.work(session -> {
-            try {
-                onChat(e.getPlayer());
-            } catch (RejectedException r) {
-                e.setCancelled(true);
-                e.getPlayer().sendMessage(r.getMessage(locale));
-            }
-        });
+        try {
+            transactor.work(session -> {
+                try {
+                    onChat(e.getPlayer());
+                } catch (RejectedException r) {
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage(r.getMessage(locale));
+                }
+            });
+        } catch (Throwable t) {
+            logger.log(Level.SEVERE, "An error occurred when a player tried to chat", t);
+
+            throw t;
+        }
     }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
-        if(!userService.isChatCommand(e.getMessage())) return;
+        try {
+            if(!userService.isChatCommand(e.getMessage())) return;
 
-        transactor.work(session -> {
-            try {
-                onChat(e.getPlayer());
-            } catch (RejectedException r) {
-                e.setCancelled(true);
-                e.getPlayer().sendMessage(r.getMessage(locale));
-            }
-        });
+            transactor.work(session -> {
+                try {
+                    onChat(e.getPlayer());
+                } catch (RejectedException r) {
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage(r.getMessage(locale));
+                }
+            });
+        } catch (Throwable t) {
+            logger.log(Level.SEVERE, "An error occurred when a player tried to use a command", t);
+
+            throw t;
+        }
     }
 }

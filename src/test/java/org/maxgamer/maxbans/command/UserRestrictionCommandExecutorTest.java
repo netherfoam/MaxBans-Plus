@@ -13,6 +13,7 @@ import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.logging.Logger;
 
 import static org.mockito.Mockito.*;
 
@@ -25,7 +26,7 @@ public class UserRestrictionCommandExecutorTest implements UnitTest {
      */
     private static class DummyCommandExecutor extends UserRestrictionCommandExecutor {
         public DummyCommandExecutor(Locale locale, Transactor transactor, LocatorService locatorService, String permission) {
-            super(locale, locatorService, permission, transactor);
+            super(locale, locatorService, permission, transactor, Logger.getLogger("DummyCommandExecutor"));
         }
 
         @Override

@@ -12,11 +12,11 @@ import java.util.Set;
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public class PluginConfig {
-    private Server server;
     private JdbcConfig jdbcConfig;
     private WarningConfig warningConfig;
     private boolean isOffline;
     private Set<String> chatCommands;
+    private boolean errorTracking;
     
     public PluginConfig() {
         setJdbcConfig(new JdbcConfig());
@@ -33,6 +33,7 @@ public class PluginConfig {
         this.setWarningConfig(new WarningConfig(configuration.getConfigurationSection("warnings")));
         this.setOffline(configuration.getBoolean("offline", !server.getOnlineMode()));
         this.setChatCommands(configuration.getStringList("chat-commands"));
+        this.setErrorTracking(configuration.getBoolean("error-tracking", false));
     }
 
     public JdbcConfig getJdbcConfig() {
@@ -72,5 +73,13 @@ public class PluginConfig {
             if(command == null) continue;
             this.chatCommands.add(command.toLowerCase());
         }
+    }
+
+    public boolean isErrorTracking() {
+        return errorTracking;
+    }
+
+    public void setErrorTracking(boolean errorTracking) {
+        this.errorTracking = errorTracking;
     }
 }
