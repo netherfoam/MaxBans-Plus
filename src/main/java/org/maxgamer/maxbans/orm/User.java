@@ -54,7 +54,7 @@ public class User {
     @OrderBy("expiresAt")
     private List<Warning> warnings = new LinkedList<>();
 
-    private User() {
+    public User() {
         // Hibernate constructor
     }
 

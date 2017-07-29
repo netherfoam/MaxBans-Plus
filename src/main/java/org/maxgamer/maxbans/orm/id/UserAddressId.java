@@ -21,7 +21,7 @@ public class UserAddressId implements Serializable {
     @JoinColumn(name = "address")
     private Address address;
 
-    private UserAddressId() {
+    public UserAddressId() {
         // Hibernate constructor
     }
 

@@ -33,7 +33,7 @@ public class Address {
     )
     private List<Mute> mutes = new LinkedList<>();
 
-    private Address() {
+    public Address() {
         // Hibernate constructor
     }
 

@@ -150,7 +150,6 @@ public class AddressService {
 
         if(address == null) {
             address = create(ip);
-            addressRepository.save(address);
         } else {
             for (UserAddress history : user.getAddresses()) {
                 if(history.getAddress().getHost().equals(address.getHost())) {

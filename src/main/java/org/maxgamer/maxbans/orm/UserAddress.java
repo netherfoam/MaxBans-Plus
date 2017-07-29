@@ -23,7 +23,7 @@ public class UserAddress {
     @Column(name = "last_active")
     private Instant lastActive;
 
-    private UserAddress() {
+    public UserAddress() {
         // Hibernate constructor
     }
 

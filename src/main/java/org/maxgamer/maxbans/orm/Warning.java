@@ -12,7 +12,7 @@ public class Warning extends Restriction {
     @ManyToOne(optional = false)
     private User user;
 
-    private Warning() {
+    public Warning() {
         // Hibernate constructor
     }
 
