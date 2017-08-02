@@ -56,6 +56,10 @@ public abstract class IPRestrictionCommandExecutor extends StandardCommandExecut
                 } catch (IllegalArgumentException e) {
                     user = locatorService.user(ipOrUser);
 
+                    if(user == null) {
+                        throw new MessageException("No player starting with " + ipOrUser + " found");
+                    }
+
                     if(user.getAddresses().isEmpty()) {
                         sender.sendMessage("Player has no IP history");
                         return;

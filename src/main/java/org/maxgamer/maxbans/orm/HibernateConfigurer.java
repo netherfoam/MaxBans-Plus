@@ -25,6 +25,9 @@ public class HibernateConfigurer {
         config.setProperty("hibernate.connection.password", jdbc.getPassword());
         config.setProperty("hibernate.show_sql", String.valueOf(jdbc.isShowSql()));
 
+        config.setProperty("hibernate.c3p0.timeout", "300");
+        config.setProperty("hibernate.connection.provider_class", "org.hibernate.connection.C3P0ConnectionProvider");
+
         return config;
     }
 

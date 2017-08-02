@@ -80,6 +80,13 @@
             <version>5.1.0.Final</version>
         </dependency>
 
+        <!-- C3P0 connection pooling allows us to test connection validity -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+            <version>5.1.0.Final</version>
+        </dependency>
+
         <!-- Flyway -->
         <dependency>
             <groupId>org.flywaydb</groupId>
