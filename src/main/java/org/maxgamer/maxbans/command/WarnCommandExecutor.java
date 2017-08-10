@@ -17,16 +17,16 @@ import java.time.Duration;
  */
 public class WarnCommandExecutor extends UserRestrictionCommandExecutor {
     @Inject
-    private UserService userService;
+    protected UserService userService;
 
     @Inject
-    private WarningService warningService;
+    protected WarningService warningService;
 
     @Inject
-    private BroadcastService broadcastService;
+    protected BroadcastService broadcastService;
 
     @Inject
-    private MetricService metricService;
+    protected MetricService metricService;
 
     @Inject
     public WarnCommandExecutor() {

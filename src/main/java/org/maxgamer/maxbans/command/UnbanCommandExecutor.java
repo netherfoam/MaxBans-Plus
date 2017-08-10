@@ -19,13 +19,13 @@ import java.time.Duration;
  */
 public class UnbanCommandExecutor extends IPRestrictionCommandExecutor {
     @Inject
-    private BroadcastService broadcastService;
+    protected BroadcastService broadcastService;
 
     @Inject
-    private UserService userService;
+    protected UserService userService;
 
     @Inject
-    private MetricService metricService;
+    protected MetricService metricService;
 
     @Inject
     public UnbanCommandExecutor() {

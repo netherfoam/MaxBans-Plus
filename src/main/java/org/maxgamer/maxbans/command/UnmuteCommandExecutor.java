@@ -20,16 +20,16 @@ import java.time.Duration;
  */
 public class UnmuteCommandExecutor extends IPRestrictionCommandExecutor {
     @Inject
-    private BroadcastService broadcastService;
+    protected BroadcastService broadcastService;
 
     @Inject
-    private AddressService addressService;
+    protected AddressService addressService;
 
     @Inject
-    private UserService userService;
+    protected UserService userService;
 
     @Inject
-    private MetricService metricService;
+    protected MetricService metricService;
 
     @Inject
     public UnmuteCommandExecutor() {

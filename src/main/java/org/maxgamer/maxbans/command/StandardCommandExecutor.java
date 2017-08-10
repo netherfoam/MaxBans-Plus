@@ -15,7 +15,6 @@ public abstract class StandardCommandExecutor extends TransactionalCommandExecut
     @Inject
     protected Locale locale;
 
-    @Inject
     protected String permission;
 
     public StandardCommandExecutor(String permission) {

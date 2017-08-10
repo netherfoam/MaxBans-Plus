@@ -18,13 +18,13 @@ import java.time.Duration;
  */
 public class BanCommandExecutor extends UserRestrictionCommandExecutor {
     @Inject
-    private BroadcastService broadcastService;
+    protected BroadcastService broadcastService;
 
     @Inject
-    private UserService userService;
+    protected UserService userService;
 
     @Inject
-    private MetricService metricService;
+    protected MetricService metricService;
 
     @Inject
     public BanCommandExecutor() {

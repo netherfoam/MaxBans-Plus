@@ -8,6 +8,7 @@ import org.maxgamer.maxbans.MaxBansPlus;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.locale.Locale;
 
+import javax.inject.Singleton;
 import java.util.logging.Logger;
 
 /**
@@ -32,31 +33,37 @@ public class PluginModule {
     }
 
     @Provides
+    @Singleton
     public Logger getLogger() {
         return logger;
     }
 
     @Provides
+    @Singleton
     public MaxBansPlus getPlugin() {
         return plugin;
     }
 
     @Provides
+    @Singleton
     public PluginConfig getConfig() {
         return config;
     }
 
     @Provides
+    @Singleton
     public Server getServer() {
         return server;
     }
 
     @Provides
+    @Singleton
     public FileConfiguration getConfiguration() {
         return configuration;
     }
 
     @Provides
+    @Singleton
     public Locale getLocale() {
         return locale;
     }

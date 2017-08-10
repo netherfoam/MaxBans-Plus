@@ -22,13 +22,13 @@ import java.util.LinkedList;
  */
 public class LockdownCommandExecutor extends StandardCommandExecutor {
     @Inject
-    private LockdownService lockdownService;
+    protected LockdownService lockdownService;
 
     @Inject
-    private UserService userService;
+    protected UserService userService;
 
     @Inject
-    private BroadcastService broadcastService;
+    protected BroadcastService broadcastService;
 
     @Inject
     public LockdownCommandExecutor() {

@@ -10,12 +10,15 @@ import org.maxgamer.maxbans.service.metric.MetricService;
 import org.maxgamer.maxbans.service.metric.VoidMetricService;
 import org.maxgamer.maxbans.service.metric.bStatsMetricService;
 
+import javax.inject.Singleton;
+
 /**
  * @author netherfoam
  */
 @Module
 public class ServiceModule {
     @Provides
+    @Singleton
     public GeoIPService geoIPService() {
         return new GeoIPService(getClass().getClassLoader().getResourceAsStream("GeoLite.zip"), "en");
     }
@@ -27,6 +30,7 @@ public class ServiceModule {
      * @return the metric service
      */
     @Provides
+    @Singleton
     public MetricService metricService(PluginConfig config, MaxBansPlus plugin) {
         if (!config.isMetrics()) {
             return new VoidMetricService();
@@ -36,6 +40,7 @@ public class ServiceModule {
     }
 
     @Provides
+    @Singleton
     public WarningConfig warningConfig(PluginConfig config) {
         return config.getWarningConfig();
     }

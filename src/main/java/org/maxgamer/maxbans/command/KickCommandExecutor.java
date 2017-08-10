@@ -19,13 +19,13 @@ import java.util.LinkedList;
  */
 public class KickCommandExecutor extends StandardCommandExecutor {
     @Inject
-    private LocatorService locatorService;
+    protected LocatorService locatorService;
 
     @Inject
-    private BroadcastService broadcastService;
+    protected BroadcastService broadcastService;
 
     @Inject
-    private MetricService metricService;
+    protected MetricService metricService;
 
     @Inject
     public KickCommandExecutor() {

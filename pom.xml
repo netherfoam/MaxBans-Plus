@@ -87,13 +87,7 @@
             <version>5.1.0.Final</version>
         </dependency>
 
-        <!-- Saves us injecting dependencies -->
-        <!--<dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>4.1.0</version>
-        </dependency>-->
-
+        <!-- Injection framework for dependencies -->
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
@@ -170,7 +164,7 @@
                 </executions>
             </plugin>
 
-            <!-- Dagger -->
+            <!-- Dagger processes annotations, so it needs to be invoked by Maven first -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

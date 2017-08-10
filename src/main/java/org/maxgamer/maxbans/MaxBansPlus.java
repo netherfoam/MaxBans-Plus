@@ -3,13 +3,18 @@ package org.maxgamer.maxbans;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
 import io.sentry.event.Event;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
+import org.maxgamer.maxbans.context.component.CommandExecutorComponent;
 import org.maxgamer.maxbans.exception.ConfigException;
+import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.util.FlywayUtil;
 import org.maxgamer.maxbans.util.SentryLogger;
@@ -87,40 +92,50 @@ public class MaxBansPlus extends JavaPlugin {
         }
 
         context = new PluginContext(this, config, locale, getServer(), getDataFolder(), getErrorLogger());
-        
+
+        // Update our database if necessary
         migrate();
 
-        // TODO
-        /*RestrictionListener restrictionListener = context.getInjector().getInstance(RestrictionListener.class);
-        getServer().getPluginManager().registerEvents(restrictionListener, this);
+        // Register our listener
+        register(context.modules().listeners().restriction());
 
-        getCommand("ban").setExecutor(context.getInjector().getInstance(BanCommandExecutor.class));
-        getCommand("ipban").setExecutor(context.getInjector().getInstance(IPBanCommandExecutor.class));
-        getCommand("unban").setExecutor(context.getInjector().getInstance(UnbanCommandExecutor.class));
-        getCommand("mute").setExecutor(context.getInjector().getInstance(MuteCommandExecutor.class));
-        getCommand("ipmute").setExecutor(context.getInjector().getInstance(IPMuteCommandExecutor.class));
-        getCommand("unmute").setExecutor(context.getInjector().getInstance(UnmuteCommandExecutor.class));
-        getCommand("iplookup").setExecutor(context.getInjector().getInstance(LookupCommandExecutor.class));
-        getCommand("kick").setExecutor(context.getInjector().getInstance(KickCommandExecutor.class));
-        getCommand("warn").setExecutor(context.getInjector().getInstance(WarnCommandExecutor.class));
-        getCommand("lockdown").setExecutor(context.getInjector().getInstance(LockdownCommandExecutor.class));
+        // Register our commands
+        CommandExecutorComponent commands = context.modules().commands();
+        register("ban", commands.ban());
+        register("ipban", commands.unban());
+        register("unban", commands.unban());
+        register("mute", commands.mute());
+        register("ipmute", commands.ipmute());
+        register("unmute", commands.unmute());
+        register("iplookup", commands.lookup());
+        register("kick", commands.kick());
+        register("warn", commands.warn());
+        register("lockdown", commands.lockdown());
 
-        context.getInjector().getInstance(Transactor.class).work(session -> {
+        // Kick any players who aren't allowed to be on the server right now
+        context.modules().transactor().work(session -> {
             for(Player player : context.getServer().getOnlinePlayers()) {
                 try {
-                    restrictionListener.onJoin(player, player.getAddress().getAddress().getHostAddress());
+                    context.modules().listeners().restriction().onJoin(player, player.getAddress().getAddress().getHostAddress());
                 } catch (RejectedException e) {
                     player.kickPlayer(e.getMessage(locale));
                 }
             }
-        });*/
+        });
+    }
+
+    private void register(Listener listener) {
+        getServer().getPluginManager().registerEvents(listener, this);
+    }
+
+    private void register(String name, CommandExecutor command) {
+        getCommand(name).setExecutor(command);
     }
 
     @Override
     public void onDisable() {
         if(context != null) {
-            // TODO?
-            /*context.close();*/
+            context.close();
         }
     }
 
