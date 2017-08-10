@@ -1,13 +1,15 @@
 package org.maxgamer.maxbans.repository;
 
 import org.maxgamer.maxbans.orm.Ban;
-import org.maxgamer.maxbans.transaction.Transactor;
+
+import javax.inject.Inject;
 
 /**
  * @author Dirk Jamieson
  */
 public class BanRepository extends RestrictionRepository<Ban> {
-    public BanRepository(Transactor worker) {
-        super(worker, Ban.class);
+    @Inject
+    public BanRepository() {
+        super(Ban.class);
     }
 }

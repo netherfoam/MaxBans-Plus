@@ -20,13 +20,13 @@ import static org.mockito.Mockito.*;
 public class WarningServiceTest extends PluginContextTest implements IntegrationTest {
     @Test
     public void testWarn() {
-        WarningService service = getContext().getWarningService();
+        WarningService service = getContext().modules().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
         config.setDuration(Duration.ofMinutes(30));
         config.setPenalties(1, "/strike {{name}}");
 
-        User user = getContext().getUserService().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
+        User user = getContext().modules().services().user().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
 
         Locale locale = new Locale();
         locale.put("warn.broadcast", "broadcast message");
@@ -37,13 +37,13 @@ public class WarningServiceTest extends PluginContextTest implements Integration
 
     @Test
     public void testMultiCommandStrike() {
-        WarningService service = getContext().getWarningService();
+        WarningService service = getContext().modules().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
         config.setDuration(Duration.ofMinutes(30));
         config.setPenalties(1, "/strike {{name}}", "/kill {{name}}");
 
-        User user = getContext().getUserService().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
+        User user = getContext().modules().services().user().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
 
         Locale locale = new Locale();
         locale.put("warn.broadcast", "broadcast message");
@@ -54,14 +54,14 @@ public class WarningServiceTest extends PluginContextTest implements Integration
 
     @Test
     public void testWarnReset() {
-        WarningService service = getContext().getWarningService();
+        WarningService service = getContext().modules().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
         config.setDuration(Duration.ofMinutes(30));
         config.setPenalties(1, "/strike {{name}}");
         config.setStrikes(2);
 
-        User user = getContext().getUserService().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
+        User user = getContext().modules().services().user().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
 
         Locale locale = new Locale();
         locale.put("warn.broadcast", "broadcast message");

@@ -37,7 +37,7 @@ public class SentryLoggerTest implements IntegrationTest {
     @Test
     public void run() {
         SentryClient client = mock(SentryClient.class);
-        SentryLogger logger = new SentryLogger("SentryLoggerTest", "platform", "release", "serverName", Event.Level.WARNING, client);
+        SentryLogger logger = new SentryLogger(null, "SentryLoggerTest", "platform", "release", "serverName", Event.Level.WARNING, client);
 
         RuntimeException ex = new RuntimeException();
         ex.fillInStackTrace();

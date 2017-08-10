@@ -2,31 +2,35 @@ package org.maxgamer.maxbans.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.service.*;
-import org.maxgamer.maxbans.transaction.Transactor;
+import org.maxgamer.maxbans.service.BroadcastService;
+import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.service.WarningService;
+import org.maxgamer.maxbans.service.metric.MetricService;
 
+import javax.inject.Inject;
 import java.time.Duration;
-import java.util.logging.Logger;
 
 /**
  * @author netherfoam
  */
 public class WarnCommandExecutor extends UserRestrictionCommandExecutor {
-    private UserService userService;
-    private WarningService warningService;
-    private BroadcastService broadcastService;
-    private MetricService metricService;
+    @Inject
+    protected UserService userService;
 
-    public WarnCommandExecutor(Locale locale, Logger logger, Transactor transactor, LocatorService locatorService, UserService userService, WarningService warningService, BroadcastService broadcastService, MetricService metrics) {
-        super(locale, locatorService, "maxbans.warn", transactor, logger);
+    @Inject
+    protected WarningService warningService;
 
-        this.userService = userService;
-        this.warningService = warningService;
-        this.broadcastService = broadcastService;
-        this.metricService = metrics;
+    @Inject
+    protected BroadcastService broadcastService;
+
+    @Inject
+    protected MetricService metricService;
+
+    @Inject
+    public WarnCommandExecutor() {
+        super("maxbans.warn");
     }
 
     @Override

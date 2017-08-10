@@ -6,6 +6,8 @@ import org.hibernate.Transaction;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.maxgamer.maxbans.exception.TransactionException;
 
+import javax.inject.Inject;
+
 /**
  * @author netherfoam
  */
@@ -22,6 +24,7 @@ public class Transactor {
 
     private SessionFactory factory;
 
+    @Inject
     public Transactor(SessionFactory factory) {
         this.factory = factory;
     }

@@ -3,22 +3,19 @@ package org.maxgamer.maxbans.command;
 import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.service.AddressService;
-import org.maxgamer.maxbans.service.LocatorService;
-import org.maxgamer.maxbans.transaction.Transactor;
 
+import javax.inject.Inject;
 import java.time.Duration;
-import java.util.logging.Logger;
 
 /**
  * @author netherfoam
  */
 public class LookupCommandExecutor extends IPRestrictionCommandExecutor {
-    public LookupCommandExecutor(Transactor transactor, Locale locale, Logger logger, LocatorService locatorService, AddressService addressService) {
-        super(locale, logger, locatorService, "maxbans.iplookup", addressService, transactor);
+    @Inject
+    public LookupCommandExecutor() {
+        super("maxbans.iplookup");
     }
 
     @Override

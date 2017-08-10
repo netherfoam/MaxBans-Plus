@@ -10,6 +10,7 @@ import org.maxgamer.maxbans.orm.Warning;
 import org.maxgamer.maxbans.repository.WarningRepository;
 import org.maxgamer.maxbans.util.StringUtil;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class WarningService {
     private LocatorService locatorService;
     private WarningConfig config;
 
+    @Inject
     public WarningService(Server server, WarningRepository repository, LocatorService locatorService, WarningConfig config) {
         this.server = server;
         this.repository = repository;

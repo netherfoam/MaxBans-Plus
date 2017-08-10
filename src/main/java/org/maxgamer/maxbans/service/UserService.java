@@ -11,6 +11,7 @@ import org.maxgamer.maxbans.repository.MuteRepository;
 import org.maxgamer.maxbans.repository.UserRepository;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
+import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -25,6 +26,7 @@ public class UserService {
     private BanRepository bans;
     private MuteRepository mutes;
 
+    @Inject
     public UserService(PluginConfig config, UserRepository users, BanRepository bans, MuteRepository mutes) {
         this.config = config;
         this.users = users;

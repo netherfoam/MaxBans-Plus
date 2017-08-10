@@ -1,8 +1,8 @@
 package org.maxgamer.maxbans.repository;
 
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.transaction.Transactor;
 
+import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -10,8 +10,9 @@ import java.util.UUID;
  * @author Dirk Jamieson
  */
 public class UserRepository extends Repository<UUID, User> {
-    public UserRepository(Transactor worker) {
-        super(worker, UUID.class, User.class);
+    @Inject
+    public UserRepository() {
+        super(UUID.class, User.class);
     }
     
     public User findByAlias(String name) {

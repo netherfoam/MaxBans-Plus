@@ -26,7 +26,11 @@ public class UserRestrictionCommandExecutorTest implements UnitTest {
      */
     private static class DummyCommandExecutor extends UserRestrictionCommandExecutor {
         public DummyCommandExecutor(Locale locale, Transactor transactor, LocatorService locatorService, String permission) {
-            super(locale, locatorService, permission, transactor, Logger.getLogger("DummyCommandExecutor"));
+            super(permission);
+            this.logger = Logger.getLogger("DummyCommandExecutor");
+            this.transactor = transactor;
+            this.locatorService = locatorService;
+            this.locale = locale;
         }
 
         @Override

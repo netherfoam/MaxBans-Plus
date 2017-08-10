@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.util.Permissions;
 
+import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class BroadcastService {
     private Server server;
     private Map<Object, Instant> firewall = new HashMap<>();
 
+    @Inject
     public BroadcastService(Server server) {
         this.server = server;
     }

@@ -1,6 +1,5 @@
 package org.maxgamer.maxbans.benchmark;
 
-import junit.framework.Assert;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
 import org.maxgamer.maxbans.orm.*;
@@ -32,7 +31,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
         List<User> users = new ArrayList<>(number);
 
         // Users
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 // Create 100k users
                 UUID id = UUID.randomUUID();
@@ -50,7 +49,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Ban> userBans(int number, List<User> users) {
         List<Ban> bans = new ArrayList<>(number);
 
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -75,7 +74,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Ban> addressBans(int number, List<Address> addresses) {
         List<Ban> bans = new ArrayList<>(number);
 
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 Address address = random(addresses, i);
 
@@ -98,7 +97,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Mute> userMutes(int number, List<User> users) {
         List<Mute> mutes = new ArrayList<>(number);
 
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -123,7 +122,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Mute> addressMutes(int number, List<Address> addresses) {
         List<Mute> mutes = new ArrayList<>(number);
 
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 Address address = random(addresses, i);
 
@@ -146,7 +145,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Warning> warnings(int number, List<User> users) {
         List<Warning> warnings = new ArrayList<>(number);
 
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -171,7 +170,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Address> addresses(int number, List<User> users) {
         List<Address> addresses = new ArrayList<>(number);
 
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
 
@@ -210,14 +209,5 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
         addressMutes(500, addresses);
 
         warnings(5000, users);
-
-        User user = users.get(users.size() / 2);
-        long start = System.currentTimeMillis();
-
-        getContext().getUserService().get(user.getId());
-
-        long end = System.currentTimeMillis();
-
-        Assert.assertTrue("timeout", (end - start) < 50);
     }
 }

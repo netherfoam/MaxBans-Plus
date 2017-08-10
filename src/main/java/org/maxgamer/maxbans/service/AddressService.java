@@ -10,6 +10,7 @@ import org.maxgamer.maxbans.repository.MuteRepository;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 import org.maxgamer.maxbans.util.geoip.GeoCountry;
 
+import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -25,6 +26,7 @@ public class AddressService {
     private GeoIPService geoIPService;
     private UserService userService;
 
+    @Inject
     public AddressService(BanRepository bans, MuteRepository mutes, AddressRepository addressRepository, GeoIPService geoIPService, UserService userService) {
         this.bans = bans;
         this.mutes = mutes;

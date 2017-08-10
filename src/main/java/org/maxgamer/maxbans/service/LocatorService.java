@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class LocatorService {
     private Server server;
     private UserService userService;
 
+    @Inject
     public LocatorService(Server server, UserService userService) {
         this.server = server;
         this.userService = userService;

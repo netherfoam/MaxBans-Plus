@@ -16,7 +16,7 @@ import java.util.UUID;
 public class UserServiceTest extends PluginContextTest implements IntegrationTest {
     @Test
     public void testBan() throws RejectedException {
-        UserService users = getContext().getUserService();
+        UserService users = getContext().modules().services().user();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
         Assert.assertNull("Expect user to be unbanned", users.getBan(user));
@@ -26,7 +26,7 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
     
     @Test
     public void testMute() throws RejectedException {
-        UserService users = getContext().getUserService();
+        UserService users = getContext().modules().services().user();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
         Assert.assertNull("Expect user to be unmuted", users.getMute(user));
@@ -36,7 +36,7 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
 
     @Test
     public void testUnmute() throws RejectedException {
-        UserService users = getContext().getUserService();
+        UserService users = getContext().modules().services().user();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
         users.mute(null, user, "Breaking Rules", null);
@@ -46,7 +46,7 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
 
     @Test
     public void testUnban() throws RejectedException {
-        UserService users = getContext().getUserService();
+        UserService users = getContext().modules().services().user();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
         users.ban(null, user, "Breaking Rules", null);

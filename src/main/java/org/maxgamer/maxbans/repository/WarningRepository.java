@@ -1,13 +1,15 @@
 package org.maxgamer.maxbans.repository;
 
 import org.maxgamer.maxbans.orm.Warning;
-import org.maxgamer.maxbans.transaction.Transactor;
+
+import javax.inject.Inject;
 
 /**
  * @author netherfoam
  */
 public class WarningRepository extends RestrictionRepository<Warning> {
-    public WarningRepository(Transactor worker) {
-        super(worker, Warning.class);
+    @Inject
+    public WarningRepository() {
+        super(Warning.class);
     }
 }
