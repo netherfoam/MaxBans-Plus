@@ -1,16 +1,19 @@
 package org.maxgamer.maxbans;
 
 import org.bukkit.Server;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
+import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.repository.H2Test;
-import org.maxgamer.maxbans.service.MetricService;
 import org.maxgamer.maxbans.test.IntegrationTest;
 
 import java.io.File;
+import java.util.logging.Logger;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -31,7 +34,11 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
             throw new IllegalStateException("Can't create data folder");
         }
 
-        context = new PluginContext(config, server, folder, mock(MetricService.class));
+        MaxBansPlus plugin = mock(MaxBansPlus.class);
+        FileConfiguration configuration = mock(FileConfiguration.class);
+        doReturn(configuration).when(plugin).getConfig();
+
+        context = new PluginContext(plugin, config, new Locale(), server, folder, Logger.getLogger("Test"));
     }
 
     @After

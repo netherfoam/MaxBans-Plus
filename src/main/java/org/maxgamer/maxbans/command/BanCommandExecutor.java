@@ -3,32 +3,32 @@ package org.maxgamer.maxbans.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
-import org.maxgamer.maxbans.service.LocatorService;
-import org.maxgamer.maxbans.service.MetricService;
 import org.maxgamer.maxbans.service.UserService;
-import org.maxgamer.maxbans.transaction.Transactor;
+import org.maxgamer.maxbans.service.metric.MetricService;
 import org.maxgamer.maxbans.util.TemporalDuration;
 
+import javax.inject.Inject;
 import java.time.Duration;
-import java.util.logging.Logger;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public class BanCommandExecutor extends UserRestrictionCommandExecutor {
+    @Inject
     private BroadcastService broadcastService;
+
+    @Inject
     private UserService userService;
+
+    @Inject
     private MetricService metricService;
 
-    public BanCommandExecutor(Transactor transactor, LocatorService locatorService, UserService userService, BroadcastService broadcastService, Locale locale, Logger logger, MetricService metrics) {
-        super(locale, locatorService, "maxbans.ban", transactor, logger);
-        this.userService = userService;
-        this.broadcastService = broadcastService;
-        this.metricService = metrics;
+    @Inject
+    public BanCommandExecutor() {
+        super("maxbans.ban");
     }
 
     @Override

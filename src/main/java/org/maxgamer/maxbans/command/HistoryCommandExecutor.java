@@ -3,17 +3,16 @@ package org.maxgamer.maxbans.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.exception.MessageException;
-import org.maxgamer.maxbans.locale.Locale;
-import org.maxgamer.maxbans.transaction.Transactor;
 
-import java.util.logging.Logger;
+import javax.inject.Inject;
 
 /**
  * @author netherfoam
  */
 public class HistoryCommandExecutor extends StandardCommandExecutor {
-    public HistoryCommandExecutor(Transactor transactor, Locale locale, Logger logger, String permission) {
-        super(transactor, locale, logger, permission);
+    @Inject
+    public HistoryCommandExecutor() {
+        super("maxbans.history");
     }
 
     @Override

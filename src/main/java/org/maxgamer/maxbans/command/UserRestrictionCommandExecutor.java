@@ -6,28 +6,24 @@ import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.exception.TransactionException;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.LocatorService;
-import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
+import javax.inject.Inject;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public abstract class UserRestrictionCommandExecutor extends StandardCommandExecutor {
-    protected final LocatorService locatorService;
-    protected final Transactor transactor;
+    @Inject
+    protected LocatorService locatorService;
 
-    public UserRestrictionCommandExecutor(Locale locale, LocatorService locatorService, String permission, Transactor transactor, Logger logger) {
-        super(transactor, locale, logger, permission);
-        this.locatorService = locatorService;
-        this.transactor = transactor;
+    public UserRestrictionCommandExecutor(String permission) {
+        super(permission);
     }
 
     @Override

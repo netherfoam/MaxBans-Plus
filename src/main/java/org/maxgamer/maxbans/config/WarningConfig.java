@@ -14,7 +14,7 @@ public class WarningConfig {
     private Map<Integer, List<String>> penalties = new HashMap<>();
     private int strikes = 3;
     private Duration duration = Duration.ofDays(7);
-
+    
     public WarningConfig() {
     }
 

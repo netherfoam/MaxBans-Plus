@@ -5,21 +5,20 @@ import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.locale.Locale;
-import org.maxgamer.maxbans.transaction.Transactor;
 
-import java.util.logging.Logger;
+import javax.inject.Inject;
 
 /**
  * @author netherfoam
  */
 public abstract class StandardCommandExecutor extends TransactionalCommandExecutor {
-    protected final Locale locale;
-    protected final String permission;
+    @Inject
+    protected Locale locale;
 
-    public StandardCommandExecutor(Transactor transactor, Locale locale, Logger logger, String permission) {
-        super(transactor, logger);
+    @Inject
+    protected String permission;
 
-        this.locale = locale;
+    public StandardCommandExecutor(String permission) {
         this.permission = permission;
     }
 

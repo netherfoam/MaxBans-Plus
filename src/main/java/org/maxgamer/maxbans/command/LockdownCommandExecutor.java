@@ -5,34 +5,34 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LockdownService;
 import org.maxgamer.maxbans.service.UserService;
-import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.Lockdown;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * @author netherfoam
  */
 public class LockdownCommandExecutor extends StandardCommandExecutor {
+    @Inject
     private LockdownService lockdownService;
+
+    @Inject
     private UserService userService;
+
+    @Inject
     private BroadcastService broadcastService;
 
-    public LockdownCommandExecutor(Transactor transactor, Locale locale, Logger logger, LockdownService lockdownService, UserService userService, BroadcastService broadcastService) {
-        super(transactor, locale, logger, "maxbans.lockdown");
-
-        this.lockdownService = lockdownService;
-        this.userService = userService;
-        this.broadcastService = broadcastService;
+    @Inject
+    public LockdownCommandExecutor() {
+        super("maxbans.lockdown");
     }
 
     @Override

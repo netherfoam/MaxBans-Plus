@@ -4,32 +4,36 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.service.*;
-import org.maxgamer.maxbans.transaction.Transactor;
+import org.maxgamer.maxbans.service.AddressService;
+import org.maxgamer.maxbans.service.BroadcastService;
+import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.service.metric.MetricService;
 
+import javax.inject.Inject;
 import java.time.Duration;
-import java.util.logging.Logger;
 
 /**
  * @author netherfoam
  */
 public class UnmuteCommandExecutor extends IPRestrictionCommandExecutor {
+    @Inject
     private BroadcastService broadcastService;
+
+    @Inject
     private AddressService addressService;
+
+    @Inject
     private UserService userService;
+
+    @Inject
     private MetricService metricService;
 
-    public UnmuteCommandExecutor(Transactor transactor, Locale locale, Logger logger, LocatorService locatorService, BroadcastService broadcastService, AddressService addressService, UserService userService, MetricService metrics) {
-        super(locale, logger, locatorService, "maxbans.mute", addressService, transactor);
-
-        this.broadcastService = broadcastService;
-        this.addressService = addressService;
-        this.userService = userService;
-        this.metricService = metrics;
+    @Inject
+    public UnmuteCommandExecutor() {
+        super("maxbans.mute");
     }
 
     @Override

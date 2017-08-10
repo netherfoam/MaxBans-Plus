@@ -15,6 +15,7 @@ import org.maxgamer.maxbans.service.LockdownService;
 import org.maxgamer.maxbans.service.UserService;
 import org.maxgamer.maxbans.transaction.Transactor;
 
+import javax.inject.Inject;
 import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +32,7 @@ public class RestrictionListener implements Listener {
     private Locale locale;
     private Logger logger;
 
+    @Inject
     public RestrictionListener(Transactor transactor, UserService userService, LockdownService lockdownService, BroadcastService broadcastService, AddressService addressService, Locale locale, Logger logger) {
         this.transactor = transactor;
         this.userService = userService;

@@ -9,6 +9,7 @@ import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.util.Lockdown;
 
+import javax.inject.Inject;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class LockdownService {
     private Lockdown state;
     private String reason;
 
+    @Inject
     public LockdownService(Server server, UserService userService, BroadcastService broadcastService, FileConfiguration file) {
         this.server = server;
         this.userService = userService;
@@ -34,7 +36,10 @@ public class LockdownService {
 
         String type = file.getString("state", "off");
 
-        this.state = Lockdown.get(type);
+        if(type != null) {
+            this.state = Lockdown.get(type);
+        }
+
         if(this.state == null) {
             this.state = Lockdown.OFF;
         }

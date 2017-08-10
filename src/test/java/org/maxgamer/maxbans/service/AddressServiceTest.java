@@ -22,7 +22,7 @@ import java.util.UUID;
 public class AddressServiceTest extends PluginContextTest implements IntegrationTest {
     @Test
     public void testBan() throws RejectedException {
-        AddressService addresses = getContext().getAddressService();
+        AddressService addresses = getContext().modules().services().address();
         Address address = addresses.create("127.0.0.1");
 
         Assert.assertNull("Expect address to be unbanned", addresses.getBan(address));
@@ -32,7 +32,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
 
     @Test
     public void testMute() throws RejectedException {
-        AddressService addresses = getContext().getAddressService();
+        AddressService addresses = getContext().modules().services().address();
         Address address = addresses.create("127.0.0.1");
 
         Assert.assertNull("Expect address to be unmuted", addresses.getMute(address));
@@ -42,7 +42,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
 
     @Test
     public void testUnmute() throws RejectedException {
-        AddressService addresses = getContext().getAddressService();
+        AddressService addresses = getContext().modules().services().address();
         Address address = addresses.create("127.0.0.1");
 
         addresses.mute(null, address, "Breaking Rules", null);
@@ -52,7 +52,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
 
     @Test
     public void testUnban() throws RejectedException {
-        AddressService addresses = getContext().getAddressService();
+        AddressService addresses = getContext().modules().services().address();
         Address address = addresses.create("127.0.0.1");
 
         addresses.ban(null, address, "Breaking Rules", null);
@@ -62,14 +62,14 @@ public class AddressServiceTest extends PluginContextTest implements Integration
 
     @Test
     public void testReport() throws MessageException {
-        UserService users = getContext().getUserService();
-        AddressService service = getContext().getAddressService();
+        UserService users = getContext().modules().services().user();
+        AddressService service = getContext().modules().services().address();
 
         UUID id = UUID.randomUUID();
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             User user = users.create(id, "Address_McGee", Instant.now());
 
-            AddressRepository repository = getContext().getAddressRepository();
+            AddressRepository repository = getContext().modules().repositories().address();
             Address address = new Address("127.0.0.1");
             repository.save(address);
 
@@ -83,12 +83,12 @@ public class AddressServiceTest extends PluginContextTest implements Integration
             address.getUsers().add(secondary);
         });
 
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             Address address = service.get("127.0.0.1");
             Assert.assertFalse(address.getUsers().isEmpty());
         });
 
-        getContext().getTransactor().work(session -> {
+        getContext().modules().transactor().work(session -> {
             MessageBuilder builder = service.report(users.get(id), new Locale());
 
             Assert.assertEquals("expect no ban", builder.preview("ban"), null);

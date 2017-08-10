@@ -41,6 +41,8 @@ public class SentryLogger extends Logger {
         levels.put(Level.OFF, null);
     }
 
+    private Logger delegate;
+
     private String platform;
 
     private String release;
@@ -61,7 +63,7 @@ public class SentryLogger extends Logger {
      * @param minimum the minimum log level to report, inclusive
      */
     public SentryLogger(MaxBansPlus plugin, Event.Level minimum, SentryClient sentry) {
-        this(plugin.getName(), plugin.getServer().getName() + " " + plugin.getServer().getVersion(),
+        this(plugin.getLogger(), plugin.getName(), plugin.getServer().getName() + " " + plugin.getServer().getVersion(),
                 plugin.getDescription().getName() + " " + plugin.getDescription().getVersion(),
                 plugin.getServer().getServerName(), minimum, sentry);
     }
@@ -76,9 +78,10 @@ public class SentryLogger extends Logger {
      * @param minimum the minimum level to send logs to sentry
      * @param sentry the sentry client
      */
-    public SentryLogger(String logName, String platform, String release, String serverName, Event.Level minimum, SentryClient sentry) {
+    public SentryLogger(Logger delegate, String logName, String platform, String release, String serverName, Event.Level minimum, SentryClient sentry) {
         super(logName, null);
 
+        this.delegate = delegate;
         this.platform = platform;
         this.release = release;
         this.serverName = serverName;
@@ -88,6 +91,10 @@ public class SentryLogger extends Logger {
 
     @Override
     public void log(LogRecord record) {
+        if(delegate != null) {
+            delegate.log(record);
+        }
+
         Event.Level level = levels.get(record.getLevel());
 
         // We don't log this level to Sentry

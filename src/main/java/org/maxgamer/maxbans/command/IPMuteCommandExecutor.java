@@ -4,30 +4,33 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
-import org.maxgamer.maxbans.service.*;
-import org.maxgamer.maxbans.transaction.Transactor;
+import org.maxgamer.maxbans.service.BroadcastService;
+import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.service.metric.MetricService;
 import org.maxgamer.maxbans.util.TemporalDuration;
 
+import javax.inject.Inject;
 import java.time.Duration;
-import java.util.logging.Logger;
 
 /**
  * @author netherfoam
  */
 public class IPMuteCommandExecutor extends IPRestrictionCommandExecutor {
+    @Inject
     private UserService userService;
+
+    @Inject
     private BroadcastService broadcastService;
+
+    @Inject
     private MetricService metricService;
 
-    public IPMuteCommandExecutor(Locale locale, Logger logger, LocatorService locatorService, Transactor transactor, AddressService addressService, UserService userService, BroadcastService broadcastService, MetricService metrics) {
-        super(locale, logger, locatorService, "maxbans.ipban", addressService, transactor);
-        this.userService = userService;
-        this.broadcastService = broadcastService;
-        this.metricService = metrics;
+    @Inject
+    public IPMuteCommandExecutor() {
+        super("maxbans.ipban");
     }
 
     @Override

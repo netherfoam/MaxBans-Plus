@@ -7,7 +7,6 @@ import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.exception.TransactionException;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.AddressService;
@@ -15,24 +14,26 @@ import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
+import javax.inject.Inject;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public abstract class IPRestrictionCommandExecutor extends StandardCommandExecutor {
-    protected final AddressService addressService;
-    protected final LocatorService locatorService;
-    protected final Transactor transactor;
+    @Inject
+    protected AddressService addressService;
 
-    public IPRestrictionCommandExecutor(Locale locale, Logger logger, LocatorService locatorService, String permission, AddressService addressService, Transactor transactor) {
-        super(transactor, locale, logger, permission);
-        this.locatorService = locatorService;
-        this.addressService = addressService;
-        this.transactor = transactor;
+    @Inject
+    protected LocatorService locatorService;
+
+    @Inject
+    protected Transactor transactor;
+
+    public IPRestrictionCommandExecutor(String permission) {
+        super(permission);
     }
 
     @Override

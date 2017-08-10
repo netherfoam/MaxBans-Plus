@@ -1,28 +1,21 @@
-package org.maxgamer.maxbans.service;
+package org.maxgamer.maxbans.service.metric;
 
 import org.bstats.Metrics;
 import org.maxgamer.maxbans.MaxBansPlus;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author netherfoam
  */
-public class MetricService {
-    public static final String LOCALE = "locale";
-    public static final String USER_BANS = "user_bans";
-    public static final String USER_MUTES = "user_mutes";
-    public static final String IP_BANS = "ip_bans";
-    public static final String IP_MUTES = "ip_mutes";
-    public static final String WARNINGS = "warnings";
-    public static final String KICKS = "kicks";
-
-    private Metrics metrics;
+public class bStatsMetricService implements MetricService {
     private Map<String, Integer> increments = new HashMap<>();
 
-    public MetricService(MaxBansPlus plugin) {
-        metrics = new Metrics(plugin);
+    @Inject
+    public bStatsMetricService(MaxBansPlus plugin) {
+        Metrics metrics = new Metrics(plugin);
 
         metrics.addCustomChart(new Metrics.SimplePie(LOCALE) {
             @Override
@@ -88,6 +81,7 @@ public class MetricService {
         return v;
     }
 
+    @Override
     public void increment(String chartId) {
         int value = get(chartId) + 1;
         increments.put(chartId, value);

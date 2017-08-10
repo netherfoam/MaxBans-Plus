@@ -4,32 +4,32 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.MessageException;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LocatorService;
-import org.maxgamer.maxbans.service.MetricService;
-import org.maxgamer.maxbans.transaction.Transactor;
+import org.maxgamer.maxbans.service.metric.MetricService;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * @author netherfoam
  */
-public class KickCommand extends StandardCommandExecutor {
+public class KickCommandExecutor extends StandardCommandExecutor {
+    @Inject
     private LocatorService locatorService;
+
+    @Inject
     private BroadcastService broadcastService;
+
+    @Inject
     private MetricService metricService;
 
-    public KickCommand(Transactor transactor, Locale locale, Logger logger, LocatorService locatorService, BroadcastService broadcastService, MetricService metrics) {
-        super(transactor, locale, logger, "maxbans.kick");
-
-        this.locatorService = locatorService;
-        this.broadcastService = broadcastService;
-        this.metricService = metrics;
+    @Inject
+    public KickCommandExecutor() {
+        super("maxbans.kick");
     }
 
     @Override

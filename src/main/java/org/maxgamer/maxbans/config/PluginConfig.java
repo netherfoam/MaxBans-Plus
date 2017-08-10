@@ -17,6 +17,7 @@ public class PluginConfig {
     private boolean isOffline;
     private Set<String> chatCommands;
     private boolean errorTracking;
+    private boolean metrics;
     
     public PluginConfig() {
         setJdbcConfig(new JdbcConfig());
@@ -34,6 +35,7 @@ public class PluginConfig {
         this.setOffline(configuration.getBoolean("offline", !server.getOnlineMode()));
         this.setChatCommands(configuration.getStringList("chat-commands"));
         this.setErrorTracking(configuration.getBoolean("error-tracking", false));
+        this.setMetrics(configuration.getBoolean("metrics", true));
     }
 
     public JdbcConfig getJdbcConfig() {
@@ -81,5 +83,13 @@ public class PluginConfig {
 
     public void setErrorTracking(boolean errorTracking) {
         this.errorTracking = errorTracking;
+    }
+
+    public boolean isMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(boolean metrics) {
+        this.metrics = metrics;
     }
 }
