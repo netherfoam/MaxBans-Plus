@@ -42,17 +42,17 @@ kick:
     broadcast: "&a{{name}}&r was kicked by &a{{source}}&r for &a{{reason|no reason}}&r."
     message: |
       You've been kicked by &a{{source}}&r
-      Reason: &a{{reason|None}}&r
+      Reason: &a{{reason|none}}&r
 
 lockdown:
     broadcast: |
       The server has been switched to lockdown mode: &a{{type}}&r by &a{{source}}&r
       This means: &a{{description}}&r.
-      The reason was: &a{{reason|None}}&r
+      The reason was: &a{{reason|none}}&r
 
     message: |
       The server is currently in lockdown.
-      Reason: &a{{reason|None}}&r
+      Reason: &a{{reason|none}}&r
 
 notification:
     ipbanned: "&a{{name|address}}&r tried to join but is currently banned."
@@ -71,19 +71,19 @@ iplookup:
       First Login: &a{{firstActive|Never}}&r
       Last Login: &a{{lastActive|Never}}&r
       Address: &a{{ip}}&r
-      Ban: &a{{ban|None}}&r
-      Mute: &a{{mute|None}}&r
+      Ban: &a{{ban|none}}&r
+      Mute: &a{{mute|none}}&r
       The following users have also used the IP Address:
-      &a{{users|None}}&r
+      &a{{users|none}}&r
 
     ip: |
       &a{{ip}}&r IP Address Report:
       First Seen: &a{{firstActive|Never}}&r
       Last Seen: &a{{lastActive|Never}}&r
-      Ban: &a{{ban|None}}&r
-      Mute: &a{{mute|None}}&r
+      Ban: &a{{ban|none}}&r
+      Mute: &a{{mute|none}}&r
       The following users have used the IP Address:
-      &a{{users|None}}&r
+      &a{{users|none}}&r
 
 history:
     ban: "{{name}} was banned by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
