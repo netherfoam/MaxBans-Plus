@@ -76,6 +76,7 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+        this.alias = name.toLowerCase();
     }
 
     public Instant getLastActive() {

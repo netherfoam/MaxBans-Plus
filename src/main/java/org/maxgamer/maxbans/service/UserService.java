@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,7 +56,23 @@ public class UserService {
     }
     
     public User create(Player player) {
-        return create(player.getUniqueId(), player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
+        UUID id;
+        if(config.isOffline()) {
+            // Potential exploit patched in 1.5, details below:
+            // - A player joins as ID 0, name Gandalf
+            // - Player gets warnings or mutes on offline server
+            // - Player joins with the same ID, but as name Merlin
+            // - Gandalf gets renamed to Merlin because ID is the primary key in the table
+            // - Player joins with new UUID, name Gandalf.
+            // - Player has effectively transferred all mutes/warnings to Merlin
+
+            // To fix this, we don't trust client UUID's if we're offline. We generate our own, here.
+            id = UUID.randomUUID();
+        } else {
+            id = player.getUniqueId();
+        }
+
+        return create(id, player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
     }
     
     public User get(Player player) {
@@ -236,6 +253,10 @@ public class UserService {
         for(UserAddress userAddress : user.getAddresses()) {
             addresses.add(userAddress.getAddress().getHost());
         }
+
+        // Most recent addresses first
+        Collections.reverse(addresses);
+
         builder.with("addresses", addresses);
 
         return builder;
