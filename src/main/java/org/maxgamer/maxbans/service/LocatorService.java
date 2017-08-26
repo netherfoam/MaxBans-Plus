@@ -46,6 +46,8 @@ public class LocatorService {
     }
 
     public Player player(User user) {
+        if(user == null) return null;
+
         return server.getPlayer(user.getId());
     }
 
