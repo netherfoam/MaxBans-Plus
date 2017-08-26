@@ -89,7 +89,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
         });
 
         getContext().modules().transactor().work(session -> {
-            MessageBuilder builder = service.report(users.get(id), new Locale());
+            MessageBuilder builder = users.report(users.get(id), new Locale());
 
             Assert.assertEquals("expect no ban", builder.preview("ban"), null);
             Assert.assertEquals("expect no mute", builder.preview("mute"), null);

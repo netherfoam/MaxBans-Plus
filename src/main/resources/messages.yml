@@ -67,21 +67,21 @@ permission:
 iplookup:
     never: "&a{{name}}&r has no IP history"
     user: |
-      &a{{name}}&r IP Address Report:
+      &a{{name}}&r User Report:
       First Login: &a{{firstActive|Never}}&r
       Last Login: &a{{lastActive|Never}}&r
-      Address: &a{{ip}}&r
-      Ban: &a{{ban|none}}&r
-      Mute: &a{{mute|none}}&r
-      The following users have also used the IP Address:
-      &a{{users|none}}&r
+      Ban: &a{{ban.reason|none}}&r (by: {{ban.source|nobody}}, expires: {{ban.expires|never}})
+      Mute: &a{{mute|none}}&r (by: {{mute.source|nobody}}, expires: {{mute.expires|never}})
+      &a{{name}}&r has used the following IP addresses:
+      &a{{addresses|none}}&r
 
     ip: |
       &a{{ip}}&r IP Address Report:
       First Seen: &a{{firstActive|Never}}&r
       Last Seen: &a{{lastActive|Never}}&r
-      Ban: &a{{ban|none}}&r
-      Mute: &a{{mute|none}}&r
+      Country: &a{{country|Unknown}}&r (&a{{continent|Unknown}}&f)
+      Ban: &a{{ban.reason|none}}&r (by: {{ban.source|nobody}}, expires: {{ban.expires|never}})
+      Mute: &a{{mute|none}}&r (by: {{mute.source|nobody}}, expires: {{mute.expires|never}})
       The following users have used the IP Address:
       &a{{users|none}}&r
 

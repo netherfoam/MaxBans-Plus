@@ -1,14 +1,17 @@
 package org.maxgamer.maxbans.util.geoip;
 
+import java.math.BigInteger;
+import java.util.Objects;
+
 /**
  * @author netherfoam
  */
 public class GeoBlock implements Comparable<GeoBlock> {
     private final GeoCountry country;
-    private final int minimum;
-    private final int maximum;
+    private final BigInteger minimum;
+    private final BigInteger maximum;
 
-    public GeoBlock(GeoCountry country, int minimum, int maximum) {
+    public GeoBlock(GeoCountry country, BigInteger minimum, BigInteger maximum) {
         this.country = country;
         this.minimum = minimum;
         this.maximum = maximum;
@@ -18,18 +21,18 @@ public class GeoBlock implements Comparable<GeoBlock> {
         return country;
     }
 
-    public int getMinimum() {
+    public BigInteger getMinimum() {
         return minimum;
     }
 
-    public int getMaximum() {
+    public BigInteger getMaximum() {
         return maximum;
     }
 
     @Override
     public int compareTo(GeoBlock that) {
         // We can assume that our bounds never overlap
-        return this.minimum - that.minimum;
+        return this.minimum.subtract(that.minimum).signum();
     }
 
     @Override
@@ -39,13 +42,13 @@ public class GeoBlock implements Comparable<GeoBlock> {
 
         GeoBlock geoBlock = (GeoBlock) o;
 
-        return minimum == geoBlock.minimum;
+        return Objects.equals(minimum, geoBlock.minimum);
 
     }
 
     @Override
     public int hashCode() {
-        return minimum;
+        return minimum.hashCode();
     }
 
     @Override

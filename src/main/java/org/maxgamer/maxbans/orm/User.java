@@ -113,4 +113,10 @@ public class User {
     public String getAlias() {
         return alias;
     }
+
+    public UserAddress getLastAddress() {
+        if(addresses.isEmpty()) return null;
+
+        return addresses.get(addresses.size() - 1);
+    }
 }
