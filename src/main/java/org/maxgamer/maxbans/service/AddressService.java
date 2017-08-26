@@ -166,9 +166,9 @@ public class AddressService {
 
         Ban ban = getBan(address);
         if(ban != null) {
-            throw new RejectedException("ban.kick")
+            throw new RejectedException("ipban.denied")
                     .with("address", ip)
-                    .with("banner", ban.getSource() == null ? "Console" : ban.getSource().getName())
+                    .with("source", ban.getSource() == null ? "Console" : ban.getSource().getName())
                     .with("reason", ban.getReason())
                     .with("duration", ban.getExpiresAt());
         }

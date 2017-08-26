@@ -96,6 +96,7 @@ public class UserService {
         if(ban != null) {
             throw new RejectedException("ban.denied")
                     .with("reason", ban.getReason())
+                    .with("source", ban.getSource() == null ? "Console" : ban.getSource().getName())
                     .with("duration", ban.getExpiresAt());
         }
 
@@ -109,6 +110,7 @@ public class UserService {
         throw new RejectedException("mute.denied")
                 .with("name", user.getName())
                 .with("reason", mute.getReason())
+                .with("source", mute.getSource() == null ? "Console" : mute.getSource().getName())
                 .with("duration", mute.getExpiresAt());
     }
 

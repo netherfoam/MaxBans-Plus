@@ -46,10 +46,10 @@ public class IPBanCommandExecutor extends IPRestrictionCommandExecutor {
                 .with("source", banner == null ? "Console" : banner.getName())
                 .with("duration", TemporalDuration.of(duration));
 
-        broadcastService.broadcast(message.get("ban.broadcast"), silent, source);
+        broadcastService.broadcast(message.get("ipban.broadcast"), silent, source);
 
         for(Player player : locatorService.players(address)) {
-            player.kickPlayer(message.get("ban.kick"));
+            player.kickPlayer(message.get("ipban.kick"));
         }
 
         // Shouldn't be necessary, if everything else is working, to kick the player by retrieving them by the user object here.

@@ -1,13 +1,29 @@
 ban:
-    kick: "&fYou've been banned by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    kick: |
+      You've been banned by &a{{source}}&r
+      Reason: &a{{reason|no reason}}&r
+      Expires: &a{{duration|never}}&r
+
     broadcast: "&a{{name|address}}&r was banned by &a{{source}}&r for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
-    denied: "&fYou're banned for &a{{reason|no reason}}&r. Expires: &a{{duration|never}}&r"
+    denied: |
+      You're banned by &a{{source}}&r
+      Reason: &a{{reason|no reason}}&r
+      Expires: &a{{duration|never}}&r
+
     unban: "&f{{name|address}} was unbanned by {{source}}."
 
 ipban:
-    kick: "You've been banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
+    kick: |
+      You've been IP banned by &a{{source}}&r
+      Reason: &a{{reason|no reason}}&r
+      Expires: &a{{duration|never}}&r
+
     broadcast: "{{name|address}} was banned by {{source}} for {{reason|no reason}}. Expires: {{duration|never}}"
-    denied: "You're banned for {{reason|no reason}}. Expires: {{duration|never}}"
+    denied: |
+      You're IP banned by &a{{source}}&r
+      Reason: &a{{reason|no reason}}&r
+      Expires: &a{{duration|never}}&r
+
     unban: "{{name|address}} was unbanned by {{source}}."
 
 mute:
@@ -25,8 +41,8 @@ warn:
 kick:
     broadcast: "&a{{name}}&r was kicked by &a{{source}}&r for &a{{reason|no reason}}&r."
     message: |
-      You've been kicked by &a{{source}}&r. The reason given was:
-      &a{{reason|None}}&r
+      You've been kicked by &a{{source}}&r
+      Reason: &a{{reason|None}}&r
 
 lockdown:
     broadcast: |

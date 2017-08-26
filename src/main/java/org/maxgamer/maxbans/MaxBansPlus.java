@@ -102,7 +102,7 @@ public class MaxBansPlus extends JavaPlugin {
         // Register our commands
         CommandExecutorComponent commands = context.modules().commands();
         register("ban", commands.ban());
-        register("ipban", commands.unban());
+        register("ipban", commands.ipban());
         register("unban", commands.unban());
         register("mute", commands.mute());
         register("ipmute", commands.ipmute());
