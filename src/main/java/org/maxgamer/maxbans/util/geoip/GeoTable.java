@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.util.geoip;
 
 import com.google.common.net.InetAddresses;
 
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.TreeSet;
@@ -20,13 +21,16 @@ public class GeoTable {
         this.blocks = blocks;
     }
 
-    public GeoBlock getBlock(int ip) {
+    public GeoBlock getBlock(BigInteger ip) {
         GeoBlock dummy = new GeoBlock(null, ip, ip);
 
         GeoBlock block = blocks.floor(dummy);
 
-        if(block.getMinimum() > ip) return null;
-        if(block.getMaximum() <= ip) return null;
+        // minimum > ip
+        if(block.getMinimum().compareTo(ip) > 0) return null;
+
+        // maximum < ip
+        if(block.getMaximum().compareTo(ip) <= 0) return null;
 
         return block;
     }
@@ -34,6 +38,6 @@ public class GeoTable {
     public GeoBlock getBlock(String ip) {
         InetAddress addr = InetAddresses.forString(ip);
 
-        return getBlock(InetAddresses.coerceToInteger(addr));
+        return getBlock(new BigInteger(addr.getAddress()));
     }
 }

@@ -5,6 +5,7 @@ import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.service.UserService;
 
 import javax.inject.Inject;
 import java.time.Duration;
@@ -14,6 +15,9 @@ import java.time.Duration;
  */
 public class LookupCommandExecutor extends IPRestrictionCommandExecutor {
     @Inject
+    protected UserService userService;
+
+    @Inject
     public LookupCommandExecutor() {
         super("maxbans.iplookup");
     }
@@ -21,13 +25,15 @@ public class LookupCommandExecutor extends IPRestrictionCommandExecutor {
     @Override
     public void restrict(CommandSender source, Address address, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException {
         if(user != null) {
-            String message = addressService
+            String message = userService
                     .report(user, locale)
                     .get("iplookup.user");
 
             source.sendMessage(message);
-            return;
         }
+
+        // Newline to separate the reports
+        source.sendMessage("-----------------------------------");
 
         // Address can't be null
         String message = addressService

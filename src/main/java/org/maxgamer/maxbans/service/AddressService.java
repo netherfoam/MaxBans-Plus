@@ -168,6 +168,7 @@ public class AddressService {
         if(ban != null) {
             throw new RejectedException("ipban.denied")
                     .with("address", ip)
+                    .with("name", user.getName())
                     .with("source", ban.getSource() == null ? "Console" : ban.getSource().getName())
                     .with("reason", ban.getReason())
                     .with("duration", ban.getExpiresAt());
@@ -191,119 +192,58 @@ public class AddressService {
             Instant lastActive = null;
             Instant firstActive = null;
 
-            for(UserAddress userAddress : history) {
-                if(lastActive == null || userAddress.getLastActive().isAfter(lastActive)) {
+            for (UserAddress userAddress : history) {
+                if (lastActive == null || userAddress.getLastActive().isAfter(lastActive)) {
                     lastActive = userAddress.getLastActive();
                 }
 
-                if(firstActive == null || userAddress.getFirstActive().isBefore(firstActive)) {
+                if (firstActive == null || userAddress.getFirstActive().isBefore(firstActive)) {
                     firstActive = userAddress.getFirstActive();
                 }
             }
 
             builder.with("lastActive", lastActive);
             builder.with("firstActive", firstActive);
-
-            GeoCountry country = geoIPService.getCountry(address.getHost());
-            if (country != null) {
-                builder.with("country", country.getCountryName());
-                builder.with("continent", country.getContinentName());
-            }
-
-            Ban ban = getBan(address);
-            if(ban != null) {
-                String reason = ban.getReason();
-                if(reason == null || reason.isEmpty()) reason = "No reason";
-                builder.with("ban", reason);
-            }
-
-            Mute mute = getMute(address);
-            if(mute != null) {
-                String reason = mute.getReason();
-                if(reason == null || reason.isEmpty()) reason = "No reason";
-                builder.with("mute", reason);
-            }
-
-            List<User> users = address.getUsers().stream().map(UserAddress::getUser).collect(Collectors.toList());
-            StringBuilder stringBuilder = new StringBuilder();
-            for(User related : users) {
-                // Prefix with a comma if this isn't the first element
-                if(stringBuilder.length() > 0) stringBuilder.append(", ");
-
-                stringBuilder.append(related.getName());
-            }
-            builder.with("users", stringBuilder.toString());
         }
 
-        return builder;
-    }
-
-    public MessageBuilder report(User user, Locale locale) throws RejectedException {
-        if(user == null || user.getAddresses().isEmpty()) {
-            throw new RejectedException("iplookup.never");
+        GeoCountry country = geoIPService.getCountry(address.getHost());
+        if (country != null) {
+            builder.with("country", country.getCountryName());
+            builder.with("continent", country.getContinentName());
         }
 
-        List<UserAddress> history = user.getAddresses();
-        MessageBuilder builder = locale.get();
-        builder.with("name", user.getName());
-
-        if(!history.isEmpty()) {
-            UserAddress userAddress = history.get(history.size() - 1);
-
-            builder.with("lastActive", userAddress.getLastActive());
-            builder.with("firstActive", userAddress.getFirstActive());
-
-            Address address = userAddress.getAddress();
-            builder.with("ip", address.getHost());
-
-            GeoCountry country = geoIPService.getCountry(address.getHost());
-            if (country != null) {
-                builder.with("country", country.getCountryName());
-                builder.with("continent", country.getContinentName());
-            }
-
-            Ban ban = getBan(address);
-            if(ban != null) {
-                String reason = ban.getReason();
-                if(reason == null || reason.isEmpty()) reason = "No reason";
-                builder.with("ban", reason);
-            }
-
-            Mute mute = getMute(address);
-            if(mute != null) {
-                String reason = mute.getReason();
-                if(reason == null || reason.isEmpty()) reason = "No reason";
-                builder.with("mute", reason);
-            }
-
-            List<User> users = address.getUsers().stream().map(UserAddress::getUser).collect(Collectors.toList());
-            StringBuilder stringBuilder = new StringBuilder();
-            for(User related : users) {
-                // Don't include the user whose active
-                if(related == user) continue;
-
-                // Prefix with a comma if this isn't the first element
-                if(stringBuilder.length() > 0) stringBuilder.append(", ");
-
-                stringBuilder.append(related.getName());
-            }
-            builder.with("users", stringBuilder.toString());
-        }
-
-        // These override the IP restrictions, since the user was explicitly banned
-        Ban ban = userService.getBan(user);
+        Ban ban = getBan(address);
         if(ban != null) {
             String reason = ban.getReason();
             if(reason == null || reason.isEmpty()) reason = "No reason";
-            builder.with("ban", reason);
+
+            builder.with("ban", reason); // Legacy support < 1.5
+            builder.with("ban.reason", reason);
+            builder.with("ban.source", ban.getSource() == null ? "Console" : ban.getSource().getName());
+            builder.with("ban.expires", ban.getExpiresAt());
+            builder.with("ban.created", ban.getCreated());
         }
 
-        Mute mute = userService.getMute(user);
+        Mute mute = getMute(address);
         if(mute != null) {
             String reason = mute.getReason();
             if(reason == null || reason.isEmpty()) reason = "No reason";
-            builder.with("mute", reason);
+            builder.with("mute", reason); // Legacy support < 1.5
+            builder.with("mute.reason", reason);
+            builder.with("mute.source", mute.getSource() == null ? "Console" : mute.getSource().getName());
+            builder.with("mute.expires", mute.getExpiresAt());
+            builder.with("mute.created", mute.getCreated());
         }
+
+        List<User> users = address.getUsers().stream().map(UserAddress::getUser).collect(Collectors.toList());
+        StringBuilder stringBuilder = new StringBuilder();
+        for(User related : users) {
+            // Prefix with a comma if this isn't the first element
+            if(stringBuilder.length() > 0) stringBuilder.append(", ");
+
+            stringBuilder.append(related.getName());
+        }
+        builder.with("users", stringBuilder.toString());
 
         return builder;
     }

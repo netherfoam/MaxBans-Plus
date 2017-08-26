@@ -3,9 +3,12 @@ package org.maxgamer.maxbans.service;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.exception.RejectedException;
+import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.Ban;
 import org.maxgamer.maxbans.orm.Mute;
 import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.orm.UserAddress;
 import org.maxgamer.maxbans.repository.BanRepository;
 import org.maxgamer.maxbans.repository.MuteRepository;
 import org.maxgamer.maxbans.repository.UserRepository;
@@ -14,6 +17,8 @@ import org.maxgamer.maxbans.util.RestrictionUtil;
 import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,7 +56,23 @@ public class UserService {
     }
     
     public User create(Player player) {
-        return create(player.getUniqueId(), player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
+        UUID id;
+        if(config.isOffline()) {
+            // Potential exploit patched in 1.5, details below:
+            // - A player joins as ID 0, name Gandalf
+            // - Player gets warnings or mutes on offline server
+            // - Player joins with the same ID, but as name Merlin
+            // - Gandalf gets renamed to Merlin because ID is the primary key in the table
+            // - Player joins with new UUID, name Gandalf.
+            // - Player has effectively transferred all mutes/warnings to Merlin
+
+            // To fix this, we don't trust client UUID's if we're offline. We generate our own, here.
+            id = UUID.randomUUID();
+        } else {
+            id = player.getUniqueId();
+        }
+
+        return create(id, player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
     }
     
     public User get(Player player) {
@@ -95,6 +116,7 @@ public class UserService {
         Ban ban = getBan(user);
         if(ban != null) {
             throw new RejectedException("ban.denied")
+                    .with("name", user.getName())
                     .with("reason", ban.getReason())
                     .with("source", ban.getSource() == null ? "Console" : ban.getSource().getName())
                     .with("duration", ban.getExpiresAt());
@@ -187,6 +209,57 @@ public class UserService {
 
             bans.save(ban);
         }
+    }
+
+    public MessageBuilder report(User user, Locale locale) throws RejectedException {
+        if(user == null || user.getAddresses().isEmpty()) {
+            throw new RejectedException("iplookup.never");
+        }
+
+        MessageBuilder builder = locale.get();
+        builder.with("name", user.getName());
+        builder.with("firstActive", user.getFirstActive());
+        builder.with("lastActive", user.getLastActive());
+
+        // Legacy support < 1.5
+        UserAddress lastAddress = user.getLastAddress();
+        if(lastAddress != null) {
+            builder.with("ip", lastAddress.getAddress().getHost());
+        }
+
+        Ban ban = getBan(user);
+        if(ban != null) {
+            String reason = ban.getReason();
+            if(reason == null || reason.isEmpty()) reason = "No reason";
+            builder.with("ban", reason); // Legacy support < 1.5
+            builder.with("ban.reason", reason);
+            builder.with("ban.source", ban.getSource() == null ? "Console" : ban.getSource().getName());
+            builder.with("ban.expires", ban.getExpiresAt());
+            builder.with("ban.created", ban.getCreated());
+        }
+
+        Mute mute = getMute(user);
+        if(mute != null) {
+            String reason = mute.getReason();
+            if(reason == null || reason.isEmpty()) reason = "No reason";
+            builder.with("mute", reason); // Legacy support < 1.5
+            builder.with("mute.reason", reason);
+            builder.with("mute.source", mute.getSource() == null ? "Console" : mute.getSource().getName());
+            builder.with("mute.expires", mute.getExpiresAt());
+            builder.with("mute.created", mute.getCreated());
+        }
+
+        List<String> addresses = new ArrayList<>(user.getAddresses().size());
+        for(UserAddress userAddress : user.getAddresses()) {
+            addresses.add(userAddress.getAddress().getHost());
+        }
+
+        // Most recent addresses first
+        Collections.reverse(addresses);
+
+        builder.with("addresses", addresses);
+
+        return builder;
     }
 }
 

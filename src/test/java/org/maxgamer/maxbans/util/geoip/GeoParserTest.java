@@ -1,78 +1,55 @@
 package org.maxgamer.maxbans.util.geoip;
 
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.test.IntegrationTest;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * @author netherfoam
  */
 public class GeoParserTest implements IntegrationTest {
-    @Test
-    public void testParser() throws URISyntaxException, IOException {
+    private GeoTable table;
+
+    @Before
+    public void init() throws IOException {
         InputStream geoLiteZip = getClass().getClassLoader().getResourceAsStream("GeoLite.zip");
+        table = GeoParser.standard(geoLiteZip, "en");
+    }
 
-        ZipInputStream zipInput = new ZipInputStream(geoLiteZip);
-
-        ZipEntry entry;
-
-        String countryFile = "GeoLite2-Country-Locations-en.csv";
-        String ipv4File = "GeoLite2-Country-Blocks-IPv4.csv";
-
-        InputStream countrySrc = null;
-        InputStream ipv4Src = null;
-
-        while((entry = zipInput.getNextEntry()) != null) {
-            if(entry.getName().endsWith(countryFile)) {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                byte[] data = new byte[4096];
-
-                int n;
-                while((n = zipInput.read(data)) > 0) {
-                    out.write(data, 0, n);
-                }
-
-                countrySrc = new ByteArrayInputStream(out.toByteArray());
-            }
-
-            if(entry.getName().endsWith(ipv4File)) {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                byte[] data = new byte[4096];
-
-                int n;
-                while((n = zipInput.read(data)) > 0) {
-                    out.write(data, 0, n);
-                }
-
-                ipv4Src = new ByteArrayInputStream(out.toByteArray());
-            }
-        }
-
-        zipInput.close();
-
-        GeoParser parser = new GeoParser();
-        GeoTable table = parser.parse(countrySrc, ipv4Src);
-
-        if (countrySrc != null) {
-            countrySrc.close();
-        }
-
-        if (ipv4Src != null) {
-            ipv4Src.close();
-        }
-
+    @Test
+    public void testLocalhost() throws URISyntaxException, IOException {
         GeoBlock localhost = table.getBlock("127.0.0.1");
         Assert.assertNull("Localhost isn't in a country", localhost);
+    }
 
+    @Test
+    public void testIpv6() throws URISyntaxException, IOException {
+        GeoBlock localhost = table.getBlock("::1");
+        Assert.assertNull("Localhost isn't in a country", localhost);
+    }
+
+    @Test
+    public void testIpv6Country() {
+        GeoBlock taiwanese = table.getBlock("2001:288:106:8000::");
+        Assert.assertNotNull("Expected a block", taiwanese);
+
+        GeoCountry taiwan = taiwanese.getCountry();
+        Assert.assertEquals("Expect country code", "TW", taiwan.getCountryCode());
+        Assert.assertEquals("Expect country name", "Taiwan", taiwan.getCountryName());
+        Assert.assertEquals("Expect continent name", "Asia", taiwan.getContinentName());
+        Assert.assertEquals("Expect continent code", "AS", taiwan.getContinentCode());
+    }
+
+    @Test
+    public void testAustralia() throws URISyntaxException, IOException {
         GeoBlock australian = table.getBlock("110.23.24.48");
+        Assert.assertNotNull("Expected a block", australian);
+
         GeoCountry australia = australian.getCountry();
         Assert.assertNotNull("Australian", australian);
         Assert.assertEquals("Expect country code", "AU", australia.getCountryCode());

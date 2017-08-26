@@ -76,6 +76,7 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+        this.alias = name.toLowerCase();
     }
 
     public Instant getLastActive() {
@@ -112,5 +113,11 @@ public class User {
 
     public String getAlias() {
         return alias;
+    }
+
+    public UserAddress getLastAddress() {
+        if(addresses.isEmpty()) return null;
+
+        return addresses.get(addresses.size() - 1);
     }
 }
