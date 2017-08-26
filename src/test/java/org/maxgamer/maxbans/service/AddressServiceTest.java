@@ -96,7 +96,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
             Assert.assertEquals("expect IP address", builder.preview("ip"), "127.0.0.1");
             Assert.assertNotNull("firstActive", builder.preview("firstActive"));
             Assert.assertNotNull("lastActive", builder.preview("lastActive"));
-            Assert.assertTrue("expect to find related user", builder.preview("users").toString().contains("Address_McGee_Other"));
+            Assert.assertTrue("expect to find related user", builder.preview("addresses").toString().contains("127.0.0.1"));
         });
     }
 }
