@@ -92,6 +92,12 @@ history:
     unmute: "{{name}} was muted by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
     warn: "{{name}} was warned by {{source|console}}: {{reason|No reason}}"
 
+# The prefix and suffix for messages which are silent
+# These are activated by the -s flag in a command eg "/ban netherfoam -s Ninja ban"
+silent:
+    prefix: "&a&o[Silent]&r&r "
+    suffix: ""
+
 # The locale to use for time units. Valid examples include:
 # en, fr, de, it, ja, ko, zh
 locale: en

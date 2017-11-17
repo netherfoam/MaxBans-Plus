@@ -63,6 +63,7 @@ public class User {
         this.lastActive = firstActive;
         this.id = id;
         this.name = name;
+
         this.alias = name.toLowerCase();
     }
 

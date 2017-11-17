@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.service;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.util.Permissions;
 
 import javax.inject.Inject;
@@ -18,10 +19,16 @@ public class BroadcastService {
     private static final String MODERATOR_PERMISSION = "maxbans.mod";
     private Server server;
     private Map<Object, Instant> firewall = new HashMap<>();
+    private Locale locale;
 
     @Inject
-    public BroadcastService(Server server) {
+    public BroadcastService(Server server, Locale locale) {
         this.server = server;
+        this.locale = locale;
+    }
+
+    public void moderators(String message) {
+        server.broadcast(message, MODERATOR_PERMISSION);
     }
 
     /**
@@ -35,6 +42,15 @@ public class BroadcastService {
 
         if(silent) {
             permission = Permissions.SEE_SILENT;
+
+            // Attach our silence prefix & suffix
+            if (locale.has("silent.prefix")) {
+                message = locale.get().get("silent.prefix") + message;
+            }
+
+            if (locale.has("silent.suffix")) {
+                message = message + locale.get().get("silent.suffix");
+            }
         } else {
             permission = Permissions.SEE_BROADCAST;
         }
@@ -47,10 +63,6 @@ public class BroadcastService {
             // Target doesn't have permission so wasn't notified by the broadcast!
             involved.sendMessage(message);
         }
-    }
-
-    public void moderators(String message) {
-        server.broadcast(message, MODERATOR_PERMISSION);
     }
 
     /**
