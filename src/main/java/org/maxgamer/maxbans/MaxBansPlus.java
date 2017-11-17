@@ -20,6 +20,7 @@ import org.maxgamer.maxbans.util.FlywayUtil;
 import org.maxgamer.maxbans.util.SentryLogger;
 
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
 /**
@@ -58,8 +59,11 @@ public class MaxBansPlus extends JavaPlugin {
                 return;
             }
         }
-        
+
+        YamlConfiguration fallback = YamlConfiguration.loadConfiguration(new InputStreamReader(getResource("messages.yml")));
         ConfigurationSection localeConfig = YamlConfiguration.loadConfiguration(messagesFile);
+        fallback.addDefaults(fallback);
+
         locale.load(localeConfig);
     }
 
