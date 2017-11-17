@@ -4,7 +4,7 @@ import io.sentry.Sentry;
 import io.sentry.SentryClient;
 import io.sentry.event.Event;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -19,8 +19,7 @@ import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.util.FlywayUtil;
 import org.maxgamer.maxbans.util.SentryLogger;
 
-import java.io.File;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.logging.Logger;
 
 /**
@@ -60,9 +59,14 @@ public class MaxBansPlus extends JavaPlugin {
             }
         }
 
-        YamlConfiguration fallback = YamlConfiguration.loadConfiguration(new InputStreamReader(getResource("messages.yml")));
-        ConfigurationSection localeConfig = YamlConfiguration.loadConfiguration(messagesFile);
-        fallback.addDefaults(fallback);
+        YamlConfiguration localeConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getResource("messages.yml")));
+        try {
+            localeConfig.load(new FileReader(messagesFile));
+        } catch (IOException e) {
+            throw new IllegalStateException("Couldn't read file: " + messagesFile, e);
+        } catch (InvalidConfigurationException e) {
+            throw new IllegalStateException("Bad YML configuration file: " + messagesFile, e);
+        }
 
         locale.load(localeConfig);
     }
