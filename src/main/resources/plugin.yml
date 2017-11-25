@@ -46,6 +46,10 @@ commands:
       description: Prevent players from joining the server.
       usage: /lockdown <ALL|JOIN|NEW|OFF> [reason]
 
+   history:
+      description: View the recent punishments dealt to players through MaxBans Plus
+      usage: /history [page] [admin]
+
 permissions:
    maxbans.ban:
       description: Use the /ban and /unban commands
@@ -64,6 +68,9 @@ permissions:
 
    maxbans.warn:
       description: Use the /warn command
+
+   maxbans.history:
+      description: Use the /history command
 
    maxbans.silent:
       description: See command announcements even when they're silenced using the -s flag

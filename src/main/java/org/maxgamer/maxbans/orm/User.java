@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "Users")
-public class User {
+public class User implements Tenant {
     @Id
     private UUID id;
 
@@ -70,6 +70,7 @@ public class User {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

@@ -2,6 +2,7 @@ package org.maxgamer.maxbans;
 
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.maxgamer.maxbans.config.PluginConfig;
@@ -11,6 +12,7 @@ import org.maxgamer.maxbans.repository.H2Test;
 import org.maxgamer.maxbans.test.IntegrationTest;
 
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
 import static org.mockito.Mockito.doReturn;
@@ -37,8 +39,11 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
         MaxBansPlus plugin = mock(MaxBansPlus.class);
         FileConfiguration configuration = mock(FileConfiguration.class);
         doReturn(configuration).when(plugin).getConfig();
+        Locale locale = new Locale();
+        YamlConfiguration localeConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("messages.yml")));
+        locale.load(localeConfig);
 
-        context = new PluginContext(plugin, config, new Locale(), server, folder, Logger.getLogger("Test"));
+        context = new PluginContext(plugin, config, locale, server, folder, Logger.getLogger("Test"));
     }
 
     @After

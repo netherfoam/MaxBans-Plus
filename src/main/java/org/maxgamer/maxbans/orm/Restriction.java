@@ -7,7 +7,8 @@ import java.util.UUID;
 /**
  * @author Dirk Jamieson
  */
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Restriction {
     @Id
     private UUID id = UUID.randomUUID();
@@ -85,4 +86,6 @@ public abstract class Restriction {
     public void setRevoker(User revoker) {
         this.revoker = revoker;
     }
+
+    public abstract Tenant getTenant();
 }

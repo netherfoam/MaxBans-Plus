@@ -28,4 +28,9 @@ public class Warning extends Restriction {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public Tenant getTenant() {
+        return user;
+    }
 }

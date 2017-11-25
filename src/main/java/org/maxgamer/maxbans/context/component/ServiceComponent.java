@@ -17,4 +17,5 @@ public interface ServiceComponent {
     WarningService warn();
     MetricService metric();
     GeoIPService geoIP();
+    HistoryService history();
 }

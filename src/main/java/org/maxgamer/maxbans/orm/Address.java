@@ -9,7 +9,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "Address")
-public class Address {
+public class Address implements Tenant {
     @Id
     @Column
     private String host;
@@ -55,5 +55,10 @@ public class Address {
 
     public List<Mute> getMutes() {
         return mutes;
+    }
+
+    @Override
+    public String getName() {
+        return host;
     }
 }

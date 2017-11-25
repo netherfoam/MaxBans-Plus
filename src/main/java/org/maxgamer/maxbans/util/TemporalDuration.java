@@ -39,12 +39,12 @@ public class TemporalDuration implements TemporalAccessor {
         if (!temporal.isSupported(field)) return false;
         long value = temporal.getLong(field) - BASE_TEMPORAL.getLong(field);
         
-        return value != 0l;
+        return value != 0L;
     }
 
     @Override
     public long getLong(TemporalField field) {
-        if (!isSupported(field)) throw new UnsupportedTemporalTypeException(new StringBuilder().append(field.toString()).toString());
+        if (!isSupported(field)) throw new UnsupportedTemporalTypeException(field.toString());
         
         return temporal.getLong(field) - BASE_TEMPORAL.getLong(field);
     }

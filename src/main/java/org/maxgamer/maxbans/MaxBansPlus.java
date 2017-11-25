@@ -119,6 +119,7 @@ public class MaxBansPlus extends JavaPlugin {
         register("kick", commands.kick());
         register("warn", commands.warn());
         register("lockdown", commands.lockdown());
+        register("history", commands.history());
 
         // Kick any players who aren't allowed to be on the server right now
         context.modules().transactor().work(session -> {

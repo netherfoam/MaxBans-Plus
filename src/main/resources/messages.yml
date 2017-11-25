@@ -86,11 +86,11 @@ iplookup:
       &a{{users|none}}&r
 
 history:
-    ban: "{{name}} was banned by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
-    unban: "{{name}} was unbanned by {{source|console}}"
-    mute: "{{name}} was muted by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
-    unmute: "{{name}} was muted by {{source|console}} for {{duration|forever}}: {{reason|No reason}}"
-    warn: "{{name}} was warned by {{source|console}}: {{reason|No reason}}"
+    ban: "{{name|address}} was banned by {{source|console}}. Reason: {{reason|No reason}}. Expires {{duration|never}}"
+    unban: "{{name|address}} was unbanned by {{source|console}}"
+    mute: "{{name|address}} was muted by {{source|console}}. Reason: {{reason|No reason}}. Expires {{duration|never}}"
+    unmute: "{{name|address}} was muted by {{source|console}}. Reason: {{reason|No reason}}. Expires {{duration|never}}"
+    warn: "{{name|address}} was warned by {{source|console}}. Reason: {{reason|No reason}}. Expires {{duration|never}}"
 
 # The prefix and suffix for messages which are silent
 # These are activated by the -s flag in a command eg "/ban netherfoam -s Ninja ban"
