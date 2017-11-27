@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Executor that provides the /history command
+ *
  * @author netherfoam
  */
 public class HistoryCommandExecutor extends StandardCommandExecutor {
@@ -33,25 +35,12 @@ public class HistoryCommandExecutor extends StandardCommandExecutor {
     public void perform(CommandSender sender, Command command, String cmd, String[] userArgs) throws MessageException {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(userArgs));
 
+        List<String> messages;
+
         int page = 0;
         if (!args.isEmpty()) {
-            String pageString = args.remove(0);
-
-            try {
-                // Minus one, because humans use 1 indexed pages, but we don't.
-                page = Integer.parseInt(pageString) - 1;
-
-                if (page < 0) {
-                    throw new RejectedException("Page number must be >= 1");
-                }
-            } catch (NumberFormatException e) {
-                throw new RejectedException(pageString+ " is not a suitable page number");
-            }
-        }
-
-        List<String> messages;
-        if (!args.isEmpty()) {
-            String banner = args.get(0);
+            // Extract the user to view history of
+            String banner = args.remove(0);
 
             User user;
             if (banner.equalsIgnoreCase("console")) {
@@ -64,6 +53,21 @@ public class HistoryCommandExecutor extends StandardCommandExecutor {
                 }
             }
 
+            if (!args.isEmpty()) {
+                String pageString = args.remove(0);
+
+                try {
+                    // Minus one, because humans use 1 indexed pages, but we don't.
+                    page = Integer.parseInt(pageString) - 1;
+
+                    if (page < 0) {
+                        throw new RejectedException("Page number must be >= 1");
+                    }
+                } catch (NumberFormatException e) {
+                    throw new RejectedException(pageString + " is not a suitable page number");
+                }
+            }
+
             messages = historyService.getHistory(page, user);
         } else {
             messages = historyService.getHistory(page);
@@ -72,6 +76,7 @@ public class HistoryCommandExecutor extends StandardCommandExecutor {
         for (String message : messages) {
             sender.sendMessage(message);
         }
+
         sender.sendMessage("--- Page " + (page + 1) + " ---");
     }
 }

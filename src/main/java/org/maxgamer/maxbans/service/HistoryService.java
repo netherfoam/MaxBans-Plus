@@ -14,10 +14,23 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * History service helps generate the messages used to describe recent occurrences to moderators
+ */
 public class HistoryService {
+    /**
+     * The page size
+     */
     private static final int LIMIT = 15;
 
+    /**
+     * The transactor to use to perform a transaction
+     */
     private Transactor transactor;
+
+    /**
+     * The locale we use for history message generation
+     */
     private Locale locale;
 
     @Inject
@@ -26,10 +39,21 @@ public class HistoryService {
         this.locale = locale;
     }
 
+    /**
+     * Fetch the history for the given moderator
+     * @param page the page, zero indexed
+     * @param source the moderator to view the past actions of
+     * @return the page of actions
+     */
     public List<String> getHistory(int page, User source) {
         return transactor.retrieve(session -> describe(getBySender(page, source)));
     }
 
+    /**
+     * Fetch the history for the given page, globally
+     * @param page the page number, zero indexed
+     * @return the page of history
+     */
     public List<String> getHistory(int page) {
         return transactor.retrieve(session -> describe(getAll(page)));
     }

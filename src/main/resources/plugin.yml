@@ -48,7 +48,7 @@ commands:
 
    history:
       description: View the recent punishments dealt to players through MaxBans Plus
-      usage: /history [page] [admin]
+      usage: /history [moderator] [page]
 
 permissions:
    maxbans.ban:
