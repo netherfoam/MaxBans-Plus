@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.FlywayException;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.context.component.CommandExecutorComponent;
@@ -20,6 +21,7 @@ import org.maxgamer.maxbans.util.FlywayUtil;
 import org.maxgamer.maxbans.util.SentryLogger;
 
 import java.io.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -102,13 +104,19 @@ public class MaxBansPlus extends JavaPlugin {
         context = new PluginContext(this, config, locale, getServer(), getDataFolder(), getErrorLogger());
 
         // Update our database if necessary
-        migrate();
+        try {
+            migrate();
+        } catch (FlywayException e) {
+            getErrorLogger().log(Level.SEVERE, "Unable to migrate database. Disabling MaxBans", e);
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
 
         // Register our listener
-        register(context.modules().listeners().restriction());
+        register(context.components().listeners().restriction());
 
         // Register our commands
-        CommandExecutorComponent commands = context.modules().commands();
+        CommandExecutorComponent commands = context.components().commands();
         register("ban", commands.ban());
         register("ipban", commands.ipban());
         register("unban", commands.unban());
@@ -122,10 +130,10 @@ public class MaxBansPlus extends JavaPlugin {
         register("history", commands.history());
 
         // Kick any players who aren't allowed to be on the server right now
-        context.modules().transactor().work(session -> {
+        context.components().transactor().work(session -> {
             for(Player player : context.getServer().getOnlinePlayers()) {
                 try {
-                    context.modules().listeners().restriction().onJoin(player, player.getAddress().getAddress().getHostAddress());
+                    context.components().listeners().restriction().onJoin(player, player.getAddress().getAddress().getHostAddress());
                 } catch (RejectedException e) {
                     player.kickPlayer(e.getMessage(locale));
                 }

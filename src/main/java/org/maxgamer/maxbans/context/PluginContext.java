@@ -21,6 +21,7 @@ public class PluginContext {
     private Server server;
     private File dataFolder;
     private PluginComponent modules;
+    private PluginModule pluginModule;
     
     public PluginContext(MaxBansPlus plugin, PluginConfig config, Locale locale, Server server, File dataFolder, Logger logger) {
         this.config = config;
@@ -29,13 +30,15 @@ public class PluginContext {
 
         FileConfiguration lockdownCfg = YamlConfiguration.loadConfiguration(new File(dataFolder, "lockdown.yml"));
 
+        pluginModule = new PluginModule(plugin, server, config, lockdownCfg, locale, logger);
+
         modules = DaggerPluginComponent
                 .builder()
-                .pluginModule(new PluginModule(plugin, server, config, lockdownCfg, locale, logger))
+                .pluginModule(pluginModule)
                 .build();
     }
 
-    public PluginComponent modules() {
+    public PluginComponent components() {
         return modules;
     }
 
@@ -52,6 +55,8 @@ public class PluginContext {
     }
 
     public void close() {
-        modules().sessionFactory().close();
+        if (pluginModule.isSessionInitialised()) {
+            components().sessionFactory().close();
+        }
     }
 }

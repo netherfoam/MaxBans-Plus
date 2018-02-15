@@ -17,8 +17,11 @@ import javax.inject.Singleton;
 public class JdbcModule {
     @Provides
     @Singleton
-    public SessionFactory sessionFactory(Configuration configurer) {
-        return configurer.buildSessionFactory();
+    public SessionFactory sessionFactory(Configuration configurer, PluginModule plugin) {
+        SessionFactory factory = configurer.buildSessionFactory();
+        plugin.setSessionInitialised(true);
+
+        return factory;
     }
 
     @Provides
