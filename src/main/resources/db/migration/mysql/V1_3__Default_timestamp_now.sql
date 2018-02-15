@@ -5,8 +5,8 @@
 -- it does not a) fail migration and b) fail to execute because 0 is an invalid timestamp
 --
 
-ALTER TABLE Users ALTER COLUMN first_active SET DEFAULT now();
-ALTER TABLE Users ALTER COLUMN last_active SET DEFAULT now();
+ALTER TABLE Users MODIFY COLUMN first_active DATETIME NOT NULL DEFAULT now();
+ALTER TABLE Users MODIFY COLUMN last_active DATETIME NOT NULL DEFAULT now();
 
-ALTER TABLE Address_User ALTER COLUMN first_active SET DEFAULT now();
-ALTER TABLE Address_User ALTER COLUMN last_active SET DEFAULT now();
+ALTER TABLE Address_User MODIFY COLUMN first_active DATETIME NOT NULL DEFAULT now();
+ALTER TABLE Address_User MODIFY COLUMN last_active DATETIME NOT NULL DEFAULT now();

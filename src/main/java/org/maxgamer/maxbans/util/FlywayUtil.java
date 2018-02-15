@@ -1,5 +1,6 @@
 package org.maxgamer.maxbans.util;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.MigrationInfo;
@@ -50,6 +51,10 @@ public class FlywayUtil {
                         }
                     }
                 } catch (SQLException e) {
+                    if (e.getMessage().contains("doesn't exist")) {
+                        // There's no schema_version table, this is fine. Just means we're a fresh install
+                        return;
+                    }
                     throw new FlywayException("Could not verify first migration checksum", e);
                 }
             }
