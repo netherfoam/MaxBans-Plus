@@ -1,18 +1,9 @@
 package org.maxgamer.maxbans.util;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import org.flywaydb.core.Flyway;
-import org.flywaydb.core.api.FlywayException;
-import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.MigrationVersion;
-import org.flywaydb.core.api.callback.BaseFlywayCallback;
-import org.flywaydb.core.api.callback.FlywayCallback;
 import org.maxgamer.maxbans.config.JdbcConfig;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.maxgamer.maxbans.util.db.Flyway_MySQL_V1_1__Fix_Callback;
 
 /**
  * @author netherfoam
@@ -33,32 +24,12 @@ public class FlywayUtil {
             // This allows use of databases which have existing tables in their database
             flyway.setBaselineVersion(MigrationVersion.fromVersion("1.0"));
             flyway.setBaselineOnMigrate(true);
+
+            // We disable validation on migration v1.1 because of a legacy bug
+            flyway.setCallbacks(new Flyway_MySQL_V1_1__Fix_Callback());
         }
 
         flyway.setLocations("db/migration/" + type);
-
-        // We disable validation on migration because of a legacy bug
-        flyway.setCallbacks(new BaseFlywayCallback() {
-            @Override
-            public void beforeValidate(Connection connection) {
-                try (PreparedStatement ps = connection.prepareStatement("SELECT sv.checksum FROM schema_version sv WHERE sv.version = ?")) {
-                    ps.setString(1, "1.0");
-                    ResultSet rs = ps.executeQuery();
-                    if (rs.next()) {
-                        if (rs.getLong("sv.checksum") != 0L) {
-                            // Repair old script checksums
-                            flyway.repair();
-                        }
-                    }
-                } catch (SQLException e) {
-                    if (e.getMessage().contains("doesn't exist")) {
-                        // There's no schema_version table, this is fine. Just means we're a fresh install
-                        return;
-                    }
-                    throw new FlywayException("Could not verify first migration checksum", e);
-                }
-            }
-        });
 
         return flyway;
     }
