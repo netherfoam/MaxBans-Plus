@@ -2,8 +2,8 @@ CREATE TABLE `Users` (
     id binary(16) NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     alias VARCHAR(50) NOT NULL,
-    first_active DATETIME NOT NULL DEFAULT 0,
-    last_active DATETIME NOT NULL DEFAULT 0
+    first_active DATETIME NOT NULL DEFAULT now(),
+    last_active DATETIME NOT NULL DEFAULT now()
 );
 
 CREATE TABLE Mute (
@@ -59,8 +59,8 @@ CREATE TABLE Address_Ban (
 CREATE TABLE Address_User (
     address VARCHAR(15) NOT NULL REFERENCES Address(host),
     user_id binary(16) NOT NULL REFERENCES Users(id),
-    first_active DATETIME NOT NULL DEFAULT 0,
-    last_active DATETIME NOT NULL DEFAULT 0,
+    first_active DATETIME NOT NULL DEFAULT now(),
+    last_active DATETIME NOT NULL DEFAULT now(),
     PRIMARY KEY(address, user_id)
 );
 
