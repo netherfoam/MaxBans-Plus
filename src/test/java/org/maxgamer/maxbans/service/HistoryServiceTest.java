@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.orm.Restriction;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.transaction.Transactor;
 
@@ -24,10 +23,10 @@ public class HistoryServiceTest extends PluginContextTest {
 
     @Before
     public void setup() {
-        historyService = getContext().modules().services().history();
-        userService = getContext().modules().services().user();
-        addressService = getContext().modules().services().address();
-        transactorService = getContext().modules().transactor();
+        historyService = getContext().components().services().history();
+        userService = getContext().components().services().user();
+        addressService = getContext().components().services().address();
+        transactorService = getContext().components().transactor();
     }
 
     @Test

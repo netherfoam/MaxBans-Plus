@@ -22,6 +22,7 @@ public class PluginModule {
     private Server server;
     private FileConfiguration configuration;
     private Locale locale;
+    private boolean sessionInitialised = false;
 
     public PluginModule(MaxBansPlus plugin, Server server, PluginConfig config, FileConfiguration configuration, Locale locale, Logger logger) {
         this.plugin = plugin;
@@ -30,6 +31,12 @@ public class PluginModule {
         this.configuration = configuration;
         this.locale = locale;
         this.logger = logger;
+    }
+
+    @Provides
+    @Singleton
+    public PluginModule pluginModule() {
+        return this;
     }
 
     @Provides
@@ -66,5 +73,13 @@ public class PluginModule {
     @Singleton
     public Locale getLocale() {
         return locale;
+    }
+
+    public boolean isSessionInitialised() {
+        return sessionInitialised;
+    }
+
+    public void setSessionInitialised(boolean initialised) {
+        this.sessionInitialised = initialised;
     }
 }

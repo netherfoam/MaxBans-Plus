@@ -31,7 +31,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
         List<User> users = new ArrayList<>(number);
 
         // Users
-        getContext().modules().transactor().work(session -> {
+        getContext().components().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 // Create 100k users
                 UUID id = UUID.randomUUID();
@@ -49,7 +49,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Ban> userBans(int number, List<User> users) {
         List<Ban> bans = new ArrayList<>(number);
 
-        getContext().modules().transactor().work(session -> {
+        getContext().components().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -74,7 +74,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Ban> addressBans(int number, List<Address> addresses) {
         List<Ban> bans = new ArrayList<>(number);
 
-        getContext().modules().transactor().work(session -> {
+        getContext().components().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 Address address = random(addresses, i);
 
@@ -97,7 +97,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Mute> userMutes(int number, List<User> users) {
         List<Mute> mutes = new ArrayList<>(number);
 
-        getContext().modules().transactor().work(session -> {
+        getContext().components().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -122,7 +122,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Mute> addressMutes(int number, List<Address> addresses) {
         List<Mute> mutes = new ArrayList<>(number);
 
-        getContext().modules().transactor().work(session -> {
+        getContext().components().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 Address address = random(addresses, i);
 
@@ -145,7 +145,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Warning> warnings(int number, List<User> users) {
         List<Warning> warnings = new ArrayList<>(number);
 
-        getContext().modules().transactor().work(session -> {
+        getContext().components().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -170,7 +170,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Address> addresses(int number, List<User> users) {
         List<Address> addresses = new ArrayList<>(number);
 
-        getContext().modules().transactor().work(session -> {
+        getContext().components().transactor().work(session -> {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
 
