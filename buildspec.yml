@@ -3,10 +3,12 @@ version: 0.2
 phases:
   build:
     commands:
+      # Runs our tests and makes our binary
       - mvn package
 
-  postbuild:
+  post_build:
     commands:
+      # Upload our Artefact to S3 without encryption
       - aws s3 cp target/maxbans-plus-*.jar s3://maxgamer.org/plugins/
 
 cache:
