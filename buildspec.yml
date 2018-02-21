@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - mvn package
+
+  postbuild:
+    commands:
+      - aws s3 cp target/maxbans-plus-*.jar s3://maxgamer.org/plugins/
+
+cache:
+  paths:
+    - '/root/.m2/**/*'
