@@ -5,7 +5,7 @@ This is a walk-through for each configuration section in the MaxBansPlus `config
 database:
    driver: "org.h2.Driver"
    url: "jdbc:h2:./plugins/MaxBansPlus/storage"
-   user: "root"
+   username: "root"
    password: "password"
    show-sql: false
 
@@ -29,7 +29,7 @@ We'll walk step by step through it below.
 database:
    driver: "org.h2.Driver"
    url: "jdbc:h2:./plugins/MaxBansPlus/storage"
-   user: "root"
+   username: "root"
    password: "password"
    show-sql: false
 ```
@@ -39,11 +39,11 @@ called `storage.mv.db`.
 
 The options are as follows:
 
-Option | Description
--------|------------
-driver | The database driver to use. Common ones are `com.mysql.jdbc.Driver` and `org.h2.Driver`
-url    | The JDBC url for the driver. Varies depending on the driver
-user   | The user to connect to the database with
+Option   | Description
+---------|------------
+driver   | The database driver to use. Common ones are `com.mysql.jdbc.Driver` and `org.h2.Driver`
+url      | The JDBC url for the driver. Varies depending on the driver
+username | The user to connect to the database with
 password | The password to use for the database
 show-sql | Whether SQL statements should be printed to the console. This is a debugging tool.
 
@@ -53,7 +53,7 @@ show-sql | Whether SQL statements should be printed to the console. This is a de
 database:
    driver: "com.mysql.jdbc.Driver"
    url: "jdbc:mysql://localhost:3306/maxbansplus"
-   user: "root"
+   username: "root"
    password: "password"
 ```
 
