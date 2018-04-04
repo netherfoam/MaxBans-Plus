@@ -3,7 +3,6 @@ package org.maxgamer.maxbans.transactor;
 import junit.framework.Assert;
 import org.hibernate.cfg.Configuration;
 import org.junit.Test;
-import org.maxgamer.maxbans.exception.TransactionException;
 import org.maxgamer.maxbans.orm.Ban;
 import org.maxgamer.maxbans.orm.HibernateConfigurer;
 import org.maxgamer.maxbans.repository.H2Test;

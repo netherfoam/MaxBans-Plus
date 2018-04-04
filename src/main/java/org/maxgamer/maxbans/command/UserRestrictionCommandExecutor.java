@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.exception.TransactionException;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.transaction.TransactionLayer;

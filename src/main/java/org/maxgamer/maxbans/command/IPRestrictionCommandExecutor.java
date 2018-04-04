@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.exception.TransactionException;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.AddressService;
@@ -46,7 +45,7 @@ public abstract class IPRestrictionCommandExecutor extends StandardCommandExecut
             sender.sendMessage("Must supply target IP or user");
             return;
         }
-        
+
         try (TransactionLayer tx = transactor.transact()) {
             String ipOrUser = args.pop();
             User user = null;
