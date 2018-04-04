@@ -8,6 +8,7 @@ import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.exception.TransactionException;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.LocatorService;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
 import javax.inject.Inject;
@@ -36,25 +37,17 @@ public abstract class UserRestrictionCommandExecutor extends StandardCommandExec
             return;
         }
 
-        try {
-            transactor.work(session -> {
-                User user = locatorService.user(args.pop());
-                if (user == null) {
-                    sender.sendMessage("Player not found");
-                    return;
-                }
-
-                Duration duration = RestrictionUtil.getDuration(args);
-                String reason = String.join(" ", args);
-
-                restrict(sender, user, duration, reason, silent);
-            });
-        } catch (TransactionException e) {
-            if(e.getCause() instanceof MessageException) {
-                throw (MessageException) e.getCause();
+        try (TransactionLayer tx = transactor.transact()) {
+            User user = locatorService.user(args.pop());
+            if (user == null) {
+                sender.sendMessage("Player not found");
+                return;
             }
 
-            throw e;
+            Duration duration = RestrictionUtil.getDuration(args);
+            String reason = String.join(" ", args);
+
+            restrict(sender, user, duration, reason, silent);
         }
     }
     

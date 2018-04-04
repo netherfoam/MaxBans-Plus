@@ -13,6 +13,7 @@ import org.maxgamer.maxbans.service.AddressService;
 import org.maxgamer.maxbans.service.BroadcastService;
 import org.maxgamer.maxbans.service.LockdownService;
 import org.maxgamer.maxbans.service.UserService;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import javax.inject.Inject;
@@ -72,15 +73,11 @@ public class RestrictionListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerLoginEvent e) {
-        try {
-            transactor.work(session -> {
-                try {
-                    onJoin(e.getPlayer(), e.getAddress().getHostAddress());
-                } catch (RejectedException r) {
-                    e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-                    e.setKickMessage(r.getMessage(locale));
-                }
-            });
+        try (TransactionLayer tx = transactor.transact()) {
+            onJoin(e.getPlayer(), e.getAddress().getHostAddress());
+        } catch (RejectedException r) {
+            e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+            e.setKickMessage(r.getMessage(locale));
         } catch (Throwable t) {
             logger.log(Level.SEVERE, "An error occurred when a player tried to join", t);
 
@@ -112,15 +109,11 @@ public class RestrictionListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        try {
-            transactor.work(session -> {
-                try {
-                    onChat(e.getPlayer());
-                } catch (RejectedException r) {
-                    e.setCancelled(true);
-                    e.getPlayer().sendMessage(r.getMessage(locale));
-                }
-            });
+        try (TransactionLayer tx = transactor.transact()) {
+            onChat(e.getPlayer());
+        } catch (RejectedException r) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(r.getMessage(locale));
         } catch (Throwable t) {
             logger.log(Level.SEVERE, "An error occurred when a player tried to chat", t);
 
@@ -130,17 +123,13 @@ public class RestrictionListener implements Listener {
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
-        try {
+        try (TransactionLayer tx = transactor.transact()) {
             if(!userService.isChatCommand(e.getMessage())) return;
 
-            transactor.work(session -> {
-                try {
-                    onChat(e.getPlayer());
-                } catch (RejectedException r) {
-                    e.setCancelled(true);
-                    e.getPlayer().sendMessage(r.getMessage(locale));
-                }
-            });
+            onChat(e.getPlayer());
+        } catch (RejectedException r) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(r.getMessage(locale));
         } catch (Throwable t) {
             logger.log(Level.SEVERE, "An error occurred when a player tried to use a command", t);
 

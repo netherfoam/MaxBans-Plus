@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
 import org.maxgamer.maxbans.orm.*;
 import org.maxgamer.maxbans.test.IntegrationTest;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -31,17 +32,17 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
         List<User> users = new ArrayList<>(number);
 
         // Users
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             for(int i = 0; i < number; i++) {
                 // Create 100k users
                 UUID id = UUID.randomUUID();
                 User user = new User(id, id.toString());
 
-                session.persist(user);
+                tx.getSession().persist(user);
                 users.add(user);
             }
-            session.flush();
-        });
+            // Session is flushed at the end automatically
+        }
 
         return users;
     }
@@ -49,7 +50,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Ban> userBans(int number, List<User> users) {
         List<Ban> bans = new ArrayList<>(number);
 
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -61,12 +62,11 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 ban.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 user.getBans().add(ban);
 
-                session.persist(ban);
+                tx.getSession().persist(ban);
 
                 bans.add(ban);
             }
-            session.flush();
-        });
+        }
 
         return bans;
     }
@@ -74,8 +74,8 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Ban> addressBans(int number, List<Address> addresses) {
         List<Ban> bans = new ArrayList<>(number);
 
-        getContext().components().transactor().work(session -> {
-            for(int i = 0; i < number; i++) {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
+            for (int i = 0; i < number; i++) {
                 Address address = random(addresses, i);
 
                 Ban ban = new Ban();
@@ -84,12 +84,12 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 ban.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 address.getBans().add(ban);
 
-                session.persist(ban);
+                tx.getSession().persist(ban);
 
                 bans.add(ban);
             }
-            session.flush();
-        });
+            tx.getSession().flush();
+        }
 
         return bans;
     }
@@ -97,7 +97,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Mute> userMutes(int number, List<User> users) {
         List<Mute> mutes = new ArrayList<>(number);
 
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -109,12 +109,12 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 mute.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 user.getMutes().add(mute);
 
-                session.persist(mute);
+                tx.getSession().persist(mute);
 
                 mutes.add(mute);
             }
-            session.flush();
-        });
+            tx.getSession().flush();
+        }
 
         return mutes;
     }
@@ -122,7 +122,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Mute> addressMutes(int number, List<Address> addresses) {
         List<Mute> mutes = new ArrayList<>(number);
 
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             for(int i = 0; i < number; i++) {
                 Address address = random(addresses, i);
 
@@ -132,12 +132,12 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 mute.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 address.getMutes().add(mute);
 
-                session.persist(mute);
+                tx.getSession().persist(mute);
 
                 mutes.add(mute);
             }
-            session.flush();
-        });
+            tx.getSession().flush();
+        }
 
         return mutes;
     }
@@ -145,7 +145,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Warning> warnings(int number, List<User> users) {
         List<Warning> warnings = new ArrayList<>(number);
 
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
                 User source = random(users, i - 1);
@@ -157,12 +157,12 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 warning.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 user.getWarnings().add(warning);
 
-                session.persist(warning);
+                tx.getSession().persist(warning);
 
                 warnings.add(warning);
             }
-            session.flush();
-        });
+            tx.getSession().flush();
+        }
 
         return warnings;
     }
@@ -170,7 +170,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
     public List<Address> addresses(int number, List<User> users) {
         List<Address> addresses = new ArrayList<>(number);
 
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             for(int i = 0; i < number; i++) {
                 User user = random(users, i);
 
@@ -184,13 +184,13 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 UserAddress userAddress = new UserAddress(user, address);
                 user.getAddresses().add(userAddress);
 
-                session.persist(address);
-                session.saveOrUpdate(user);
+                tx.getSession().persist(address);
+                tx.getSession().saveOrUpdate(user);
 
                 addresses.add(address);
             }
-            session.flush();
-        });
+            tx.getSession().flush();
+        }
 
         return addresses;
     }

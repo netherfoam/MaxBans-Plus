@@ -9,6 +9,7 @@ import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.LocatorService;
 import org.maxgamer.maxbans.test.UnitTest;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
@@ -46,17 +47,8 @@ public class UserRestrictionCommandExecutorTest implements UnitTest {
     @Before
     public void init() {
         transactor = mock(Transactor.class);
-        doAnswer(invocationOnMock -> {
-            Transactor.VoidJob work = (Transactor.VoidJob) invocationOnMock.getArguments()[0];
-            work.run(null);
-            return null;
-        }).when(transactor).work(any());
 
-        doAnswer(invocationOnMock -> {
-            Transactor.VoidJob work = (Transactor.VoidJob) invocationOnMock.getArguments()[0];
-            work.run(null);
-            return null;
-        }).when(transactor).retrieve(any());
+        doReturn(mock(TransactionLayer.class)).when(transactor).transact();
     }
 
     @Test
