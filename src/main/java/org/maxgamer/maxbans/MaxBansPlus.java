@@ -15,6 +15,7 @@ import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.context.component.CommandExecutorComponent;
 import org.maxgamer.maxbans.exception.ConfigException;
+import org.maxgamer.maxbans.exception.SchemaBrokenException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.transaction.TransactionLayer;
@@ -104,9 +105,14 @@ public class MaxBansPlus extends JavaPlugin {
 
         context = new PluginContext(this, config, locale, getServer(), getDataFolder(), getErrorLogger());
 
-        // Update our database if necessary
         try {
+            // Update our database if necessary
             migrate();
+        } catch (SchemaBrokenException e) {
+            // This error is a problem that the server admin should fix
+            getLogger().log(Level.SEVERE, e.getMessage());
+            getPluginLoader().disablePlugin(this);
+            return;
         } catch (FlywayException e) {
             getErrorLogger().log(Level.SEVERE, "Unable to migrate database. Disabling MaxBans", e);
             getPluginLoader().disablePlugin(this);
