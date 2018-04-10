@@ -29,6 +29,8 @@ public class Flyway_MySQL_V1_1__Fix_Callback extends BaseFlywayCallback {
 
     @Override
     public void beforeValidate(Connection connection) {
+        String versionTable = flywayConfiguration.getTable();
+
         try (PreparedStatement ps = connection.prepareStatement("SELECT sv.checksum FROM schema_version sv WHERE sv.version = ?")) {
             ps.setString(1, MIGRATION_VERSION);
             ResultSet rs = ps.executeQuery();
@@ -51,7 +53,7 @@ public class Flyway_MySQL_V1_1__Fix_Callback extends BaseFlywayCallback {
             }
         } catch (SQLException e) {
             String message = e.getMessage();
-            if (message.contains("doesn't exist") && message.contains("schema_version")) {
+            if (message.contains("doesn't exist") && message.contains(versionTable)) {
                 // There's no schema_version table, this is fine. Just means we're a fresh install
                 return;
             }

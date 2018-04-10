@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * @author netherfoam
@@ -46,14 +47,14 @@ public class WarningService {
         warnings.add(warning);
 
         List<String> penalties = config.getPenalty(strike);
-        if(penalties != null && !penalties.isEmpty()) {
+        if (penalties != null && !penalties.isEmpty()) {
             Map<String, Object> substitutions = new HashMap<>();
             substitutions.put("name", user.getName());
             substitutions.put("source", source == null ? "Console" : source.getName());
             substitutions.put("reason", reason);
             substitutions.put("strike", strike);
 
-            for(String penalty : penalties) {
+            for (String penalty : penalties) {
                 penalise(penalty, substitutions);
             }
         }
@@ -65,7 +66,7 @@ public class WarningService {
                 .with("name", user.getName());
 
         Player player = locatorService.player(user);
-        if(player != null) {
+        if (player != null) {
             player.sendMessage(message.get("warn.warned"));
         }
 
@@ -80,6 +81,13 @@ public class WarningService {
         // Expand penalty as if it were a placeholder message
         penalty = StringUtil.expand(penalty, substitutions);
 
-        server.dispatchCommand(server.getConsoleSender(), penalty);
+        try {
+            server.dispatchCommand(server.getConsoleSender(), penalty);
+        } catch (RuntimeException e) {
+            server.getLogger().log(Level.WARNING,
+                    "Failed to run warning penalty command: '" + penalty + "'. The command threw " +
+                            "an exception. Please report this to the author of the command. This is " +
+                            "not an issue with MaxBans Plus.", e);
+        }
     }
 }
