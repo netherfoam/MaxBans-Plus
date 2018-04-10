@@ -18,7 +18,7 @@
         <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry</artifactId>
-            <version>1.3.0</version>
+            <version>1.7.3</version>
         </dependency>
 
         <!-- bStats Metrics -->
@@ -203,10 +203,17 @@
     </build>
 
     <repositories>
+        <!-- Prevents us attempting to download everything from spigot / bstats before maven central -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+
         <repository>
             <id>bstats-repo</id>
             <url>http://repo.bstats.org/content/repositories/releases/</url>
