@@ -23,6 +23,7 @@ import org.maxgamer.maxbans.util.FlywayUtil;
 import org.maxgamer.maxbans.util.SentryLogger;
 
 import java.io.*;
+import java.nio.channels.OverlappingFileLockException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,6 +109,10 @@ public class MaxBansPlus extends JavaPlugin {
         try {
             // Update our database if necessary
             migrate();
+        } catch (OverlappingFileLockException e) {
+            getLogger().log(Level.SEVERE, "Database file is locked. Perhaps another server is running from the same directory. Disabling MaxBans", e);
+            getPluginLoader().disablePlugin(this);
+            return;
         } catch (SchemaBrokenException e) {
             // This error is a problem that the server admin should fix
             getLogger().log(Level.SEVERE, e.getMessage());
