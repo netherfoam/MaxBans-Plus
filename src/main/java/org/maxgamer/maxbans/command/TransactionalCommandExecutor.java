@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import javax.inject.Inject;
@@ -21,8 +22,9 @@ public abstract class TransactionalCommandExecutor implements CommandExecutor {
 
     @Override
     public final boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        try {
-            transactor.work(session -> transact(commandSender, command, s, strings));
+        try (TransactionLayer tx = transactor.transact()) {
+            transact(commandSender, command, s, strings);
+
             return true;
         } catch (Throwable t) {
             // Log our exception to Sentry so it can be fixed

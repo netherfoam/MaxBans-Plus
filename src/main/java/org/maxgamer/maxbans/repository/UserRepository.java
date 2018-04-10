@@ -1,6 +1,7 @@
 package org.maxgamer.maxbans.repository;
 
 import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 
 import javax.inject.Inject;
 import java.util.Iterator;
@@ -16,14 +17,14 @@ public class UserRepository extends Repository<UUID, User> {
     }
     
     public User findByAlias(String name) {
-        return worker.retrieve(session -> {
-            Iterator iterator = session.createQuery("SELECT u FROM User u WHERE u.alias LIKE :name")
+        try (TransactionLayer tx = worker.transact()) {
+            Iterator iterator = tx.getSession().createQuery("SELECT u FROM User u WHERE u.alias LIKE :name")
                     .setParameter("name", name.toLowerCase())
                     .iterate();
 
             if(!iterator.hasNext()) return null;
 
             return (User) iterator.next();
-        });
+        }
     }
 }

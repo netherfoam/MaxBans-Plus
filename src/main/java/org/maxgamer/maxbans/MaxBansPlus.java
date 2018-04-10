@@ -17,6 +17,7 @@ import org.maxgamer.maxbans.context.component.CommandExecutorComponent;
 import org.maxgamer.maxbans.exception.ConfigException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.util.FlywayUtil;
 import org.maxgamer.maxbans.util.SentryLogger;
 
@@ -130,7 +131,7 @@ public class MaxBansPlus extends JavaPlugin {
         register("history", commands.history());
 
         // Kick any players who aren't allowed to be on the server right now
-        context.components().transactor().work(session -> {
+        try (TransactionLayer tx = context.components().transactor().transact()) {
             for(Player player : context.getServer().getOnlinePlayers()) {
                 try {
                     context.components().listeners().restriction().onJoin(player, player.getAddress().getAddress().getHostAddress());
@@ -138,7 +139,7 @@ public class MaxBansPlus extends JavaPlugin {
                     player.kickPlayer(e.getMessage(locale));
                 }
             }
-        });
+        }
     }
 
     private void register(Listener listener) {

@@ -6,11 +6,11 @@ import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
-import org.maxgamer.maxbans.exception.TransactionException;
 import org.maxgamer.maxbans.orm.Address;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.AddressService;
 import org.maxgamer.maxbans.service.LocatorService;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.RestrictionUtil;
 
@@ -46,41 +46,33 @@ public abstract class IPRestrictionCommandExecutor extends StandardCommandExecut
             return;
         }
 
-        try {
-            transactor.work(session -> {
-                String ipOrUser = args.pop();
-                User user = null;
-                String ip;
+        try (TransactionLayer tx = transactor.transact()) {
+            String ipOrUser = args.pop();
+            User user = null;
+            String ip;
 
-                try {
-                    ip = InetAddresses.forString(ipOrUser).getHostAddress();
-                } catch (IllegalArgumentException e) {
-                    user = locatorService.user(ipOrUser);
+            try {
+                ip = InetAddresses.forString(ipOrUser).getHostAddress();
+            } catch (IllegalArgumentException e) {
+                user = locatorService.user(ipOrUser);
 
-                    if(user == null) {
-                        throw new MessageException("No player starting with " + ipOrUser + " found");
-                    }
-
-                    if(user.getAddresses().isEmpty()) {
-                        sender.sendMessage("Player has no IP history");
-                        return;
-                    }
-
-                    ip = user.getAddresses().get(user.getAddresses().size() - 1).getAddress().getHost();
+                if(user == null) {
+                    throw new MessageException("No player starting with " + ipOrUser + " found");
                 }
 
-                Duration duration = RestrictionUtil.getDuration(args);
-                String reason = String.join(" ", args);
-                Address address = addressService.getOrCreate(ip);
+                if(user.getAddresses().isEmpty()) {
+                    sender.sendMessage("Player has no IP history");
+                    return;
+                }
 
-                restrict(sender, address, user, duration, reason, silent);
-            });
-        } catch (TransactionException e) {
-            if(e.getCause() instanceof MessageException) {
-                throw (MessageException) e.getCause();
+                ip = user.getAddresses().get(user.getAddresses().size() - 1).getAddress().getHost();
             }
 
-            throw e;
+            Duration duration = RestrictionUtil.getDuration(args);
+            String reason = String.join(" ", args);
+            Address address = addressService.getOrCreate(ip);
+
+            restrict(sender, address, user, duration, reason, silent);
         }
     }
 

@@ -7,6 +7,7 @@ import org.hibernate.criterion.SimpleExpression;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.*;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.MessageUtil;
 
@@ -46,7 +47,9 @@ public class HistoryService {
      * @return the page of actions
      */
     public List<String> getHistory(int page, User source) {
-        return transactor.retrieve(session -> describe(getBySender(page, source)));
+        try (TransactionLayer tx = transactor.transact()) {
+            return describe(getBySender(page, source));
+        }
     }
 
     /**
@@ -55,11 +58,13 @@ public class HistoryService {
      * @return the page of history
      */
     public List<String> getHistory(int page) {
-        return transactor.retrieve(session -> describe(getAll(page)));
+        try (TransactionLayer tx = transactor.transact()) {
+            return describe(getAll(page));
+        }
     }
 
     private List<Restriction> getBySender(int page, User user) {
-        List<Restriction> restrictions = transactor.retrieve(session -> {
+        try (TransactionLayer tx = transactor.transact()) {
             Criterion userMustMatch;
             if (user != null) {
                 userMustMatch = Restrictions.eq("source", user);
@@ -67,7 +72,7 @@ public class HistoryService {
                 userMustMatch = Restrictions.isNull("source");
             }
 
-            List<?> list = session.createCriteria(Restriction.class, "r")
+            List<?> list = tx.getSession().createCriteria(Restriction.class, "r")
                     .add(userMustMatch)
                     .addOrder(Order.desc("created"))
                     .setFirstResult(page * LIMIT)
@@ -75,23 +80,19 @@ public class HistoryService {
                     .list();
 
             return (List<Restriction>) list;
-        });
-
-        return restrictions;
+        }
     }
 
     private List<Restriction> getAll(int page) {
-        List<Restriction> restrictions = transactor.retrieve(session -> {
-            List<?> list = session.createCriteria(Restriction.class, "r")
+        try (TransactionLayer tx = transactor.transact()) {
+            List<?> list = tx.getSession().createCriteria(Restriction.class, "r")
                     .addOrder(Order.desc("created"))
                     .setFirstResult(page * LIMIT)
                     .setMaxResults(LIMIT)
                     .list();
 
             return (List<Restriction>) list;
-        });
-
-        return restrictions;
+        }
     }
 
     private List<String> describe(List<Restriction> restrictions) {

@@ -12,6 +12,7 @@ import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.orm.UserAddress;
 import org.maxgamer.maxbans.repository.AddressRepository;
 import org.maxgamer.maxbans.test.IntegrationTest;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -66,7 +67,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
         AddressService service = getContext().components().services().address();
 
         UUID id = UUID.randomUUID();
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             User user = users.create(id, "Address_McGee", Instant.now());
 
             AddressRepository repository = getContext().components().repositories().address();
@@ -81,14 +82,14 @@ public class AddressServiceTest extends PluginContextTest implements Integration
             UserAddress secondary = new UserAddress(friend, address);
             user.getAddresses().add(secondary);
             address.getUsers().add(secondary);
-        });
+        }
 
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             Address address = service.get("127.0.0.1");
             Assert.assertFalse(address.getUsers().isEmpty());
-        });
+        }
 
-        getContext().components().transactor().work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             MessageBuilder builder = users.report(users.get(id), new Locale());
 
             Assert.assertEquals("expect no ban", builder.preview("ban"), null);
@@ -97,6 +98,6 @@ public class AddressServiceTest extends PluginContextTest implements Integration
             Assert.assertNotNull("firstActive", builder.preview("firstActive"));
             Assert.assertNotNull("lastActive", builder.preview("lastActive"));
             Assert.assertTrue("expect to find related user", builder.preview("addresses").toString().contains("127.0.0.1"));
-        });
+        }
     }
 }

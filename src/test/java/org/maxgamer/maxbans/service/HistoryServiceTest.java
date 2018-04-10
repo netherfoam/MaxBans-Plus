@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.orm.User;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import java.time.Duration;
@@ -36,9 +37,9 @@ public class HistoryServiceTest extends PluginContextTest {
 
         userService.ban(banner, user, "Reason", Duration.ofHours(2));
 
-        transactorService.work(session -> {
+        try (TransactionLayer tx = getContext().components().transactor().transact()) {
             List<String> messages = historyService.getHistory(1, banner);
             System.out.println(String.join("\n", messages));
-        });
+        }
     }
 }
