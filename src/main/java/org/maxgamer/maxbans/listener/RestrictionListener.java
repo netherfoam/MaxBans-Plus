@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -71,7 +72,7 @@ public class RestrictionListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerLoginEvent e) {
         try (TransactionLayer tx = transactor.transact()) {
             onJoin(e.getPlayer(), e.getAddress().getHostAddress());
@@ -107,7 +108,7 @@ public class RestrictionListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
         try (TransactionLayer tx = transactor.transact()) {
             onChat(e.getPlayer());
@@ -121,7 +122,7 @@ public class RestrictionListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         try (TransactionLayer tx = transactor.transact()) {
             if(!userService.isChatCommand(e.getMessage())) return;
