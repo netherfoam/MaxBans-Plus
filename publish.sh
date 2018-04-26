@@ -3,6 +3,9 @@
 # This is a little awkward because of how CodeBuild clones the repository
 REMOTE_BRANCH=`git branch -a --contains HEAD | sed -n 2p`
 
+# Trim off the two leading characters (they're whitespace, after sed is used)
+REMOTE_BRANCH=${REMOTE_BRANCH:2}
+
 echo "REMOTE_BRANCH: $REMOTE_BRANCH"
 
 if [[ "master*" == "$REMOTE_BRANCH" || "master" == ${REMOTE_BRANCH} ]]; then
