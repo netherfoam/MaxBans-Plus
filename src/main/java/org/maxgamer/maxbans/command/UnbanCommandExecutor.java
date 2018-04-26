@@ -38,12 +38,12 @@ public class UnbanCommandExecutor extends IPRestrictionCommandExecutor {
         User source = (sender instanceof Player ? userService.getOrCreate((Player) sender) : null);
 
         MessageBuilder message = locale.get()
-                .with("source", source == null ? "Console" : source.getName());
+                .withUserOrConsole("source", source);
 
         boolean any = false;
         if(user != null && userService.getBan(user) != null) {
             userService.unban(source, user);
-            message.with("name", user.getName());
+            message.with("name", user);
             broadcastService.broadcast(message.get("ban.unban"), silent, sender);
             any = true;
         }

@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -22,7 +23,7 @@ public class BroadcastServiceTest {
     @Before
     public void init() {
         server = mock(Server.class);
-        locale = new Locale();
+        locale = spy(new Locale(null));
 
         broadcast = new BroadcastService(server, locale);
     }
@@ -49,6 +50,9 @@ public class BroadcastServiceTest {
     public void testSilencePrefixSuffix() {
         locale.put("silent.prefix", "PRE");
         locale.put("silent.suffix", "SUF");
+
+        doReturn(true).when(locale).has(eq("silent.prefix"));
+        doReturn(true).when(locale).has(eq("silent.suffix"));
 
         broadcast.broadcast("test", true);
 

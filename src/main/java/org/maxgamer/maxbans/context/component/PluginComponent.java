@@ -7,6 +7,7 @@ import org.maxgamer.maxbans.MaxBansPlus;
 import org.maxgamer.maxbans.context.module.JdbcModule;
 import org.maxgamer.maxbans.context.module.PluginModule;
 import org.maxgamer.maxbans.context.module.ServiceModule;
+import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.transaction.Transactor;
 
 import javax.inject.Singleton;
@@ -31,4 +32,5 @@ public interface PluginComponent {
     Logger logger();
     SessionFactory sessionFactory();
     PluginManager pluginManager();
+    Locale locale();
 }

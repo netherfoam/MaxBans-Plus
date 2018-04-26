@@ -15,14 +15,17 @@ import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.context.component.CommandExecutorComponent;
 import org.maxgamer.maxbans.exception.ConfigException;
-import org.maxgamer.maxbans.exception.SchemaBrokenException;
 import org.maxgamer.maxbans.exception.RejectedException;
+import org.maxgamer.maxbans.exception.SchemaBrokenException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.transaction.TransactionLayer;
 import org.maxgamer.maxbans.util.FlywayUtil;
 import org.maxgamer.maxbans.util.SentryLogger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.channels.OverlappingFileLockException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +34,7 @@ import java.util.logging.Logger;
  * @author Dirk Jamieson
  */
 public class MaxBansPlus extends JavaPlugin {
-    private Locale locale = new Locale();
+    private Locale locale;
     private PluginContext context;
     private File messagesFile;
     private Logger sentryLogger;
@@ -63,8 +66,12 @@ public class MaxBansPlus extends JavaPlugin {
                 getPluginLoader().disablePlugin(this);
                 return;
             }
-        }
 
+            context.components().locale().load(getMessageConfiguration());
+        }
+    }
+
+    private YamlConfiguration getMessageConfiguration() {
         YamlConfiguration localeConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getResource("messages.yml")));
         try {
             localeConfig.load(new FileReader(messagesFile));
@@ -74,7 +81,7 @@ public class MaxBansPlus extends JavaPlugin {
             throw new IllegalStateException("Bad YML configuration file: " + messagesFile, e);
         }
 
-        locale.load(localeConfig);
+        return localeConfig;
     }
 
     /**
@@ -105,7 +112,8 @@ public class MaxBansPlus extends JavaPlugin {
             sentryLogger = new SentryLogger(this, Event.Level.WARNING, client);
         }
 
-        context = new PluginContext(this, config, locale, getServer(), getDataFolder(), getErrorLogger(), getServer().getPluginManager());
+        context = new PluginContext(this, config, getServer(), getDataFolder(), getMessageConfiguration(), getErrorLogger(), getServer().getPluginManager());
+        locale = context.components().locale();
 
         try {
             // Update our database if necessary
@@ -171,10 +179,6 @@ public class MaxBansPlus extends JavaPlugin {
 
     public PluginContext getContext() {
         return context;
-    }
-
-    public Locale getLocale() {
-        return locale;
     }
 
     public Logger getErrorLogger() {

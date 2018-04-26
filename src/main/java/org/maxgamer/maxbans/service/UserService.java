@@ -95,6 +95,7 @@ public class UserService {
 
         if(user != null) {
             if(!player.getName().equals(user.getName())) {
+                // Our existing name is stored with the wrong case, or the name case was changed
                 user.setName(player.getName());
             }
             return user;
@@ -123,9 +124,9 @@ public class UserService {
         Ban ban = getBan(user);
         if(ban != null) {
             throw new RejectedException("ban.denied")
-                    .with("name", user.getName())
+                    .with("name", user)
                     .with("reason", ban.getReason())
-                    .with("source", ban.getSource() == null ? "Console" : ban.getSource().getName())
+                    .with("source", ban.getSource())
                     .with("duration", ban.getExpiresAt());
         }
 
@@ -137,9 +138,9 @@ public class UserService {
         if(mute == null) return;
 
         throw new RejectedException("mute.denied")
-                .with("name", user.getName())
+                .with("name", user)
                 .with("reason", mute.getReason())
-                .with("source", mute.getSource() == null ? "Console" : mute.getSource().getName())
+                .with("source", mute.getSource())
                 .with("duration", mute.getExpiresAt());
     }
 
@@ -206,7 +207,7 @@ public class UserService {
     public void unmute(User source, User user) throws RejectedException, CancelledException {
         List<Mute> list = user.getMutes();
         if(!RestrictionUtil.isActive(list)) {
-            throw new RejectedException("mute.error.not-muted").with("name", user.getName());
+            throw new RejectedException("mute.error.not-muted").with("name", user);
         }
 
         List<Mute> revocable = new ArrayList<>(list.size());
@@ -233,7 +234,7 @@ public class UserService {
     public void unban(User source, User user) throws RejectedException, CancelledException {
         List<Ban> list = user.getBans();
         if(!RestrictionUtil.isActive(list)) {
-            throw new RejectedException("ban.error.not-banned").with("name", user.getName());
+            throw new RejectedException("ban.error.not-banned").with("name", user);
         }
 
         List<Ban> enforced = new ArrayList<>(list.size());
@@ -265,7 +266,7 @@ public class UserService {
         }
 
         MessageBuilder builder = locale.get();
-        builder.with("name", user.getName());
+        builder.with("name", user);
         builder.with("firstActive", user.getFirstActive());
         builder.with("lastActive", user.getLastActive());
 
@@ -281,7 +282,7 @@ public class UserService {
             if(reason == null || reason.isEmpty()) reason = "No reason";
             builder.with("ban", reason); // Legacy support < 1.5
             builder.with("ban.reason", reason);
-            builder.with("ban.source", ban.getSource() == null ? "Console" : ban.getSource().getName());
+            builder.withUserOrConsole("ban.source", ban.getSource());
             builder.with("ban.expires", ban.getExpiresAt());
             builder.with("ban.created", ban.getCreated());
         }
@@ -292,7 +293,7 @@ public class UserService {
             if(reason == null || reason.isEmpty()) reason = "No reason";
             builder.with("mute", reason); // Legacy support < 1.5
             builder.with("mute.reason", reason);
-            builder.with("mute.source", mute.getSource() == null ? "Console" : mute.getSource().getName());
+            builder.withUserOrConsole("mute.source", mute.getSource());
             builder.with("mute.expires", mute.getExpiresAt());
             builder.with("mute.created", mute.getCreated());
         }

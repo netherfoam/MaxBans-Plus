@@ -21,7 +21,7 @@ public class MessageUtil {
     
     public static MessageBuilder inject(MessageBuilder builder, User user) {
         builder.with("id", user.getId());
-        builder.with("name", user.getName());
+        builder.withUserOrConsole("name", user);
 
         // Check last address
         UserAddress lastAddress = user.getLastAddress();
@@ -40,7 +40,7 @@ public class MessageUtil {
 
     public static MessageBuilder inject(MessageBuilder builder, Restriction restriction) {
         builder.with("reason", restriction.getReason());
-        builder.with("source", restriction.getSource() == null ? "Console" : restriction.getSource().getName());
+        builder.withUserOrConsole("source", restriction.getSource());
         builder.with("duration", restriction.getExpiresAt());
         builder.with("created", restriction.getCreated());
 

@@ -20,7 +20,7 @@ public class bStatsMetricService implements MetricService {
         metrics.addCustomChart(new Metrics.SimplePie(LOCALE) {
             @Override
             public String getValue() {
-                return plugin.getLocale().getLocale();
+                return plugin.getContext().components().locale().getLocale();
             }
         });
 

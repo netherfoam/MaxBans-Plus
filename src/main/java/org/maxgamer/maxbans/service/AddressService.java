@@ -180,7 +180,7 @@ public class AddressService {
 
         throw new RejectedException("mute.denied")
                 .with("address", address.getHost())
-                .with("banner", mute.getSource() == null ? "Console" : mute.getSource().getName())
+                .with("banner", mute.getSource())
                 .with("reason", mute.getReason())
                 .with("duration", mute.getExpiresAt());
     }
@@ -207,8 +207,8 @@ public class AddressService {
         if (ban != null) {
             throw new RejectedException("ipban.denied")
                     .with("address", ip)
-                    .with("name", user.getName())
-                    .with("source", ban.getSource() == null ? "Console" : ban.getSource().getName())
+                    .with("name", user)
+                    .with("source", ban.getSource())
                     .with("reason", ban.getReason())
                     .with("duration", ban.getExpiresAt());
         }
@@ -258,7 +258,7 @@ public class AddressService {
 
             builder.with("ban", reason); // Legacy support < 1.5
             builder.with("ban.reason", reason);
-            builder.with("ban.source", ban.getSource() == null ? "Console" : ban.getSource().getName());
+            builder.withUserOrConsole("ban.source", ban.getSource());
             builder.with("ban.expires", ban.getExpiresAt());
             builder.with("ban.created", ban.getCreated());
         }
@@ -269,7 +269,7 @@ public class AddressService {
             if (reason == null || reason.isEmpty()) reason = "No reason";
             builder.with("mute", reason); // Legacy support < 1.5
             builder.with("mute.reason", reason);
-            builder.with("mute.source", mute.getSource() == null ? "Console" : mute.getSource().getName());
+            builder.withUserOrConsole("mute.source", mute.getSource());
             builder.with("mute.expires", mute.getExpiresAt());
             builder.with("mute.created", mute.getCreated());
         }

@@ -39,9 +39,9 @@ public class MuteCommandExecutor extends UserRestrictionCommandExecutor {
         userService.mute(banner, user, reason, duration);
         
         MessageBuilder message = locale.get()
-                .with("name", user.getName())
+                .with("name", user)
                 .with("reason", reason)
-                .with("source", banner == null ? "Console" : banner.getName())
+                .withUserOrConsole("source", banner)
                 .with("duration", TemporalDuration.of(duration));
         
         broadcastService.broadcast(message.get("mute.broadcast"), silent, source, locatorService.player(user));

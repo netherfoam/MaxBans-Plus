@@ -38,9 +38,9 @@ public class BanCommandExecutor extends UserRestrictionCommandExecutor {
         userService.ban(banner, user, reason, duration);
         
         MessageBuilder message = locale.get()
-                .with("name", user.getName())
+                .withUserOrConsole("name", user)
                 .with("reason", reason)
-                .with("source", banner == null ? "Console" : banner.getName())
+                .withUserOrConsole("source", banner)
                 .with("duration", TemporalDuration.of(duration));
 
         Player player = locatorService.player(user);

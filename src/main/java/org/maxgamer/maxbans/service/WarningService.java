@@ -60,7 +60,7 @@ public class WarningService {
         if (penalties != null && !penalties.isEmpty()) {
             Map<String, Object> substitutions = new HashMap<>();
             substitutions.put("name", user.getName());
-            substitutions.put("source", source == null ? "Console" : source.getName());
+            substitutions.put("source", source);
             substitutions.put("reason", reason);
             substitutions.put("strike", strike);
 
@@ -70,10 +70,10 @@ public class WarningService {
         }
 
         MessageBuilder message = locale.get()
-                .with("source", source == null ? "Console" : source.getName())
+                .withUserOrConsole("source", source)
                 .with("reason", reason)
                 .with("duration", config.getDuration())
-                .with("name", user.getName());
+                .with("name", user);
 
         Player player = locatorService.player(user);
         if (player != null) {

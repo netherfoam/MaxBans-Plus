@@ -41,10 +41,10 @@ public class IPBanCommandExecutor extends IPRestrictionCommandExecutor {
         addressService.ban(banner, address, reason, duration);
 
         MessageBuilder message = locale.get()
-                .with("name", user == null ? null : user.getName())
+                .with("name", user)
                 .with("address", address.getHost())
                 .with("reason", reason)
-                .with("source", banner == null ? "Console" : banner.getName())
+                .withUserOrConsole("source", banner)
                 .with("duration", TemporalDuration.of(duration));
 
         broadcastService.broadcast(message.get("ipban.broadcast"), silent, source);

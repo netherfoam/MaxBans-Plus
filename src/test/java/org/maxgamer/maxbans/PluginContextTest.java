@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.PluginContext;
-import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.repository.H2Test;
 import org.maxgamer.maxbans.test.IntegrationTest;
 
@@ -40,13 +39,10 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
         MaxBansPlus plugin = mock(MaxBansPlus.class);
         FileConfiguration configuration = mock(FileConfiguration.class);
         doReturn(configuration).when(plugin).getConfig();
-        Locale locale = new Locale();
         YamlConfiguration localeConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("messages.yml")));
-        locale.load(localeConfig);
 
         PluginManager pluginManager = mock(PluginManager.class);
-
-        context = new PluginContext(plugin, config, locale, server, folder, java.util.logging.Logger.getLogger("Test"), pluginManager);
+        context = new PluginContext(plugin, config, server, folder, localeConfig, java.util.logging.Logger.getLogger("Test"), pluginManager);
     }
 
     @After
