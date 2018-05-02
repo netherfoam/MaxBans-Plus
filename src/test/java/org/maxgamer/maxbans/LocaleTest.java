@@ -37,7 +37,8 @@ public class LocaleTest implements UnitTest {
         String expected = "Here is a test message ";
         String got = locale.get()
                 .with("type", "test")
-                .get("test.message");
+                .get("test.message")
+                .toString();
 
         Assert.assertEquals(expected, got);
     }
@@ -48,7 +49,8 @@ public class LocaleTest implements UnitTest {
         String got = locale.get()
                 .with("source", "admin")
                 .with("duration", new TemporalDuration(ChronoUnit.HOURS.getDuration()))
-                .get("ban.kick");
+                .get("ban.kick")
+                .toString();
         
         Assert.assertEquals(expected, got);
     }
@@ -58,7 +60,8 @@ public class LocaleTest implements UnitTest {
         String expected = "Hello Sweetie";
         String got = locale.get()
                 .with("person", "Sweetie")
-                .get("greeting");
+                .get("greeting")
+                .toString();
 
         Assert.assertEquals(expected, got);
     }
@@ -67,7 +70,8 @@ public class LocaleTest implements UnitTest {
     public void testFallBackWithNoValue() {
         String expected = "Hello person";
         String got = locale.get()
-                .get("greeting");
+                .get("greeting")
+                .toString();
 
         Assert.assertEquals(expected, got);
     }

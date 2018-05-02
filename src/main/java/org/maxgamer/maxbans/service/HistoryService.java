@@ -1,6 +1,7 @@
 package org.maxgamer.maxbans.service;
 
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.Message;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.*;
 import org.maxgamer.maxbans.transaction.TransactionLayer;
@@ -45,7 +46,7 @@ public class HistoryService {
      * @param source the moderator to view the past actions of
      * @return the page of actions
      */
-    public List<String> getHistory(int page, User source) {
+    public List<Message> getHistory(int page, User source) {
         try (TransactionLayer tx = transactor.transact()) {
             return describe(getBySender(page, source));
         }
@@ -56,7 +57,7 @@ public class HistoryService {
      * @param page the page number, zero indexed
      * @return the page of history
      */
-    public List<String> getHistory(int page) {
+    public List<Message> getHistory(int page) {
         try (TransactionLayer tx = transactor.transact()) {
             return describe(getAll(page));
         }
@@ -98,12 +99,12 @@ public class HistoryService {
         }
     }
 
-    private List<String> describe(List<Restriction> restrictions) {
-        List<String> messages = new ArrayList<>(restrictions.size());
+    private List<Message> describe(List<Restriction> restrictions) {
+        List<Message> messages = new ArrayList<>(restrictions.size());
 
         for (Restriction restriction : restrictions) {
             MessageBuilder builder = contextualise(restriction);
-            String message = get(builder, restriction);
+            Message message = get(builder, restriction);
             messages.add(message);
         }
 
@@ -120,7 +121,7 @@ public class HistoryService {
         return builder;
     }
 
-    private String get(MessageBuilder builder, Restriction restriction) {
+    private Message get(MessageBuilder builder, Restriction restriction) {
         if (restriction instanceof Mute) {
             return builder.get("history.mute");
         }

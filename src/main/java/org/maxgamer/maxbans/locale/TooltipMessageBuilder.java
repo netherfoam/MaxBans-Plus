@@ -4,6 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.orm.UserAddress;
 import org.maxgamer.maxbans.service.GeoIPService;
@@ -43,9 +44,14 @@ public class TooltipMessageBuilder extends MessageBuilder {
 
         BaseComponent component = toComponent(user);
 
-        substitutions.put(key, component.toLegacyText());
+        substitutions.put(key, component);
 
         return this;
+    }
+
+    @Override
+    public Message get(String templateId) {
+        return new TooltipMessage(locale, substitutions, templateId);
     }
 
     private BaseComponent toComponent(User user) {
@@ -81,11 +87,11 @@ public class TooltipMessageBuilder extends MessageBuilder {
             }
         }
 
-        String text = hover.get("hover.user");
+        Message text = hover.get("hover.user");
 
         name.setHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
-                TextComponent.fromLegacyText(text)
+                TextComponent.fromLegacyText(text.toString())
         ));
 
         return name;

@@ -108,7 +108,7 @@ public class LockdownService {
             for(Player player : server.getOnlinePlayers()) {
                 User user = userService.getOrCreate(player);
                 if(!isAllowed(user, false)) {
-                    player.kickPlayer(message.get("lockdown.message"));
+                    player.kickPlayer(message.get("lockdown.message").toString());
                 }
             }
         }

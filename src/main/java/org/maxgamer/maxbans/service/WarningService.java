@@ -77,7 +77,7 @@ public class WarningService {
 
         Player player = locatorService.player(user);
         if (player != null) {
-            player.sendMessage(message.get("warn.warned"));
+            message.get("warn.warned").send(player);
         }
 
         return message;

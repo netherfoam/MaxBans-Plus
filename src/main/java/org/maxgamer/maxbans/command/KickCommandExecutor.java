@@ -66,7 +66,7 @@ public class KickCommandExecutor extends StandardCommandExecutor {
                 .with("name", player.getName())
                 .with("reason", reason);
 
-        player.kickPlayer(properties.get("kick.message"));
+        player.kickPlayer(properties.get("kick.message").toString());
 
         broadcastService.broadcast(properties.get("kick.broadcast"), silent, sender);
         metricService.increment(MetricService.KICKS);
