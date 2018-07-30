@@ -2,6 +2,9 @@ package org.maxgamer.maxbans.service;
 
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.config.PluginConfig;
+import org.maxgamer.maxbans.event.BanUserEvent;
+import org.maxgamer.maxbans.event.MuteUserEvent;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
@@ -30,23 +33,25 @@ public class UserService {
     private UserRepository users;
     private BanRepository bans;
     private MuteRepository mutes;
+    private EventService events;
 
     @Inject
-    public UserService(PluginConfig config, UserRepository users, BanRepository bans, MuteRepository mutes) {
+    public UserService(PluginConfig config, EventService events, UserRepository users, BanRepository bans, MuteRepository mutes) {
         this.config = config;
+        this.events = events;
         this.users = users;
         this.bans = bans;
         this.mutes = mutes;
     }
-    
+
     public User get(String name) {
         return users.findByAlias(name);
     }
-    
+
     public User get(UUID id) {
         return users.find(id);
     }
-    
+
     public User create(UUID id, String name, Instant lastPlayed) {
         User user = new User(id, name);
         user.setLastActive(lastPlayed);
@@ -54,7 +59,7 @@ public class UserService {
 
         return user;
     }
-    
+
     public User create(Player player) {
         UUID id;
         if(config.isOffline()) {
@@ -74,7 +79,7 @@ public class UserService {
 
         return create(id, player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
     }
-    
+
     public User get(Player player) {
         if(config.isOffline()) {
             return get(player.getName());
@@ -82,20 +87,20 @@ public class UserService {
             return get(player.getUniqueId());
         }
     }
-    
+
     public User getOrCreate(Player player) {
         User user = get(player);
-        
+
         if(user != null) {
             if(!player.getName().equals(user.getName())) {
                 user.setName(player.getName());
             }
             return user;
         }
-        
+
         return create(player);
     }
-    
+
     public Ban getBan(User user) {
         for(Ban ban : user.getBans()) {
             if(RestrictionUtil.isActive(ban)) return ban;
@@ -103,7 +108,7 @@ public class UserService {
 
         return null;
     }
-    
+
     public Mute getMute(User user) {
         for(Mute mute : user.getMutes()) {
             if(RestrictionUtil.isActive(mute)) return mute;
@@ -111,7 +116,7 @@ public class UserService {
 
         return null;
     }
-    
+
     public void onJoin(User user) throws RejectedException {
         Ban ban = getBan(user);
         if(ban != null) {
@@ -145,34 +150,53 @@ public class UserService {
         return false;
     }
 
-    public void ban(User source, User user, String reason, Duration duration) throws RejectedException {
+    public void ban(User source, User user, String reason, Duration duration) throws RejectedException, CancelledException {
         Ban ban = new Ban();
         ban.setCreated(Instant.now());
         ban.setReason(reason);
         ban.setSource(source);
-        
+
         if(duration != null) {
             ban.setExpiresAt((Instant) duration.addTo(ban.getCreated()));
         }
 
         RestrictionUtil.assertRestrictionLonger(user.getBans(), ban);
+
+        BanUserEvent event = new BanUserEvent(source, user, ban);
+        events.call(event);
+
+        if(event.isCancelled()) {
+            throw new CancelledException();
+        }
+
+        // Must not have mutated the ban to be too short, so we check this again
+        RestrictionUtil.assertRestrictionLonger(user.getBans(), ban);
+
         bans.save(ban);
         user.getBans().add(ban);
         users.save(user);
     }
-    
-    public void mute(User source, User user, String reason, Duration duration) throws RejectedException {
+
+    public void mute(User source, User user, String reason, Duration duration) throws RejectedException, CancelledException {
         Mute mute = new Mute();
         mute.setCreated(Instant.now());
         mute.setReason(reason);
         mute.setSource(source);
-        
+
         if(duration != null) {
             mute.setExpiresAt(((Instant) duration.addTo(mute.getCreated())));
         }
-        
+
         RestrictionUtil.assertRestrictionLonger(user.getMutes(), mute);
-        
+        MuteUserEvent event = new MuteUserEvent(source, user, mute);
+        events.call(event);
+
+        if (event.isCancelled()) {
+            throw new CancelledException();
+        }
+
+        RestrictionUtil.assertRestrictionLonger(user.getMutes(), mute);
+
         mutes.save(mute);
 
         user.getMutes().add(mute);

@@ -1,5 +1,8 @@
 package org.maxgamer.maxbans.service;
 
+import org.maxgamer.maxbans.event.BanAddressEvent;
+import org.maxgamer.maxbans.event.MuteAddressEvent;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
@@ -14,6 +17,7 @@ import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.stream.Collectors;
 
 /**
@@ -24,15 +28,15 @@ public class AddressService {
     private MuteRepository mutes;
     private AddressRepository addressRepository;
     private GeoIPService geoIPService;
-    private UserService userService;
+    private EventService eventService;
 
     @Inject
-    public AddressService(BanRepository bans, MuteRepository mutes, AddressRepository addressRepository, GeoIPService geoIPService, UserService userService) {
+    public AddressService(BanRepository bans, MuteRepository mutes, AddressRepository addressRepository, GeoIPService geoIPService, EventService eventService) {
         this.bans = bans;
         this.mutes = mutes;
         this.addressRepository = addressRepository;
         this.geoIPService = geoIPService;
-        this.userService = userService;
+        this.eventService = eventService;
     }
 
     public Address get(String ip) {
@@ -81,13 +85,22 @@ public class AddressService {
 
         RestrictionUtil.assertRestrictionLonger(address.getMutes(), mute);
 
+        MuteAddressEvent event = new MuteAddressEvent(source, address, mute);
+        eventService.call(event);
+
+        if (event.isCancelled()) {
+            throw new CancellationException();
+        }
+
+        RestrictionUtil.assertRestrictionLonger(address.getMutes(), mute);
+
         mutes.save(mute);
 
         address.getMutes().add(mute);
         addressRepository.save(address);
     }
 
-    public void ban(User source, Address address, String reason, Duration duration) throws RejectedException {
+    public void ban(User source, Address address, String reason, Duration duration) throws RejectedException, CancelledException {
         Ban ban = new Ban();
         ban.setCreated(Instant.now());
         ban.setReason(reason);
@@ -98,6 +111,13 @@ public class AddressService {
         }
 
         RestrictionUtil.assertRestrictionLonger(address.getBans(), ban);
+        BanAddressEvent event = new BanAddressEvent(source, address, ban);
+        eventService.call(event);
+
+        if (event.isCancelled()) {
+            throw new CancelledException();
+        }
+
         bans.save(ban);
         address.getBans().add(ban);
         addressRepository.save(address);

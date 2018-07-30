@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.service;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.test.IntegrationTest;
@@ -15,7 +16,7 @@ import java.util.UUID;
  */
 public class UserServiceTest extends PluginContextTest implements IntegrationTest {
     @Test
-    public void testBan() throws RejectedException {
+    public void testBan() throws RejectedException, CancelledException {
         UserService users = getContext().components().services().user();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
@@ -25,7 +26,7 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
     }
     
     @Test
-    public void testMute() throws RejectedException {
+    public void testMute() throws RejectedException, CancelledException {
         UserService users = getContext().components().services().user();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
@@ -35,7 +36,7 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
     }
 
     @Test
-    public void testUnmute() throws RejectedException {
+    public void testUnmute() throws RejectedException, CancelledException {
         UserService users = getContext().components().services().user();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 
@@ -45,7 +46,7 @@ public class UserServiceTest extends PluginContextTest implements IntegrationTes
     }
 
     @Test
-    public void testUnban() throws RejectedException {
+    public void testUnban() throws RejectedException, CancelledException {
         UserService users = getContext().components().services().user();
         User user = users.create(UUID.randomUUID(), "Test_McGee", Instant.now());
 

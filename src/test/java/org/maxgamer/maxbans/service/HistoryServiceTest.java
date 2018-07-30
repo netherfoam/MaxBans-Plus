@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.transaction.TransactionLayer;
@@ -31,7 +32,7 @@ public class HistoryServiceTest extends PluginContextTest {
     }
 
     @Test
-    public void getBySenderWithContents() throws RejectedException {
+    public void getBySenderWithContents() throws RejectedException, CancelledException {
         User user = userService.create(UUID.randomUUID(), "Joe", Instant.EPOCH);
         User banner = userService.create(UUID.randomUUID(), "MrAdmin", Instant.EPOCH);
 

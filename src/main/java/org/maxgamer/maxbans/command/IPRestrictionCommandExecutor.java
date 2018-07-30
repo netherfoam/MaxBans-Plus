@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.command;
 import com.google.common.net.InetAddresses;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
@@ -37,7 +38,7 @@ public abstract class IPRestrictionCommandExecutor extends StandardCommandExecut
     }
 
     @Override
-    public final void perform(CommandSender sender, Command command, String s, String[] userArgs) throws MessageException {
+    public final void perform(CommandSender sender, Command command, String s, String[] userArgs) throws MessageException, CancelledException {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(userArgs));
         boolean silent = RestrictionUtil.isSilent(args);
 
@@ -87,5 +88,5 @@ public abstract class IPRestrictionCommandExecutor extends StandardCommandExecut
      * @throws RejectedException
      * @throws PermissionException
      */
-    public abstract void restrict(CommandSender source, Address address, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException;
+    public abstract void restrict(CommandSender source, Address address, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException, CancelledException;
 }

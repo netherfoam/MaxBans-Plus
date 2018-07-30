@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.service;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
@@ -22,7 +23,7 @@ import java.util.UUID;
  */
 public class AddressServiceTest extends PluginContextTest implements IntegrationTest {
     @Test
-    public void testBan() throws RejectedException {
+    public void testBan() throws RejectedException, CancelledException {
         AddressService addresses = getContext().components().services().address();
         Address address = addresses.create("127.0.0.1");
 
@@ -52,7 +53,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
     }
 
     @Test
-    public void testUnban() throws RejectedException {
+    public void testUnban() throws RejectedException, CancelledException {
         AddressService addresses = getContext().components().services().address();
         Address address = addresses.create("127.0.0.1");
 
