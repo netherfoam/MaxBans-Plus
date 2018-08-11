@@ -4,6 +4,8 @@ import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.event.BanUserEvent;
 import org.maxgamer.maxbans.event.MuteUserEvent;
+import org.maxgamer.maxbans.event.UnbanUserEvent;
+import org.maxgamer.maxbans.event.UnmuteUserEvent;
 import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
@@ -203,15 +205,28 @@ public class UserService {
         users.save(user);
     }
 
-    public void unmute(User source, User user) throws RejectedException {
+    public void unmute(User source, User user) throws RejectedException, CancelledException {
         List<Mute> list = user.getMutes();
         if(!RestrictionUtil.isActive(list)) {
             throw new RejectedException("mute.error.not-muted").with("name", user.getName());
         }
 
-        for(Mute mute : list) {
+        List<Mute> revocable = new ArrayList<>(list.size());
+
+        for (Mute mute : list) {
             if(!RestrictionUtil.isActive(mute)) continue;
 
+            UnmuteUserEvent event = new UnmuteUserEvent(source, user, mute);
+            events.call(event);
+
+            if (event.isCancelled()) {
+                throw new CancelledException();
+            }
+
+            revocable.add(mute);
+        }
+
+        for (Mute mute : revocable) {
             mute.setRevokedAt(Instant.now());
             mute.setRevoker(source);
 
@@ -219,14 +234,29 @@ public class UserService {
         }
     }
 
-    public void unban(User source, User user) throws RejectedException {
+    public void unban(User source, User user) throws RejectedException, CancelledException {
         List<Ban> list = user.getBans();
         if(!RestrictionUtil.isActive(list)) {
             throw new RejectedException("ban.error.not-banned").with("name", user.getName());
         }
 
+        List<Ban> enforced = new ArrayList<>(list.size());
+
         for(Ban ban : list) {
-            if(!RestrictionUtil.isActive(ban)) continue;
+            if (!RestrictionUtil.isActive(ban)) continue;
+
+            UnbanUserEvent event = new UnbanUserEvent(source, user, ban);
+            events.call(event);
+
+            if (event.isCancelled()) {
+                throw new CancelledException();
+            }
+
+            enforced.add(ban);
+        }
+
+        for (Ban ban : enforced) {
+            if (!RestrictionUtil.isActive(ban)) continue;
 
             ban.setRevokedAt(Instant.now());
             ban.setRevoker(source);

@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.BroadcastService;
@@ -34,7 +35,7 @@ public class WarnCommandExecutor extends UserRestrictionCommandExecutor {
     }
 
     @Override
-    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) {
+    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws CancelledException {
         User banner = (source instanceof Player ? userService.getOrCreate((Player) source) : null);
 
         MessageBuilder message = warningService.warn(banner, user, reason, locale);

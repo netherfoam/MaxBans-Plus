@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.service;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
 import org.maxgamer.maxbans.config.WarningConfig;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.test.IntegrationTest;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.*;
  */
 public class WarningServiceTest extends PluginContextTest implements IntegrationTest {
     @Test
-    public void testWarn() {
+    public void testWarn() throws CancelledException {
         WarningService service = getContext().components().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
@@ -36,7 +37,7 @@ public class WarningServiceTest extends PluginContextTest implements Integration
     }
 
     @Test
-    public void testMultiCommandStrike() {
+    public void testMultiCommandStrike() throws CancelledException {
         WarningService service = getContext().components().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
@@ -53,7 +54,7 @@ public class WarningServiceTest extends PluginContextTest implements Integration
     }
 
     @Test
-    public void testWarnReset() {
+    public void testWarnReset() throws CancelledException {
         WarningService service = getContext().components().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();

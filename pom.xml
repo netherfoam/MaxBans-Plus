@@ -94,6 +94,14 @@
             <version>2.11</version>
         </dependency>
 
+        <!-- We need this because IntelliJ is stupid and won't pull in the dagger dependency without special assistance -->
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger-compiler</artifactId>
+            <version>2.11</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Flyway -->
         <dependency>
             <groupId>org.flywaydb</groupId>

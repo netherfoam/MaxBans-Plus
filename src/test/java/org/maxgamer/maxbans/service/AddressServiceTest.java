@@ -33,7 +33,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
     }
 
     @Test
-    public void testMute() throws RejectedException {
+    public void testMute() throws RejectedException, CancelledException {
         AddressService addresses = getContext().components().services().address();
         Address address = addresses.create("127.0.0.1");
 
@@ -43,7 +43,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
     }
 
     @Test
-    public void testUnmute() throws RejectedException {
+    public void testUnmute() throws RejectedException, CancelledException {
         AddressService addresses = getContext().components().services().address();
         Address address = addresses.create("127.0.0.1");
 
