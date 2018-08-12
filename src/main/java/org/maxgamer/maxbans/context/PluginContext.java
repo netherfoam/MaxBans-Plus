@@ -4,6 +4,10 @@ import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
+import org.hibernate.SessionFactory;
+import org.hibernate.c3p0.internal.C3P0ConnectionProvider;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.maxgamer.maxbans.MaxBansPlus;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.component.DaggerPluginComponent;
@@ -39,6 +43,10 @@ public class PluginContext {
                 .build();
     }
 
+    public PluginModule getPluginModule() {
+        return pluginModule;
+    }
+
     public PluginComponent components() {
         return modules;
     }
@@ -57,7 +65,16 @@ public class PluginContext {
 
     public void close() {
         if (pluginModule.isSessionInitialised()) {
-            components().sessionFactory().close();
+            SessionFactory factory = components().sessionFactory();
+
+            if (factory instanceof SessionFactoryImpl) {
+                SessionFactoryImpl sf = (SessionFactoryImpl) factory;
+                ConnectionProvider provider = sf.getServiceRegistry().getService(ConnectionProvider.class);
+                if (provider instanceof C3P0ConnectionProvider) {
+                    ((C3P0ConnectionProvider) provider).stop();
+                }
+            }
+            factory.close();
         }
     }
 }

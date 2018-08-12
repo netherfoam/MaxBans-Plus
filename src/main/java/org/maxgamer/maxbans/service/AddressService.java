@@ -96,7 +96,6 @@ public class AddressService {
         mutes.save(mute);
 
         address.getMutes().add(mute);
-        addressRepository.save(address);
     }
 
     public void ban(User source, Address address, String reason, Duration duration) throws RejectedException, CancelledException {
@@ -119,7 +118,6 @@ public class AddressService {
 
         bans.save(ban);
         address.getBans().add(ban);
-        addressRepository.save(address);
     }
 
     public void unmute(User source, Address address) throws RejectedException, CancelledException {
@@ -146,8 +144,6 @@ public class AddressService {
         for (Mute mute : enforced) {
             mute.setRevokedAt(Instant.now());
             mute.setRevoker(source);
-
-            mutes.save(mute);
         }
     }
 
@@ -175,8 +171,6 @@ public class AddressService {
         for (Ban ban : revocable) {
             ban.setRevokedAt(Instant.now());
             ban.setRevoker(source);
-
-            bans.save(ban);
         }
     }
 

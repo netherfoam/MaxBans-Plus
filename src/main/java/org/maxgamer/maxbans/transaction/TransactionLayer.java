@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.maxgamer.maxbans.exception.TransactionException;
 
+import javax.persistence.EntityManager;
 import java.io.Closeable;
 
 /**
@@ -34,7 +35,7 @@ public class TransactionLayer implements Closeable {
         }
     }
 
-    public Session getSession() {
+    public EntityManager getEntityManager() {
         return session;
     }
 

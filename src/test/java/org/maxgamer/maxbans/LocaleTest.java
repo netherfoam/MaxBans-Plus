@@ -1,6 +1,6 @@
 package org.maxgamer.maxbans;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.locale.Locale;

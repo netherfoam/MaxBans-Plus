@@ -3,6 +3,7 @@ package org.maxgamer.maxbans.repository;
 import org.flywaydb.core.Flyway;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.config.JdbcConfig;
@@ -30,6 +31,11 @@ public class MigrationTest implements IntegrationTest {
         sessionFactory = hibernate.buildSessionFactory();
 
         flyway = FlywayUtil.migrater(jdbc);
+    }
+
+    @After
+    public void destroy() {
+        sessionFactory.close();
     }
     
     @Test

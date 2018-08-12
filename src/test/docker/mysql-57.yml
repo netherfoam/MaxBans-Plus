@@ -1,0 +1,8 @@
+version: "2"
+
+services:
+    mysql:
+        build:
+            context: mysql-57
+        ports:
+          - 3306

@@ -11,9 +11,12 @@ import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.repository.H2Test;
 import org.maxgamer.maxbans.test.IntegrationTest;
+import org.maxgamer.maxbans.transaction.TransactionLayer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import static org.mockito.Mockito.doReturn;
@@ -26,7 +29,7 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
     private PluginContext context;
     
     @Before
-    public void init() {
+    public void init() throws IOException {
         super.init();
 
         PluginConfig config = new PluginConfig();
@@ -52,6 +55,8 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
     @After
     public void destroy() {
         if(context == null) return;
+        context.close();
+
         if(context.getDataFolder() == null) return;
 
         File[] files = context.getDataFolder().listFiles();

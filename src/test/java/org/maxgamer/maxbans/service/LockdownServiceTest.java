@@ -1,6 +1,6 @@
 package org.maxgamer.maxbans.service;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

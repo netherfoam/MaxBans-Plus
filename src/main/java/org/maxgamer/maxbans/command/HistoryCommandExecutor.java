@@ -46,7 +46,7 @@ public class HistoryCommandExecutor extends StandardCommandExecutor {
             if (banner.equalsIgnoreCase("console")) {
                 user = null;
             } else {
-                user = userService.get(banner);
+                user = userService.get(banner + "%");
 
                 if (user == null) {
                     throw new RejectedException("User " + banner + " doesn't exist");

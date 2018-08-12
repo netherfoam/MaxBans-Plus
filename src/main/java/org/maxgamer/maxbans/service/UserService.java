@@ -176,7 +176,6 @@ public class UserService {
 
         bans.save(ban);
         user.getBans().add(ban);
-        users.save(user);
     }
 
     public void mute(User source, User user, String reason, Duration duration) throws RejectedException, CancelledException {
@@ -202,7 +201,6 @@ public class UserService {
         mutes.save(mute);
 
         user.getMutes().add(mute);
-        users.save(user);
     }
 
     public void unmute(User source, User user) throws RejectedException, CancelledException {
@@ -229,8 +227,6 @@ public class UserService {
         for (Mute mute : revocable) {
             mute.setRevokedAt(Instant.now());
             mute.setRevoker(source);
-
-            mutes.save(mute);
         }
     }
 
@@ -260,8 +256,6 @@ public class UserService {
 
             ban.setRevokedAt(Instant.now());
             ban.setRevoker(source);
-
-            bans.save(ban);
         }
     }
 

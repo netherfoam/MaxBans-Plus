@@ -1,9 +1,5 @@
 package org.maxgamer.maxbans.service;
 
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.*;
@@ -12,6 +8,9 @@ import org.maxgamer.maxbans.transaction.Transactor;
 import org.maxgamer.maxbans.util.MessageUtil;
 
 import javax.inject.Inject;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,33 +64,37 @@ public class HistoryService {
 
     private List<Restriction> getBySender(int page, User user) {
         try (TransactionLayer tx = transactor.transact()) {
-            Criterion userMustMatch;
+            CriteriaBuilder cb = tx.getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Restriction> query = cb.createQuery(Restriction.class);
+            Root<Restriction> root = query.from(Restriction.class);
+
             if (user != null) {
-                userMustMatch = Restrictions.eq("source", user);
+                query.where(cb.equal(root.get("source"), user));
             } else {
-                userMustMatch = Restrictions.isNull("source");
+                query.where(cb.isNull(root.get("source")));
             }
 
-            List<?> list = tx.getSession().createCriteria(Restriction.class, "r")
-                    .add(userMustMatch)
-                    .addOrder(Order.desc("created"))
+            query.orderBy(cb.desc(root.get("created")));
+
+            return tx.getEntityManager().createQuery(query)
                     .setFirstResult(page * LIMIT)
                     .setMaxResults(LIMIT)
-                    .list();
-
-            return (List<Restriction>) list;
+                    .getResultList();
         }
     }
 
     private List<Restriction> getAll(int page) {
         try (TransactionLayer tx = transactor.transact()) {
-            List<?> list = tx.getSession().createCriteria(Restriction.class, "r")
-                    .addOrder(Order.desc("created"))
+            CriteriaBuilder cb = tx.getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Restriction> query = cb.createQuery(Restriction.class);
+            Root<Restriction> root = query.from(Restriction.class);
+
+            query.orderBy(cb.desc(root.get("created")));
+
+            return tx.getEntityManager().createQuery(query)
                     .setFirstResult(page * LIMIT)
                     .setMaxResults(LIMIT)
-                    .list();
-
-            return (List<Restriction>) list;
+                    .getResultList();
         }
     }
 
