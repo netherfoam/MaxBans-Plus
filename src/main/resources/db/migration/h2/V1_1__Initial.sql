@@ -1,4 +1,4 @@
-CREATE TABLE `Users` (
+CREATE TABLE Users (
     id UUID NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     alias VARCHAR(50) NOT NULL,
