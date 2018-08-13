@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author Dirk Jamieson <dirk@redeye.co>
@@ -30,11 +32,22 @@ public abstract class H2Test implements IntegrationTest {
             throw new IOException("Unable to delete " + storage.getAbsolutePath());
         }
 
+        if (storage.exists()) {
+            throw new IOException("but.. storage exists somehow?");
+        }
+
         jdbc = new JdbcConfig();
         jdbc.setUrl("jdbc:h2:./test-storage");
         jdbc.setDriver("org.h2.Driver");
         jdbc.setUsername("root");
         jdbc.setPassword("password");
+
+        File[] files = new File("").listFiles();
+        if (files != null) {
+            LOGGER.info("Files here are: " + String.join(", ", Arrays.stream(files).map(File::getName).collect(Collectors.toList())));
+        } else {
+            LOGGER.info("NO FILES");
+        }
 
         LOGGER.info("Initialising Schema...");
         Flyway flyway = FlywayUtil.migrater(jdbc);
