@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public abstract class H2Test implements IntegrationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(H2Test.class);
 
-    private static JdbcConfig jdbc;
+    private JdbcConfig jdbc;
 
     private File storage =  new File("test-storage.mv.db");
 
@@ -49,6 +49,7 @@ public abstract class H2Test implements IntegrationTest {
             LOGGER.info("NO FILES");
         }
 
+        LOGGER.info("JDBC Details: " + jdbc.toString());
         LOGGER.info("Initialising Schema...");
         Flyway flyway = FlywayUtil.migrater(jdbc);
         flyway.migrate();

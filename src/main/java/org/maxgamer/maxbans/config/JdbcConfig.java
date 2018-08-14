@@ -67,4 +67,15 @@ public class JdbcConfig {
         this.showSql = showSql;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "JdbcConfig{" +
+                "url='" + url + '\'' +
+                ", driver='" + driver + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", showSql=" + showSql +
+                '}';
+    }
 }
