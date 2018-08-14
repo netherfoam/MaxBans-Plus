@@ -25,21 +25,30 @@ public class SQLHealthCheck {
         return (target) -> {
             DockerPort dockerPort = target.port(port);
 
-            String url = "jdbc:" + type + "://" + dockerPort.getIp() + ":" + dockerPort.getExternalPort() + "/" + database + options;
-            try (Connection ignored = DriverManager.getConnection(url)) {
-                // // We made a connection without requiring a user: Success!
-                return SuccessOrFailure.success();
-            } catch (SQLException e) {
-                // Something went wrong connecting
-                String sqlState = e.getSQLState();
-
-                if ("28000".equals(sqlState)) {
-                    // This means that the authorisation failed. So MySQL is ready for connections, but requires a user
-                    // ftp://ftp.software.ibm.com/ps/products/db2/info/vr6/htm/db2m0/db2stt28.htm#TBLCODE28
+            try {
+                String url = "jdbc:" + type + "://" + dockerPort.getIp() + ":" + dockerPort.getExternalPort() + "/" + database + options;
+                try (Connection ignored = DriverManager.getConnection(url)) {
+                    // // We made a connection without requiring a user: Success!
                     return SuccessOrFailure.success();
-                }
+                } catch (SQLException e) {
+                    // Something went wrong connecting
+                    String sqlState = e.getSQLState();
 
-                return SuccessOrFailure.failure(e.getClass().getSimpleName() + ": " + e.getMessage());
+                    if ("28000".equals(sqlState)) {
+                        // This means that the authorisation failed. So MySQL is ready for connections, but requires a user
+                        // ftp://ftp.software.ibm.com/ps/products/db2/info/vr6/htm/db2m0/db2stt28.htm#TBLCODE28
+                        return SuccessOrFailure.success();
+                    }
+
+                    return SuccessOrFailure.failure(e.getClass().getSimpleName() + ": " + e.getMessage());
+                }
+            } finally {
+                try {
+                    // We give a 2 second break for MySQL to initialise
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    // Ignored
+                }
             }
         };
     }
