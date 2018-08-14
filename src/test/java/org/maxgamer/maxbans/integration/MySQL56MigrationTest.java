@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.maxgamer.maxbans.orm.HibernateConfigurer;
 import org.maxgamer.maxbans.test.IntegrationTest;
 
+import java.sql.SQLException;
+
 public class MySQL56MigrationTest extends AbstractMigrationTest implements IntegrationTest {
     @ClassRule
     public static DockerComposeRule docker = DockerComposeRule.builder()
@@ -19,7 +21,7 @@ public class MySQL56MigrationTest extends AbstractMigrationTest implements Integ
             .build();
 
     @Before
-    public void setup() {
+    public void setup() throws SQLException {
         Container mysql = docker.containers().container("mysql");
         doConfigure(mysql);
     }

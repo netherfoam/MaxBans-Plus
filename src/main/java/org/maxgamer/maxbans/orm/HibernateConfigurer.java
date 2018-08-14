@@ -1,5 +1,6 @@
 package org.maxgamer.maxbans.orm;
 
+import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.orm.id.UserAddressId;
@@ -30,7 +31,7 @@ public class HibernateConfigurer {
         config.setProperty("hibernate.connection.provider_class", "org.hibernate.connection.C3P0ConnectionProvider");
 
         // This adds support for MySQL 8.0, until Hibernate makes it part of the standard
-        config.setProperty("hibernate.dialect_resolvers", MySQL80DialectResolver.class.getCanonicalName());
+        config.setProperty(AvailableSettings.DIALECT_RESOLVERS, MySQL80DialectResolver.class.getCanonicalName());
 
         return config;
     }

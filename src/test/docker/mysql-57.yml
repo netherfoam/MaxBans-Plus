@@ -2,7 +2,6 @@ version: "2"
 
 services:
     mysql:
-        build:
-            context: mysql-57
+        image: zanox/mysql:5.7
         ports:
           - 3306

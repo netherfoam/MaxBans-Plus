@@ -13,8 +13,6 @@ import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.test.IntegrationTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -27,14 +25,11 @@ import static org.mockito.Mockito.verify;
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public class UserServiceTest extends PluginContextTest implements IntegrationTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceTest.class);
     private PluginManager pluginManager;
 
     @Before
     public void setup() {
-        LOGGER.info("setting up...");
         pluginManager = getContext().getPluginModule().getPluginManager();
-        LOGGER.info("Done setup");
     }
 
     @Test

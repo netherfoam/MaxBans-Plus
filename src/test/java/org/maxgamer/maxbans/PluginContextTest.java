@@ -11,8 +11,6 @@ import org.maxgamer.maxbans.context.PluginContext;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.repository.H2Test;
 import org.maxgamer.maxbans.test.IntegrationTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +23,6 @@ import static org.mockito.Mockito.mock;
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public class PluginContextTest extends H2Test implements IntegrationTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PluginContextTest.class);
     private PluginContext context;
     
     @Before
@@ -50,13 +47,10 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
         PluginManager pluginManager = mock(PluginManager.class);
 
         context = new PluginContext(plugin, config, locale, server, folder, java.util.logging.Logger.getLogger("Test"), pluginManager);
-
-        LOGGER.info("...Constructed plugin context");
     }
 
     @After
     public void destroy() {
-        LOGGER.info("Destroying context...");
         if(context == null) return;
         context.close();
 
