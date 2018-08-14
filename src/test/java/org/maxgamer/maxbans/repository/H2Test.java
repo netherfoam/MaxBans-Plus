@@ -9,8 +9,11 @@ import org.maxgamer.maxbans.util.FlywayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -24,11 +27,10 @@ public abstract class H2Test implements IntegrationTest {
     private JdbcConfig jdbc;
 
     private File storage =  new File("test-storage.mv.db");
+    private Flyway flyway;
 
     @Before
     public void init() throws IOException, InterruptedException {
-        LOGGER.info("Giving H2 some time to flush...");
-        Thread.sleep(2000);
         java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
 
         LOGGER.info("Creating database...");
@@ -56,12 +58,19 @@ public abstract class H2Test implements IntegrationTest {
 
         LOGGER.info("JDBC Details: " + jdbc.toString());
         LOGGER.info("Initialising Schema...");
-        Flyway flyway = FlywayUtil.migrater(jdbc);
+        flyway = FlywayUtil.migrater(jdbc);
         flyway.migrate();
     }
 
     @After
     public void teardown() throws IOException, InterruptedException {
+        DataSource source = flyway.getDataSource();
+        try (Connection c = source.getConnection()) {
+            c.createStatement().execute("SHUTDOWN");
+        } catch (SQLException e) {
+            LOGGER.info("Failed to shutdown properly", e);
+        }
+
         LOGGER.info("Tearing down database...");
         long start = System.currentTimeMillis();
 
