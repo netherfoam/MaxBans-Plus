@@ -16,8 +16,8 @@ public class SQLHealthCheck {
     /**
      * Returns the state of the SQL connection on the given port / driver / database
      *
-     * @param port     the port
-     * @param type     the driver eg "mysql"
+     * @param port the port
+     * @param type the driver eg "mysql"
      * @param database the database eg "dms"
      * @return the resulting health check
      */

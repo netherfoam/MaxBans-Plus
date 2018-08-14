@@ -5,9 +5,6 @@ phases:
     commands:
       # Runs our tests and makes our binary
       - mvn package
-
-  post_build:
-    commands:
       - ./publish.sh
 
 cache:
