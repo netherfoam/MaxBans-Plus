@@ -29,7 +29,7 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
     private PluginContext context;
     
     @Before
-    public void init() throws IOException {
+    public void init() throws IOException, InterruptedException {
         super.init();
 
         PluginConfig config = new PluginConfig();
