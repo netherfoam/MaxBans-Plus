@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +26,11 @@ public abstract class H2Test implements IntegrationTest {
     private File storage =  new File("test-storage.mv.db");
 
     @Before
-    public void init() throws IOException {
+    public void init() throws IOException, InterruptedException {
+        LOGGER.info("Giving H2 some time to flush...");
+        Thread.sleep(2000);
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+
         LOGGER.info("Creating database...");
 
         if (!storage.delete() && storage.exists()) {
