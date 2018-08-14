@@ -2,6 +2,10 @@ version: "2"
 
 services:
     mysql:
-        image: zanox/mysql:5.7
+        image: mysql:5.7
         ports:
           - 3306
+        environment:
+            MYSQL_ROOT_PASSWORD: ""
+            MYSQL_DATABASE: "maxbansplus"
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"

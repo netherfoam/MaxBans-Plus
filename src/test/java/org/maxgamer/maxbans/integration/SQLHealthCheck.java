@@ -16,8 +16,8 @@ public class SQLHealthCheck {
     /**
      * Returns the state of the SQL connection on the given port / driver / database
      *
-     * @param port the port
-     * @param type the driver eg "mysql"
+     * @param port     the port
+     * @param type     the driver eg "mysql"
      * @param database the database eg "dms"
      * @return the resulting health check
      */
@@ -25,30 +25,21 @@ public class SQLHealthCheck {
         return (target) -> {
             DockerPort dockerPort = target.port(port);
 
-            try {
-                String url = "jdbc:" + type + "://" + dockerPort.getIp() + ":" + dockerPort.getExternalPort() + "/" + database + options;
-                try (Connection ignored = DriverManager.getConnection(url)) {
-                    // // We made a connection without requiring a user: Success!
+            String url = "jdbc:" + type + "://" + dockerPort.getIp() + ":" + dockerPort.getExternalPort() + "/" + database + options;
+            try (Connection ignored = DriverManager.getConnection(url)) {
+                // // We made a connection without requiring a user: Success!
+                return SuccessOrFailure.success();
+            } catch (SQLException e) {
+                // Something went wrong connecting
+                String sqlState = e.getSQLState();
+
+                if ("28000".equals(sqlState)) {
+                    // This means that the authorisation failed. So MySQL is ready for connections, but requires a user
+                    // ftp://ftp.software.ibm.com/ps/products/db2/info/vr6/htm/db2m0/db2stt28.htm#TBLCODE28
                     return SuccessOrFailure.success();
-                } catch (SQLException e) {
-                    // Something went wrong connecting
-                    String sqlState = e.getSQLState();
-
-                    if ("28000".equals(sqlState)) {
-                        // This means that the authorisation failed. So MySQL is ready for connections, but requires a user
-                        // ftp://ftp.software.ibm.com/ps/products/db2/info/vr6/htm/db2m0/db2stt28.htm#TBLCODE28
-                        return SuccessOrFailure.success();
-                    }
-
-                    return SuccessOrFailure.failure(e.getClass().getSimpleName() + ": " + e.getMessage());
                 }
-            } finally {
-                try {
-                    // We give a 2 second break for MySQL to initialise
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    // Ignored
-                }
+
+                return SuccessOrFailure.failure(e.getClass().getSimpleName() + ": " + e.getMessage());
             }
         };
     }
