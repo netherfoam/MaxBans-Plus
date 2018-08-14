@@ -1,6 +1,7 @@
 package org.maxgamer.maxbans.integration;
 
 import com.palantir.docker.compose.DockerComposeRule;
+import com.palantir.docker.compose.configuration.ShutdownStrategy;
 import com.palantir.docker.compose.connection.Container;
 import com.palantir.docker.compose.connection.waiting.HealthChecks;
 import org.junit.Before;
@@ -16,6 +17,7 @@ public class MySQL57MigrationTest extends AbstractMigrationTest implements Integ
             .file("src/test/docker/mysql-57.yml")
             .waitingForService("mysql", HealthChecks.toHaveAllPortsOpen())
             .waitingForService("mysql", SQLHealthCheck.isAvailable(3306, "mysql", DATABASE_NAME, "?verifyServerCertificate=false&useSSL=false"))
+            .shutdownStrategy(ShutdownStrategy.KILL_DOWN)
             .build();
 
     @Before
