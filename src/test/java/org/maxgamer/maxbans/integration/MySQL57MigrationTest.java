@@ -15,6 +15,7 @@ public class MySQL57MigrationTest extends AbstractMigrationTest implements Integ
     public static DockerComposeRule docker = DockerComposeRule.builder()
             .file("src/test/docker/mysql-57.yml")
             .waitingForService("mysql", HealthChecks.toHaveAllPortsOpen())
+            .waitingForService("mysql", SQLHealthCheck.isAvailable(3306, "mysql", DATABASE_NAME, "?verifyServerCertificate=false&useSSL=false"))
             .build();
 
     @Before

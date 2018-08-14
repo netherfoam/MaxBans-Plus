@@ -38,6 +38,7 @@ public class MaxBansPlus extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
         messagesFile = new File(getDataFolder(), "messages.yml");
     }
     

@@ -18,7 +18,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public abstract class AbstractMigrationTest implements IntegrationTest {
-    private static final String DATABASE_NAME = "maxbansplus";
+    protected static final String DATABASE_NAME = "maxbansplus";
     protected JdbcConfig jdbc;
     protected SessionFactory sessionFactory;
     protected Flyway flyway;
