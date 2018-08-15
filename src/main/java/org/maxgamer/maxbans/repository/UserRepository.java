@@ -18,9 +18,10 @@ public class UserRepository extends Repository<UUID, User> {
     
     public User findByAlias(String name) {
         try (TransactionLayer tx = worker.transact()) {
-            Iterator iterator = tx.getSession().createQuery("SELECT u FROM User u WHERE u.alias LIKE :name")
+            Iterator iterator = tx.getEntityManager().createQuery("SELECT u FROM User u WHERE u.alias LIKE :name")
                     .setParameter("name", name.toLowerCase())
-                    .iterate();
+                    .getResultList()
+                    .iterator();
 
             if(!iterator.hasNext()) return null;
 

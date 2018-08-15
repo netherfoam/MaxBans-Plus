@@ -24,25 +24,25 @@ public abstract class Repository<ID extends Serializable, T> {
 
     public T find(ID id) {
         try (TransactionLayer tx = worker.transact()) {
-            return tx.getSession().get(entityClass, id);
+            return tx.getEntityManager().find(entityClass, id);
         }
     }
     
     public void persist(T t) {
         try (TransactionLayer tx = worker.transact()) {
-            tx.getSession().persist(t);
+            tx.getEntityManager().persist(t);
         }
     }
     
     public void save(T t) {
         try (TransactionLayer tx = worker.transact()) {
-            tx.getSession().saveOrUpdate(t);
+            tx.getEntityManager().persist(t);
         }
     }
 
     public List<T> findAll() {
         try (TransactionLayer tx = worker.transact()) {
-            return tx.getSession().createCriteria(entityClass).list();
+            return tx.getEntityManager().createQuery("e", entityClass).getResultList();
         }
     }
 

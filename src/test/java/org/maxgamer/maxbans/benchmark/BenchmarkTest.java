@@ -38,7 +38,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 UUID id = UUID.randomUUID();
                 User user = new User(id, id.toString());
 
-                tx.getSession().persist(user);
+                tx.getEntityManager().persist(user);
                 users.add(user);
             }
             // Session is flushed at the end automatically
@@ -62,7 +62,7 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 ban.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 user.getBans().add(ban);
 
-                tx.getSession().persist(ban);
+                tx.getEntityManager().persist(ban);
 
                 bans.add(ban);
             }
@@ -84,11 +84,11 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 ban.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 address.getBans().add(ban);
 
-                tx.getSession().persist(ban);
+                tx.getEntityManager().persist(ban);
 
                 bans.add(ban);
             }
-            tx.getSession().flush();
+            tx.getEntityManager().flush();
         }
 
         return bans;
@@ -109,11 +109,11 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 mute.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 user.getMutes().add(mute);
 
-                tx.getSession().persist(mute);
+                tx.getEntityManager().persist(mute);
 
                 mutes.add(mute);
             }
-            tx.getSession().flush();
+            tx.getEntityManager().flush();
         }
 
         return mutes;
@@ -132,11 +132,11 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 mute.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 address.getMutes().add(mute);
 
-                tx.getSession().persist(mute);
+                tx.getEntityManager().persist(mute);
 
                 mutes.add(mute);
             }
-            tx.getSession().flush();
+            tx.getEntityManager().flush();
         }
 
         return mutes;
@@ -157,11 +157,11 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 warning.setExpiresAt(Instant.now().plus(5, ChronoUnit.DAYS));
                 user.getWarnings().add(warning);
 
-                tx.getSession().persist(warning);
+                tx.getEntityManager().persist(warning);
 
                 warnings.add(warning);
             }
-            tx.getSession().flush();
+            tx.getEntityManager().flush();
         }
 
         return warnings;
@@ -184,12 +184,11 @@ public class BenchmarkTest extends PluginContextTest implements IntegrationTest 
                 UserAddress userAddress = new UserAddress(user, address);
                 user.getAddresses().add(userAddress);
 
-                tx.getSession().persist(address);
-                tx.getSession().saveOrUpdate(user);
+                tx.getEntityManager().persist(address);
 
                 addresses.add(address);
             }
-            tx.getSession().flush();
+            tx.getEntityManager().flush();
         }
 
         return addresses;

@@ -1,6 +1,7 @@
 package org.maxgamer.maxbans.context.component;
 
 import dagger.Component;
+import org.bukkit.plugin.PluginManager;
 import org.hibernate.SessionFactory;
 import org.maxgamer.maxbans.MaxBansPlus;
 import org.maxgamer.maxbans.context.module.JdbcModule;
@@ -29,4 +30,5 @@ public interface PluginComponent {
     CommandExecutorComponent commands();
     Logger logger();
     SessionFactory sessionFactory();
+    PluginManager pluginManager();
 }

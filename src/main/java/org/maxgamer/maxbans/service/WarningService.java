@@ -3,6 +3,8 @@ package org.maxgamer.maxbans.service;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.config.WarningConfig;
+import org.maxgamer.maxbans.event.WarnUserEvent;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
@@ -24,22 +26,30 @@ public class WarningService {
     private WarningRepository repository;
     private LocatorService locatorService;
     private WarningConfig config;
+    private EventService eventService;
 
     @Inject
-    public WarningService(Server server, WarningRepository repository, LocatorService locatorService, WarningConfig config) {
+    public WarningService(Server server, WarningRepository repository, LocatorService locatorService, WarningConfig config, EventService eventService) {
         this.server = server;
         this.repository = repository;
         this.locatorService = locatorService;
         this.config = config;
+        this.eventService = eventService;
     }
 
-    public MessageBuilder warn(User source, User user, String reason, Locale locale) {
+    public MessageBuilder warn(User source, User user, String reason, Locale locale) throws CancelledException {
         List<Warning> warnings = user.getWarnings();
 
         Warning warning = new Warning(user);
         warning.setSource(source);
         warning.setExpiresAt(warning.getCreated().plus(config.getDuration()));
         warning.setReason(reason);
+
+        WarnUserEvent event = new WarnUserEvent(source, user, warning);
+        eventService.call(event);
+        if (event.isCancelled()) {
+            throw new CancelledException();
+        }
 
         repository.save(warning);
 

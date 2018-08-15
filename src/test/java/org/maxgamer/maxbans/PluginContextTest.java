@@ -3,6 +3,7 @@ package org.maxgamer.maxbans;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginManager;
 import org.junit.After;
 import org.junit.Before;
 import org.maxgamer.maxbans.config.PluginConfig;
@@ -12,8 +13,8 @@ import org.maxgamer.maxbans.repository.H2Test;
 import org.maxgamer.maxbans.test.IntegrationTest;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Logger;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -25,7 +26,7 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
     private PluginContext context;
     
     @Before
-    public void init() {
+    public void init() throws IOException, InterruptedException {
         super.init();
 
         PluginConfig config = new PluginConfig();
@@ -43,17 +44,21 @@ public class PluginContextTest extends H2Test implements IntegrationTest {
         YamlConfiguration localeConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("messages.yml")));
         locale.load(localeConfig);
 
-        context = new PluginContext(plugin, config, locale, server, folder, Logger.getLogger("Test"));
+        PluginManager pluginManager = mock(PluginManager.class);
+
+        context = new PluginContext(plugin, config, locale, server, folder, java.util.logging.Logger.getLogger("Test"), pluginManager);
     }
 
     @After
     public void destroy() {
         if(context == null) return;
-        if(context.getDataFolder() == null) return;
+        context.close();
 
         File[] files = context.getDataFolder().listFiles();
+        if (files == null) return;
+
         if(files != null) {
-            for (File f : context.getDataFolder().listFiles()) {
+            for (File f : files) {
                 f.delete();
             }
         }

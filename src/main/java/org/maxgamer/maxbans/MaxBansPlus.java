@@ -38,6 +38,7 @@ public class MaxBansPlus extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
         messagesFile = new File(getDataFolder(), "messages.yml");
     }
     
@@ -104,7 +105,7 @@ public class MaxBansPlus extends JavaPlugin {
             sentryLogger = new SentryLogger(this, Event.Level.WARNING, client);
         }
 
-        context = new PluginContext(this, config, locale, getServer(), getDataFolder(), getErrorLogger());
+        context = new PluginContext(this, config, locale, getServer(), getDataFolder(), getErrorLogger(), getServer().getPluginManager());
 
         try {
             // Update our database if necessary

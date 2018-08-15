@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
@@ -32,7 +33,7 @@ public class MuteCommandExecutor extends UserRestrictionCommandExecutor {
     }
 
     @Override
-    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException {
+    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException, CancelledException {
         User banner = (source instanceof Player ? userService.getOrCreate((Player) source) : null);
         
         userService.mute(banner, user, reason, duration);

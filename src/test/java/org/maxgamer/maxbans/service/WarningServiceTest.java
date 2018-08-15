@@ -1,8 +1,13 @@
 package org.maxgamer.maxbans.service;
 
+import org.bukkit.plugin.PluginManager;
+import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
 import org.maxgamer.maxbans.config.WarningConfig;
+import org.maxgamer.maxbans.event.BanAddressEvent;
+import org.maxgamer.maxbans.event.WarnUserEvent;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.locale.Locale;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.test.IntegrationTest;
@@ -18,8 +23,15 @@ import static org.mockito.Mockito.*;
  * @author netherfoam
  */
 public class WarningServiceTest extends PluginContextTest implements IntegrationTest {
+    private PluginManager pluginManager;
+
+    @Before
+    public void setup() {
+        pluginManager = getContext().getPluginModule().getPluginManager();
+    }
+
     @Test
-    public void testWarn() {
+    public void testWarn() throws CancelledException {
         WarningService service = getContext().components().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
@@ -33,10 +45,12 @@ public class WarningServiceTest extends PluginContextTest implements Integration
 
         service.warn(null, user, "Warning", locale);
         verify(getContext().getServer(), times(1)).dispatchCommand(any(), eq("strike JoeBlogs"));
+
+        verify(pluginManager, times(1)).callEvent(isA(WarnUserEvent.class));
     }
 
     @Test
-    public void testMultiCommandStrike() {
+    public void testMultiCommandStrike() throws CancelledException {
         WarningService service = getContext().components().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();
@@ -53,7 +67,7 @@ public class WarningServiceTest extends PluginContextTest implements Integration
     }
 
     @Test
-    public void testWarnReset() {
+    public void testWarnReset() throws CancelledException {
         WarningService service = getContext().components().services().warn();
 
         WarningConfig config = getContext().getConfig().getWarningConfig();

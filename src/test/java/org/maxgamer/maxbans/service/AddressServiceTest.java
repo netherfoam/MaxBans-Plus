@@ -1,8 +1,12 @@
 package org.maxgamer.maxbans.service;
 
-import junit.framework.Assert;
+import org.bukkit.plugin.PluginManager;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.PluginContextTest;
+import org.maxgamer.maxbans.event.*;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
@@ -17,48 +21,76 @@ import org.maxgamer.maxbans.transaction.TransactionLayer;
 import java.time.Instant;
 import java.util.UUID;
 
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 /**
  * @author netherfoam
  */
 public class AddressServiceTest extends PluginContextTest implements IntegrationTest {
+    private PluginManager pluginManager;
+
+    @Before
+    public void setup() {
+        pluginManager = getContext().getPluginModule().getPluginManager();
+    }
+
     @Test
-    public void testBan() throws RejectedException {
+    public void doNothing1() {
+
+    }
+    @Test
+    public void doNothing2() {
+
+    }
+
+    @Test
+    public void testBan() throws RejectedException, CancelledException {
         AddressService addresses = getContext().components().services().address();
         Address address = addresses.create("127.0.0.1");
 
         Assert.assertNull("Expect address to be unbanned", addresses.getBan(address));
         addresses.ban(null, address, "Breaking Rules", null);
         Assert.assertNotNull("Expect address to be banned", addresses.getBan(address));
+
+        verify(pluginManager, times(1)).callEvent(isA(BanAddressEvent.class));
     }
 
     @Test
-    public void testMute() throws RejectedException {
+    public void testMute() throws RejectedException, CancelledException {
         AddressService addresses = getContext().components().services().address();
         Address address = addresses.create("127.0.0.1");
 
         Assert.assertNull("Expect address to be unmuted", addresses.getMute(address));
         addresses.mute(null, address, "Breaking Rules", null);
         Assert.assertNotNull("Expect address to be muted", addresses.getMute(address));
+
+        verify(pluginManager, times(1)).callEvent(isA(MuteAddressEvent.class));
     }
 
     @Test
-    public void testUnmute() throws RejectedException {
+    public void testUnmute() throws RejectedException, CancelledException {
         AddressService addresses = getContext().components().services().address();
         Address address = addresses.create("127.0.0.1");
 
         addresses.mute(null, address, "Breaking Rules", null);
         addresses.unmute(null, address);
         Assert.assertNull("Expect address to be unmuted", addresses.getMute(address));
+
+        verify(pluginManager, times(1)).callEvent(isA(UnmuteAddressEvent.class));
     }
 
     @Test
-    public void testUnban() throws RejectedException {
+    public void testUnban() throws RejectedException, CancelledException {
         AddressService addresses = getContext().components().services().address();
         Address address = addresses.create("127.0.0.1");
 
         addresses.ban(null, address, "Breaking Rules", null);
         addresses.unban(null, address);
         Assert.assertNull("Expect address to be unbanned", addresses.getBan(address));
+
+        verify(pluginManager, times(1)).callEvent(isA(UnbanAddressEvent.class));
     }
 
     @Test
@@ -92,8 +124,8 @@ public class AddressServiceTest extends PluginContextTest implements Integration
         try (TransactionLayer tx = getContext().components().transactor().transact()) {
             MessageBuilder builder = users.report(users.get(id), new Locale());
 
-            Assert.assertEquals("expect no ban", builder.preview("ban"), null);
-            Assert.assertEquals("expect no mute", builder.preview("mute"), null);
+            Assert.assertNull("expect no ban", builder.preview("ban"));
+            Assert.assertNull("expect no mute", builder.preview("mute"));
             Assert.assertEquals("expect IP address", builder.preview("ip"), "127.0.0.1");
             Assert.assertNotNull("firstActive", builder.preview("firstActive"));
             Assert.assertNotNull("lastActive", builder.preview("lastActive"));

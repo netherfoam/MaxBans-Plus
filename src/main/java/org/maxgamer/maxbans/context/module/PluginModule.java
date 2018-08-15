@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.PluginManager;
 import org.maxgamer.maxbans.MaxBansPlus;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.locale.Locale;
@@ -22,15 +23,17 @@ public class PluginModule {
     private Server server;
     private FileConfiguration configuration;
     private Locale locale;
+    private PluginManager pluginManager;
     private boolean sessionInitialised = false;
 
-    public PluginModule(MaxBansPlus plugin, Server server, PluginConfig config, FileConfiguration configuration, Locale locale, Logger logger) {
+    public PluginModule(MaxBansPlus plugin, Server server, PluginConfig config, FileConfiguration configuration, Locale locale, Logger logger, PluginManager pluginManager) {
         this.plugin = plugin;
         this.config = config;
         this.server = server;
         this.configuration = configuration;
         this.locale = locale;
         this.logger = logger;
+        this.pluginManager = pluginManager;
     }
 
     @Provides
@@ -73,6 +76,12 @@ public class PluginModule {
     @Singleton
     public Locale getLocale() {
         return locale;
+    }
+
+    @Provides
+    @Singleton
+    public PluginManager getPluginManager() {
+        return pluginManager;
     }
 
     public boolean isSessionInitialised() {

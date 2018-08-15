@@ -18,4 +18,5 @@ public interface ServiceComponent {
     MetricService metric();
     GeoIPService geoIP();
     HistoryService history();
+    EventService event();
 }

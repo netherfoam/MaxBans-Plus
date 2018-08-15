@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.PermissionException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.MessageBuilder;
@@ -33,7 +34,7 @@ public class UnbanCommandExecutor extends IPRestrictionCommandExecutor {
     }
 
     @Override
-    public void restrict(CommandSender sender, Address address, User user, Duration duration, String reason, boolean silent) throws RejectedException, PermissionException {
+    public void restrict(CommandSender sender, Address address, User user, Duration duration, String reason, boolean silent) throws RejectedException, CancelledException {
         User source = (sender instanceof Player ? userService.getOrCreate((Player) sender) : null);
 
         MessageBuilder message = locale.get()

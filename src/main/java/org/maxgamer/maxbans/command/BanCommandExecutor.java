@@ -2,6 +2,7 @@ package org.maxgamer.maxbans.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.maxgamer.maxbans.exception.CancelledException;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
@@ -17,22 +18,21 @@ import java.time.Duration;
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public class BanCommandExecutor extends UserRestrictionCommandExecutor {
-    @Inject
-    protected BroadcastService broadcastService;
+    private BroadcastService broadcastService;
+    private UserService userService;
+    private MetricService metricService;
 
     @Inject
-    protected UserService userService;
-
-    @Inject
-    protected MetricService metricService;
-
-    @Inject
-    public BanCommandExecutor() {
+    public BanCommandExecutor(BroadcastService broadcastService, UserService userService, MetricService metricService) {
         super("maxbans.ban");
+
+        this.broadcastService = broadcastService;
+        this.userService = userService;
+        this.metricService = metricService;
     }
 
     @Override
-    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException {
+    public void restrict(CommandSender source, User user, Duration duration, String reason, boolean silent) throws RejectedException, CancelledException {
         User banner = (source instanceof Player ? userService.getOrCreate((Player) source) : null);
 
         userService.ban(banner, user, reason, duration);
