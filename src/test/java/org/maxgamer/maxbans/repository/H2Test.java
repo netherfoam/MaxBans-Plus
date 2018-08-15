@@ -26,6 +26,7 @@ public abstract class H2Test implements IntegrationTest {
     @Before
     public void init() throws IOException, InterruptedException {
         java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+        java.util.logging.Logger.getLogger("org.flywaydb.core.internal").setLevel(Level.WARNING);
 
         if (!storage.delete() && storage.exists()) {
             throw new IOException("Unable to delete " + storage.getAbsolutePath());

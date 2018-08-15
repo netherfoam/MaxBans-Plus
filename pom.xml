@@ -143,14 +143,15 @@
             <version>2.2.11</version>
         </dependency>
 
-        <!-- Basic logger for tests -->
+        <!-- Basic logger for tests. Bukkit really uses Log4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.24</version>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.25</version>
             <scope>test</scope>
         </dependency>
 
+        <!-- So that we can use Docker-Compose inside our tests -->
         <dependency>
             <groupId>com.palantir.docker.compose</groupId>
             <artifactId>docker-compose-rule-junit4</artifactId>
