@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.Message;
 import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.test.UnitTest;
@@ -29,12 +30,15 @@ public class LockdownServiceTest implements UnitTest {
     @Before
     public void init() {
         locale = mock(Locale.class);
-        MessageBuilder message = mock(MessageBuilder.class);
-        doReturn(message).when(message).with(anyString(), any(User.class));
-        doReturn(message).when(message).with(anyString(), any(Object.class));
-        doReturn(message).when(message).withUserOrConsole(anyString(), any(User.class));
+        MessageBuilder builder = mock(MessageBuilder.class);
+        doReturn(builder).when(builder).with(anyString(), any(User.class));
+        doReturn(builder).when(builder).with(anyString(), any(Object.class));
+        doReturn(builder).when(builder).withUserOrConsole(anyString(), any(User.class));
 
-        doReturn(message).when(locale).get();
+        doReturn(builder).when(locale).get();
+
+        Message message = mock(Message.class);
+        doReturn(message).when(builder).get(anyString());
     }
 
     @Test

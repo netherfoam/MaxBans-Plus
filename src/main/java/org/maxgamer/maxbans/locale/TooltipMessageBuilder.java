@@ -4,7 +4,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.orm.UserAddress;
 import org.maxgamer.maxbans.service.GeoIPService;
@@ -17,7 +16,7 @@ import java.util.List;
 /**
  * TODO: Document this
  */
-public class TooltipMessageBuilder extends MessageBuilder {
+public class TooltipMessageBuilder extends BukkitMessageBuilder {
     private GeoIPService geoIPService;
 
     public TooltipMessageBuilder(Locale locale, GeoIPService geoIPService) {
@@ -29,7 +28,7 @@ public class TooltipMessageBuilder extends MessageBuilder {
     public MessageBuilder withUserOrConsole(String key, User user) {
         if (user == null) {
             // Standard behaviour for missing users
-            return super.with(key, null);
+            return super.with(key, "Console");
         }
 
         return this.with(key, user);
@@ -39,7 +38,7 @@ public class TooltipMessageBuilder extends MessageBuilder {
     public MessageBuilder with(String key, User user) {
         if (user == null) {
             // Standard behaviour for missing users
-            return super.with(key, null);
+            return super.with(key, (String) null);
         }
 
         BaseComponent component = toComponent(user);
@@ -91,7 +90,7 @@ public class TooltipMessageBuilder extends MessageBuilder {
 
         name.setHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
-                TextComponent.fromLegacyText(text.toString())
+                TooltipMessage.fromLegacyText(text.toString(), ChatColor.WHITE)
         ));
 
         return name;

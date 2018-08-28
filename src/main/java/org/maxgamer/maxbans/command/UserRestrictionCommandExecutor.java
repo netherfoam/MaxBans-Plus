@@ -45,7 +45,11 @@ public abstract class UserRestrictionCommandExecutor extends StandardCommandExec
             }
 
             Duration duration = RestrictionUtil.getDuration(args);
-            String reason = String.join(" ", args);
+
+            String reason = null;
+            if (args.size() > 0) {
+                reason = String.join(" ", args);
+            }
 
             restrict(sender, user, duration, reason, silent);
         }

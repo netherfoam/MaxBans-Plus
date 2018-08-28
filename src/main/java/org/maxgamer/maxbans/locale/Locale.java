@@ -1,12 +1,12 @@
 package org.maxgamer.maxbans.locale;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.service.GeoIPService;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.ocpsoft.prettytime.units.JustNow;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public class Locale {
-    protected HashMap<String, String> messages;
+    private HashMap<String, String> messages;
     protected PrettyTime prettyTime = new PrettyTime(java.util.Locale.ENGLISH);
     private GeoIPService geoIPService;
     private PluginConfig pluginConfig;
@@ -65,7 +65,11 @@ public class Locale {
             return new TooltipMessageBuilder(this, geoIPService);
         }
 
-        return new MessageBuilder(this);
+        return new BukkitMessageBuilder(this);
+    }
+
+    public Map<String, String> getMessages() {
+        return Collections.unmodifiableMap(messages);
     }
 
     /**

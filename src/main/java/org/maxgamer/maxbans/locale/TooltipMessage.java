@@ -2,15 +2,13 @@ package org.maxgamer.maxbans.locale;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.maxgamer.maxbans.util.StringUtil;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -18,11 +16,113 @@ import java.util.stream.Collectors;
 /**
  * TODO: Document this
  */
-public class TooltipMessage extends Message {
+public class TooltipMessage extends BukkitMessage {
+    private static final Pattern URL_PATTERN = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+
+    /**
+     * Correct implementation of {@link TextComponent#fromLegacyText(String, ChatColor)}
+     */
+    public static BaseComponent[] fromLegacyText(String message, ChatColor defaultColor) {
+        ArrayList<BaseComponent> components = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        TextComponent component = new TextComponent();
+        Matcher matcher = URL_PATTERN.matcher(message);
+
+        for(int i = 0; i < message.length(); ++i) {
+            char c = message.charAt(i);
+            TextComponent old;
+            if (c == 167) {
+                ++i;
+                if (i >= message.length()) {
+                    break;
+                }
+
+                c = message.charAt(i);
+                if (c >= 'A' && c <= 'Z') {
+                    c = (char)(c + 32);
+                }
+
+                ChatColor format = ChatColor.getByChar(c);
+                if (format != null) {
+                    if (builder.length() > 0) {
+                        old = component;
+                        component = new TextComponent(component);
+                        old.setText(builder.toString());
+                        builder = new StringBuilder();
+                        components.add(old);
+                    }
+
+                    switch(format) {
+                        case BOLD:
+                            component.setBold(true);
+                            break;
+                        case ITALIC:
+                            component.setItalic(true);
+                            break;
+                        case UNDERLINE:
+                            component.setUnderlined(true);
+                            break;
+                        case STRIKETHROUGH:
+                            component.setStrikethrough(true);
+                            break;
+                        case MAGIC:
+                            component.setObfuscated(true);
+                            break;
+                        case RESET:
+                            format = defaultColor;
+                        default:
+                            component = new TextComponent();
+                            component.setColor(format);
+                    }
+                }
+            } else {
+                int pos = message.indexOf(' ', i);
+                if (pos == -1) {
+                    pos = message.length();
+                }
+
+                if (matcher.region(i, pos).find()) {
+                    if (builder.length() > 0) {
+                        old = component;
+                        component = new TextComponent(component);
+                        old.setText(builder.toString());
+                        builder = new StringBuilder();
+                        components.add(old);
+                    }
+
+                    old = component;
+                    component = new TextComponent(component);
+                    String urlString = message.substring(i, pos);
+                    component.setText(urlString);
+                    component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, urlString.startsWith("http") ? urlString : "http://" + urlString));
+                    components.add(component);
+                    i += pos - i - 1;
+                    component = old;
+                } else {
+                    builder.append(c);
+                }
+            }
+        }
+
+        if (builder.length() > 0 || component.getColorRaw() != defaultColor) {
+            component.setText(builder.toString());
+            components.add(component);
+        }
+
+        if (components.isEmpty()) {
+            components.add(new TextComponent(""));
+        }
+
+        return components.toArray(new BaseComponent[components.size()]);
+    }
+
     public static BaseComponent[] expand(String template, Map<String, BaseComponent[]> substitutions) {
-        ComponentBuilder builder = new ComponentBuilder("");
+        List<BaseComponent> components = new ArrayList<>();
 
         Matcher matcher = Pattern.compile("\\{\\{[^\\}\\}]*\\}\\}").matcher(template);
+
+        // This is a dummy value for copying formatting from the previous literal
+        BaseComponent previousLiteral = new TextComponent();
 
         int last = 0;
         while(matcher.find()) {
@@ -30,41 +130,54 @@ public class TooltipMessage extends Message {
             int end = matcher.end();
 
             String group = matcher.group();
-            // TODO: @md5 is a tard and forgets to set the colour when the text is
-            // TODO: an empty string. need to correct this shitty behaviour to
-            // TODO: get colour codes working again when templates are like &a{{name}}
-            // TODO: where it gets tokenized into "&a" and "{{name}}". Since &a is
-            // TODO: converted to a component of empty text, the color gets forced
-            // TODO: to green. Fucking retard.
-            BaseComponent[] literalText = TextComponent.fromLegacyText(template.substring(last, start));
-            builder.append(literalText);
+            BaseComponent[] literalText = fromLegacyText(template.substring(last, start), ChatColor.WHITE);
+
+            if (literalText.length > 0) {
+                copyPrevious(previousLiteral, literalText);
+                previousLiteral = literalText[literalText.length - 1];
+            }
+
+            components.addAll(Arrays.asList(literalText));
             last = end;
 
             group = group.substring(2, group.length() - 2);
             String[] options = split(group, '|');
             BaseComponent[] value = expand(options, substitutions);
 
-            builder.append(value);
+            BaseComponent lastComponent = previousLiteral;
+            for (BaseComponent v : value) {
+                v.copyFormatting(lastComponent, ComponentBuilder.FormatRetention.FORMATTING, false);
+                lastComponent = v;
+            }
+
+            components.addAll(Arrays.asList(value));
         }
 
         String lastLiteral = template.substring(last);
         if (!lastLiteral.isEmpty()) {
-            builder.append(TextComponent.fromLegacyText(lastLiteral));
+            BaseComponent[] literalText = fromLegacyText(lastLiteral, ChatColor.WHITE);
+            copyPrevious(previousLiteral, literalText);
+
+            components.addAll(Arrays.asList(literalText));
         }
 
-        BaseComponent[] components = builder.create();
-        /*ChatColor lastColor = ChatColor.WHITE;
+        return components.stream()
+                .filter(c -> !c.toPlainText().isEmpty())
+                .toArray(BaseComponent[]::new);
+    }
 
-        for (BaseComponent component : components) {
-            if (component.getColorRaw() == ChatColor.WHITE) {
-                component.setColor(lastColor);
+    private static void copyPrevious(BaseComponent previous, BaseComponent[] literalText) {
+        for (int i = 0; i < literalText.length; i++) {
+            if (i == 0) {
+                // First iteration, copy from the last component
+                if (previous == null) continue;
+
+                literalText[i].copyFormatting(previous, ComponentBuilder.FormatRetention.FORMATTING, false);
                 continue;
             }
 
-            lastColor = component.getColorRaw();
-        }*/
-
-        return components;
+            literalText[i].copyFormatting(literalText[i - 1], ComponentBuilder.FormatRetention.FORMATTING, false);
+        }
     }
 
     public static BaseComponent[] expand(String[] options, Map<String, BaseComponent[]> substitutions) {
@@ -72,13 +185,13 @@ public class TooltipMessage extends Message {
             BaseComponent[] value = substitutions.get(option);
             if(value == null) continue;
             if (value.length <= 0) continue;
-            if (Arrays.stream(value).noneMatch(c -> c.toLegacyText().isEmpty())) continue;
+            if (Arrays.stream(value).allMatch(c -> c.toLegacyText().isEmpty())) continue;
 
             return value;
         }
 
         // We just use the name instead
-        return TextComponent.fromLegacyText(options[options.length - 1]);
+        return fromLegacyText(options[options.length - 1], ChatColor.WHITE);
     }
 
     private static String[] split(String text, char delimiter) {
@@ -107,24 +220,23 @@ public class TooltipMessage extends Message {
     }
 
     protected BaseComponent[] transformValueToComponents(CommandSender recipient, Object value) {
-        /*if (recipient == null) {
-            if (value instanceof BaseComponent) {
-                return new BaseComponent[]{(BaseComponent) value};
-            }
+        if (value instanceof BaseComponent) {
+            return new BaseComponent[]{(BaseComponent) value};
+        } else if (value instanceof BaseComponent[]) {
+            return (BaseComponent[]) value;
+        }
 
-            if (value instanceof BaseComponent[]) {
-                return (BaseComponent[]) value;
-            }
-        }*/
+        Object fallback = super.transform(value);
+        if (fallback == null) return null;
 
-        String legacyText = String.valueOf(super.transform(value));
+        String legacyText = String.valueOf(fallback);
 
-        return TextComponent.fromLegacyText(legacyText);
+        return fromLegacyText(legacyText, ChatColor.WHITE);
     }
 
     @Override
     public void send(CommandSender recipient) {
-        String template = locale.messages.get(this.templateId);
+        String template = locale.getMessages().get(this.templateId);
         if (template == null) throw new IllegalArgumentException("No such template: " + this.templateId);
 
         Map<String, BaseComponent[]> variableComponents = new HashMap<>(substitutions.size());
@@ -147,7 +259,7 @@ public class TooltipMessage extends Message {
 
     @Override
     public String toString() {
-        String template = locale.messages.get(this.templateId);
+        String template = locale.getMessages().get(this.templateId);
         if (template == null) throw new IllegalArgumentException("No such template: " + this.templateId);
 
         Map<String, Object> preprocessed = new HashMap<>(substitutions.size());
