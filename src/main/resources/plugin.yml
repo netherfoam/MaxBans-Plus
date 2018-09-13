@@ -33,10 +33,10 @@ commands:
       description: Kicks a user
       usage: /kick <player> [message]
 
-   iplookup:
-      description: Inspect information about a players most recent IP address
-      usage: /iplookup <user>
-      aliases: ["lookup", "checkban", "dupeip"]
+   checkban:
+      description: Inspect information about a players most recent IP address, ban and mute status
+      usage: /checkban <user>
+      aliases: ["lookup", "iplookup", "dupeip"]
 
    warn:
       description: Warn a player for misbehaviour
