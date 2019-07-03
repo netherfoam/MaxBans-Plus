@@ -65,7 +65,7 @@ public class SentryLogger extends Logger {
     public SentryLogger(MaxBansPlus plugin, Event.Level minimum, SentryClient sentry) {
         this(plugin.getLogger(), plugin.getName(), plugin.getServer().getName() + " " + plugin.getServer().getVersion(),
                 plugin.getDescription().getName() + " " + plugin.getDescription().getVersion(),
-                plugin.getServer().getServerName(), minimum, sentry);
+                plugin.getServer().getName(), minimum, sentry);
     }
 
     /**
