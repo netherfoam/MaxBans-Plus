@@ -101,14 +101,14 @@ public class LockdownService {
                 .with("type", state.toString().toLowerCase())
                 .with("reason", reason)
                 .with("description", state.description())
-                .with("source", source == null ? "Console" : source.getName());
+                .withUserOrConsole("source", source);
 
         // Kick all players who no longer are allowed (new or all players)
         if(type == Lockdown.ALL || type == Lockdown.NEW) {
             for(Player player : server.getOnlinePlayers()) {
                 User user = userService.getOrCreate(player);
                 if(!isAllowed(user, false)) {
-                    player.kickPlayer(message.get("lockdown.message"));
+                    player.kickPlayer(message.get("lockdown.message").toString());
                 }
             }
         }

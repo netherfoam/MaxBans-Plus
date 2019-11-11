@@ -5,9 +5,12 @@ import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.junit.Before;
 import org.junit.Test;
 import org.maxgamer.maxbans.exception.RejectedException;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.Message;
+import org.maxgamer.maxbans.locale.MessageBuilder;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.test.UnitTest;
 import org.maxgamer.maxbans.util.Lockdown;
@@ -22,14 +25,28 @@ import static org.mockito.Mockito.*;
  * @author netherfoam
  */
 public class LockdownServiceTest implements UnitTest {
+    private Locale locale;
+
+    @Before
+    public void init() {
+        locale = mock(Locale.class);
+        MessageBuilder builder = mock(MessageBuilder.class);
+        doReturn(builder).when(builder).with(anyString(), any(User.class));
+        doReturn(builder).when(builder).with(anyString(), any(Object.class));
+        doReturn(builder).when(builder).withUserOrConsole(anyString(), any(User.class));
+
+        doReturn(builder).when(locale).get();
+
+        Message message = mock(Message.class);
+        doReturn(message).when(builder).get(anyString());
+    }
+
     @Test
     public void testLockdown() throws RejectedException {
         Server server = mock(Server.class);
         UserService users = mock(UserService.class);
         BroadcastService broadcast = mock(BroadcastService.class);
         FileConfiguration lockdownYml = YamlConfiguration.loadConfiguration(new File("lockdown.yml"));
-        Locale locale = new Locale();
-        locale.put("lockdown.broadcast", "The server was locked down by {{name|Console}} for {{reason}}");
 
         LockdownService service = new LockdownService(server, users, broadcast, lockdownYml);
 
@@ -43,9 +60,6 @@ public class LockdownServiceTest implements UnitTest {
         UserService users = mock(UserService.class);
         BroadcastService broadcast = mock(BroadcastService.class);
         FileConfiguration lockdownYml = YamlConfiguration.loadConfiguration(new File("lockdown.yml"));
-        Locale locale = new Locale();
-        locale.put("lockdown.broadcast", "The server was locked down by {{name|Console}} for {{reason}}");
-        locale.put("lockdown.message", "The server was locked down by {{name|Console}} for {{reason}}");
 
         Player player = mock(Player.class);
         doReturn(Collections.singletonList(player)).when(server).getOnlinePlayers();
@@ -66,9 +80,6 @@ public class LockdownServiceTest implements UnitTest {
         BroadcastService broadcast = mock(BroadcastService.class);
         FileConfiguration lockdownYml = YamlConfiguration.loadConfiguration(new File("lockdown.yml"));
         User user = mock(User.class);
-        Locale locale = new Locale();
-        locale.put("lockdown.broadcast", "The server was locked down by {{name|Console}} for {{reason}}");
-        locale.put("lockdown.message", "The server was locked down by {{name|Console}} for {{reason}}");
 
         Player player = mock(Player.class);
         doReturn(Collections.singletonList(player)).when(server).getOnlinePlayers();
@@ -91,9 +102,6 @@ public class LockdownServiceTest implements UnitTest {
         BroadcastService broadcast = mock(BroadcastService.class);
         FileConfiguration lockdownYml = YamlConfiguration.loadConfiguration(new File("lockdown.yml"));
         User user = mock(User.class);
-        Locale locale = new Locale();
-        locale.put("lockdown.broadcast", "The server was locked down by {{name|Console}} for {{reason}}");
-        locale.put("lockdown.message", "The server was locked down by {{name|Console}} for {{reason}}");
 
         Player player = mock(Player.class);
         doReturn(Collections.singletonList(player)).when(server).getOnlinePlayers();
@@ -116,9 +124,6 @@ public class LockdownServiceTest implements UnitTest {
         BroadcastService broadcast = mock(BroadcastService.class);
         FileConfiguration lockdownYml = YamlConfiguration.loadConfiguration(new File("lockdown.yml"));
         User user = mock(User.class);
-        Locale locale = new Locale();
-        locale.put("lockdown.broadcast", "The server was locked down by {{name|Console}} for {{reason}}");
-        locale.put("lockdown.message", "The server was locked down by {{name|Console}} for {{reason}}");
 
         LockdownService service = new LockdownService(server, users, broadcast, lockdownYml);
 
@@ -135,9 +140,6 @@ public class LockdownServiceTest implements UnitTest {
         UserService users = mock(UserService.class);
         BroadcastService broadcast = mock(BroadcastService.class);
         FileConfiguration lockdownYml = YamlConfiguration.loadConfiguration(new File("lockdown.yml"));
-
-        Locale locale = new Locale();
-        locale.put("lockdown.broadcast", "The server was locked down by {{name|Console}} for {{reason}}");
 
         LockdownService service = new LockdownService(server, users, broadcast, lockdownYml);
         service.lockdown(null, "join", "maintenance", locale);

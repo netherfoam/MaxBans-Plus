@@ -32,7 +32,7 @@ public class MessageException extends Exception {
             // The message has a translation
             MessageBuilder builder = toBuilder(locale);
 
-           return builder.get(getMessage());
+           return builder.get(getMessage()).toString();
         } else {
             // This message has no translation. Perhaps it's not defined or perhaps it's a lazy message
             return super.getMessage();

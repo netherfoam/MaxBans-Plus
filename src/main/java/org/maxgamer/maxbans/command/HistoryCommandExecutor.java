@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.exception.MessageException;
 import org.maxgamer.maxbans.exception.RejectedException;
+import org.maxgamer.maxbans.locale.Message;
 import org.maxgamer.maxbans.orm.User;
 import org.maxgamer.maxbans.service.HistoryService;
 import org.maxgamer.maxbans.service.UserService;
@@ -35,7 +36,7 @@ public class HistoryCommandExecutor extends StandardCommandExecutor {
     public void perform(CommandSender sender, Command command, String cmd, String[] userArgs) throws MessageException {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(userArgs));
 
-        List<String> messages;
+        List<Message> messages;
 
         int page = 0;
         if (!args.isEmpty()) {
@@ -73,8 +74,8 @@ public class HistoryCommandExecutor extends StandardCommandExecutor {
             messages = historyService.getHistory(page);
         }
 
-        for (String message : messages) {
-            sender.sendMessage(message);
+        for (Message message : messages) {
+            message.send(sender);
         }
 
         sender.sendMessage("--- Page " + (page + 1) + " ---");

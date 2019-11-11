@@ -98,6 +98,10 @@ silent:
     prefix: "&a&o[Silent]&r&r "
     suffix: ""
 
+hover:
+    user: |
+      AKA &a{{users|nobody}}&r
+      From &a{{country|Unknown}}&r (&a{{continent|Unknown}}&f)
 # The locale to use for time units. Valid examples include:
 # en, fr, de, it, ja, ko, zh
 locale: en

@@ -122,7 +122,7 @@ public class AddressServiceTest extends PluginContextTest implements Integration
         }
 
         try (TransactionLayer tx = getContext().components().transactor().transact()) {
-            MessageBuilder builder = users.report(users.get(id), new Locale());
+            MessageBuilder builder = users.report(users.get(id), getContext().components().locale());
 
             Assert.assertNull("expect no ban", builder.preview("ban"));
             Assert.assertNull("expect no mute", builder.preview("mute"));

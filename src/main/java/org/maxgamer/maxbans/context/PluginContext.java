@@ -1,6 +1,7 @@
 package org.maxgamer.maxbans.context;
 
 import org.bukkit.Server;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -13,7 +14,6 @@ import org.maxgamer.maxbans.config.PluginConfig;
 import org.maxgamer.maxbans.context.component.DaggerPluginComponent;
 import org.maxgamer.maxbans.context.component.PluginComponent;
 import org.maxgamer.maxbans.context.module.PluginModule;
-import org.maxgamer.maxbans.locale.Locale;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -27,15 +27,14 @@ public class PluginContext {
     private File dataFolder;
     private PluginComponent modules;
     private PluginModule pluginModule;
-    
-    public PluginContext(MaxBansPlus plugin, PluginConfig config, Locale locale, Server server, File dataFolder, Logger logger, PluginManager pluginManager) {
+
+    public PluginContext(MaxBansPlus plugin, PluginConfig config, Server server, File dataFolder, ConfigurationSection messageConfiguration, Logger logger, PluginManager pluginManager) {
         this.config = config;
         this.server = server;
         this.dataFolder = dataFolder;
 
         FileConfiguration lockdownCfg = YamlConfiguration.loadConfiguration(new File(dataFolder, "lockdown.yml"));
-
-        pluginModule = new PluginModule(plugin, server, config, lockdownCfg, locale, logger, pluginManager);
+        pluginModule = new PluginModule(plugin, server, config, lockdownCfg, messageConfiguration, logger, pluginManager);
 
         modules = DaggerPluginComponent
                 .builder()

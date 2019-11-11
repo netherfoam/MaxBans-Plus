@@ -2,13 +2,16 @@ package org.maxgamer.maxbans.service;
 
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.maxgamer.maxbans.locale.Locale;
+import org.maxgamer.maxbans.locale.Message;
 import org.maxgamer.maxbans.util.Permissions;
 
 import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,8 +30,32 @@ public class BroadcastService {
         this.locale = locale;
     }
 
-    public void moderators(String message) {
-        server.broadcast(message, MODERATOR_PERMISSION);
+    private void broadcast(Message message, String permission, CommandSender... required) {
+        for (Player player : server.getOnlinePlayers()) {
+            if (!player.hasPermission(permission)) {
+                continue;
+            }
+
+            message.send(player);
+        }
+
+        for(CommandSender involved : required) {
+            // If the target already has permission, we've already messaged them!
+            if(involved == null || involved.hasPermission(permission)) continue;
+
+            // Target doesn't have permission so wasn't notified by the broadcast!
+            message.send(involved);
+        }
+
+        // Don't forget to send it to the console too, if necessary!
+        ConsoleCommandSender console = server.getConsoleSender();
+        if (Arrays.stream(required).noneMatch(sender -> sender == console)) {
+            message.send(console);
+        }
+    }
+
+    public void moderators(Message message) {
+        broadcast(message, MODERATOR_PERMISSION);
     }
 
     /**
@@ -37,7 +64,7 @@ public class BroadcastService {
      * @param silent true if the broadcast should only notify moderators, false if it should notify players
      * @param required the list of players who must, indisputably, be sent the message. May contain nulls.
      */
-    public void broadcast(String message, boolean silent, CommandSender... required) {
+    public void broadcast(Message message, boolean silent, CommandSender... required) {
         String permission;
 
         if(silent) {
@@ -45,24 +72,17 @@ public class BroadcastService {
 
             // Attach our silence prefix & suffix
             if (locale.has("silent.prefix")) {
-                message = locale.get().get("silent.prefix") + message;
+                message = locale.get().get("silent.prefix").append(message);
             }
 
             if (locale.has("silent.suffix")) {
-                message = message + locale.get().get("silent.suffix");
+                message = message.append(locale.get().get("silent.suffix"));
             }
         } else {
             permission = Permissions.SEE_BROADCAST;
         }
 
-        server.broadcast(message, permission);
-        for(CommandSender involved : required) {
-            // If the target already has permission, we've already messaged them!
-            if(involved == null || involved.hasPermission(permission)) continue;
-
-            // Target doesn't have permission so wasn't notified by the broadcast!
-            involved.sendMessage(message);
-        }
+        broadcast(message, permission, required);
     }
 
     /**
@@ -77,7 +97,7 @@ public class BroadcastService {
      * @param timeout the minimum time between notifications
      * @param message the message to deliver to moderators
      */
-    public void moderators(Object key, Duration timeout, String message) {
+    public void moderators(Object key, Duration timeout, Message message) {
         if(key == null) {
             throw new IllegalArgumentException("Key may not be null");
         }

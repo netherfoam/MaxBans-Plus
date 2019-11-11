@@ -41,10 +41,10 @@ public class IPMuteCommandExecutor extends IPRestrictionCommandExecutor {
         addressService.mute(muter, address, reason, duration);
 
         MessageBuilder message = locale.get()
-                .with("name", user == null ? null : user.getName())
+                .with("name", user)
                 .with("address", address.getHost())
                 .with("reason", reason)
-                .with("source", muter == null ? "Console" : muter.getName())
+                .withUserOrConsole("source", muter)
                 .with("duration", TemporalDuration.of(duration));
 
         broadcastService.broadcast(message.get("mute.broadcast"), silent, source, locatorService.player(user));

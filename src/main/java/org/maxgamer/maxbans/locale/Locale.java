@@ -1,9 +1,12 @@
 package org.maxgamer.maxbans.locale;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.maxgamer.maxbans.config.PluginConfig;
+import org.maxgamer.maxbans.service.GeoIPService;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.ocpsoft.prettytime.units.JustNow;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,35 +14,39 @@ import java.util.Map;
  * @author Dirk Jamieson <dirk@redeye.co>
  */
 public class Locale {
-    protected HashMap<String, String> messages;
+    private HashMap<String, String> messages;
     protected PrettyTime prettyTime = new PrettyTime(java.util.Locale.ENGLISH);
+    private GeoIPService geoIPService;
+    private PluginConfig pluginConfig;
     
-    public Locale(){
-        messages = new HashMap<>();
-        prettyTime.removeUnit(JustNow.class);
+    public Locale(GeoIPService geoIPService){
+        this.messages = new HashMap<>();
+        this.prettyTime.removeUnit(JustNow.class);
+        this.geoIPService = geoIPService;
     }
     
-    public Locale(Map<String, String> messages) {
-        this();
+    public Locale(GeoIPService geoIPService, Map<String, String> messages) {
+        this(geoIPService);
 
         this.messages = new HashMap<>(messages);
     }
-    
-    public Locale(ConfigurationSection config) {
-        this();
-        
-        load(config);
+
+    public Locale(GeoIPService geoIPService, PluginConfig config, ConfigurationSection messageConfig) {
+        this(geoIPService);
+        this.pluginConfig = config;
+
+        load(messageConfig);
     }
     
-    public void load(ConfigurationSection config) {
+    public void load(ConfigurationSection messageConfig) {
         messages = new HashMap<>();
-        for(String key : config.getKeys(true)) {
-            String value = config.getString(key);
+        for(String key : messageConfig.getKeys(true)) {
+            String value = messageConfig.getString(key);
 
             messages.put(key, value);
         }
 
-        String locale = config.getString("locale");
+        String locale = messageConfig.getString("locale");
         if(locale != null) {
             setLocale(locale);
         }
@@ -54,14 +61,22 @@ public class Locale {
     }
     
     public MessageBuilder get() {
-        return new MessageBuilder(this);
+        if (pluginConfig != null && pluginConfig.isTooltips()) {
+            return new TooltipMessageBuilder(this, geoIPService);
+        }
+
+        return new BukkitMessageBuilder(this);
+    }
+
+    public Map<String, String> getMessages() {
+        return Collections.unmodifiableMap(messages);
     }
 
     /**
-     * Puts the given template under the given key
+     * Puts the given template message under the given key
      *
-     * @param key the key
-     * @param template the template message
+     * @param key the key eg "ban.kick"
+     * @param template the template message eg "You have been banned for {{duration}}"
      */
     public void put(String key, String template) {
         messages.put(key, template);

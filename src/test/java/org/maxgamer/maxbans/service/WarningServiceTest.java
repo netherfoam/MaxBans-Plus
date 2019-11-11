@@ -40,7 +40,7 @@ public class WarningServiceTest extends PluginContextTest implements Integration
 
         User user = getContext().components().services().user().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
 
-        Locale locale = new Locale();
+        Locale locale = getContext().components().locale();
         locale.put("warn.broadcast", "broadcast message");
 
         service.warn(null, user, "Warning", locale);
@@ -59,7 +59,7 @@ public class WarningServiceTest extends PluginContextTest implements Integration
 
         User user = getContext().components().services().user().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
 
-        Locale locale = new Locale();
+        Locale locale = getContext().components().locale();
         locale.put("warn.broadcast", "broadcast message");
 
         service.warn(null, user, "Warning", locale);
@@ -77,7 +77,7 @@ public class WarningServiceTest extends PluginContextTest implements Integration
 
         User user = getContext().components().services().user().create(UUID.randomUUID(), "JoeBlogs", Instant.now());
 
-        Locale locale = new Locale();
+        Locale locale = getContext().components().locale();
         locale.put("warn.broadcast", "broadcast message");
 
         service.warn(null, user, "First", locale);

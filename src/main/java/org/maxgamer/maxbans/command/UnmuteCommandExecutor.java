@@ -42,12 +42,12 @@ public class UnmuteCommandExecutor extends IPRestrictionCommandExecutor {
         User source = (sender instanceof Player ? userService.getOrCreate((Player) sender) : null);
 
         MessageBuilder message = locale.get()
-                .with("source", source == null ? "Console" : source.getName());
+                .withUserOrConsole("source", source);
 
         boolean any = false;
         if(user != null && userService.getMute(user) != null) {
             userService.unmute(source, user);
-            message.with("name", user.getName());
+            message.with("name", user);
             any = true;
         }
 
