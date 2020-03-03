@@ -1,0 +1,18 @@
+version: "2"
+
+services:
+    spigot:
+        build:
+            context: "../"
+            dockerfile: paper-mc-jre-8.Dockerfile
+            args:
+                JVM_OPTS: "-Xmx2048M -Xms1024M"
+                REV: "1.8"
+        volumes:
+            - ./plugins:/minecraft/plugins/
+        ports:
+            - 25565:25565
+
+        # This lets us use `docker attach server_spigot_1` to send commands to Spigot
+        stdin_open: true
+        tty: true

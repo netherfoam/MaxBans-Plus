@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 
 /**
@@ -50,7 +51,9 @@ public abstract class H2Test implements IntegrationTest {
     public void teardown() throws IOException, InterruptedException, SQLException {
         DataSource source = flyway.getDataSource();
         try (Connection c = source.getConnection()) {
-            c.createStatement().execute("SHUTDOWN");
+            try (Statement statement = c.createStatement()) {
+                statement.execute("SHUTDOWN");
+            }
         }
 
         long start = System.currentTimeMillis();

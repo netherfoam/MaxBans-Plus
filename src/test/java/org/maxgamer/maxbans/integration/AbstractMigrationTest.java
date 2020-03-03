@@ -7,13 +7,11 @@ import org.flywaydb.core.internal.util.jdbc.DriverDataSource;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.Before;
-import org.junit.Test;
 import org.maxgamer.maxbans.config.JdbcConfig;
 import org.maxgamer.maxbans.orm.HibernateConfigurer;
 import org.maxgamer.maxbans.test.IntegrationTest;
 import org.maxgamer.maxbans.util.FlywayUtil;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
