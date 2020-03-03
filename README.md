@@ -14,6 +14,20 @@ project might be able to help you with:
 project. If you came here from `Bukkit`, then you likely want to view the 
 [old repository](https://github.com/netherfoam/MaxBans) which is maintained by Fabio12.
 
+## Compiling
+Prerequisites are:
+* JDK 11
+* Maven
+
+For integration tests, you'll also need docker and docker-compose.yml installed.
+
+To compile the JAR, simply:
+```
+mvn clean package -DskipTests
+```
+
+And copy the file from `target/maxbans-plus-xx.jar` to your plugins directory.
+
 ## Documentation
 Here's a brief overview of the usage of the plugin.
 

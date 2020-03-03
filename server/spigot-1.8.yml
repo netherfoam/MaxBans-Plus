@@ -3,7 +3,7 @@ version: "2"
 services:
     spigot:
         build:
-            context: "../"
+            context: ""
             dockerfile: paper-mc-jre-8.Dockerfile
             args:
                 JVM_OPTS: "-Xmx2048M -Xms1024M"

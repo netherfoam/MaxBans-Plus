@@ -15,7 +15,6 @@ RUN mkdir /build/ && \
 
 COPY minecraft /minecraft
 WORKDIR /minecraft
-RUN chmod +x start.sh
 
 RUN mkdir /minecraft/plugins
 
