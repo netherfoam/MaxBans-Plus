@@ -10,8 +10,8 @@
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>8</maven.compiler.release>
     </properties>
 
     <dependencies>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.1</version>
+            <version>1.7</version>
         </dependency>
 
         <!-- Apache Commons CSV for GeoLite Parsing -->
@@ -175,6 +175,13 @@
             <version>0.34.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Support for GSON (required for BStats) - required in Spigot 1.8 -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.6</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -233,7 +240,6 @@
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
-                    <release>${maven.compiler.release}</release>
                     <goal>compile</goal>
                     <annotationProcessorPaths>
                         <path>
@@ -260,8 +266,8 @@
         </repository>
 
         <repository>
-            <id>bstats-repo</id>
-            <url>http://repo.bstats.org/content/repositories/releases/</url>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
 
         <repository>
