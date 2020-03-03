@@ -1,0 +1,22 @@
+version: "2"
+
+services:
+    mysql:
+        image: mysql:5.7
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: ""
+            MYSQL_DATABASE: "maxbansplus"
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+    spigot:
+        build:
+            context: .
+            dockerfile: jdk-11-spigot-1.13.2.Dockerfile
+            args:
+                JVM_OPTS: "-Xmx2048M -Xms1024M"
+        volumes:
+            - /plugins:/minecraft/plugins/
+        ports:
+            - 25565:25565
