@@ -11,9 +11,8 @@ echo "REMOTE_BRANCH: $REMOTE_BRANCH"
 if [[ "master" == "$REMOTE_BRANCH" ]]; then
     echo "Publishing build..."
     # Upload the file because it's a commit directly to Master
-    cp target/maxbans-plus-*.jar target/maxbans-plus-latest.jar
-
     aws s3 cp target/maxbans-plus-*.jar s3://maxgamer.org/plugins/
+    aws s3 cp target/maxbans-plus-*.jar s3://maxgamer.org/plugins/maxbans-plus-latest.jar
 else
     echo "master != $REMOTE_BRANCH... Skipping publish"
 fi

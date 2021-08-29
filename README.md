@@ -14,6 +14,11 @@ project might be able to help you with:
 project. If you came here from `Bukkit`, then you likely want to view the 
 [old repository](https://github.com/netherfoam/MaxBans) which is maintained by Fabio12.
 
+## Download
+![Build Status](https://codebuild.ap-southeast-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiU1U3aXZJcWh1MkFEMHJlMzI4eElLTVRUMkxoV3ppa3dXZ3RJcStveTQrOFlpbitudEFEdnRpRGJOTGpZRmNkNkZzRGtrMkVMak5jZldMMlVVMkljVXo0PSIsIml2UGFyYW1ldGVyU3BlYyI6IkNObjNsN2luQWdMb2M2SGUiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main)
+
+The bleeding edge can be downloaded [here](https://maxgamer.org/plugins/maxbans-plus-latest.jar)
+
 ## Compiling
 Prerequisites are:
 * JDK 11
