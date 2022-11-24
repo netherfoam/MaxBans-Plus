@@ -86,7 +86,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.3.4.Final</version>
+            <version>5.3.20.Final</version>
         </dependency>
 
         <!-- C3P0 connection pooling allows us to test connection validity -->
